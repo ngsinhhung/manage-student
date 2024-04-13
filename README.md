@@ -1,2 +1,2 @@
 # remake-manage-student
-manage-student-remake
+remake-manage-student
