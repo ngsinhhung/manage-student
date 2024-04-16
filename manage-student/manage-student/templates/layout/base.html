@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>{% block tittle %}{% endblock %}</title>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+            crossorigin="anonymous"
+    />
+    <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"
+    ></script>
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+</head>
+<style>
+    .nav-item:hover {
+        background-color: #aaaaaa4c;
+        border-bottom: solid 1px white;
+        border-radius: 3px;
+    }
+
+    .icon-header:hover {
+        background-color: #aaaaaa4c;
+        border-radius: 50%;
+    }
+</style>
+<body>
+<!-- {#header#} -->
+{% block header %}
+    {% include 'layout/header.html' %}
+{% endblock %}
+<!-- {#nav-content#} -->
+{% block nav_content %}
+	<div class="container-fluid">
+    <div class="row flex-nowrap" style="color: #000;">
+        <div class="col-auto col-md-3 col-xl-2 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start text-white min-vh-100">
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start "
+                    id="menu">
+                    <li class="nav-item w-100">
+                        <a href="#" class="nav-link align-middle text-white">
+                            Trang chủ
+                        </a>
+                    </li>
+                    <li class="nav-item w-100">
+                        <a href="#" class="nav-link align-middle text-white">
+                            Phân công giảng dạy
+                        </a>
+                    </li>
+                    <li class="nav-item w-100">
+                        <a href="#" class="nav-link align-middle text-white">
+                            Tiếp nhận học sinh
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- {#content#} -->
+        <div class="col py-3">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+<!-- {#footer#} -->
+{% block footer %}
+    {% include 'layout/footer.html' %}
+{% endblock %}
+</body>
+</html>
