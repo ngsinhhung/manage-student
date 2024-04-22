@@ -27,6 +27,7 @@
             background-position: right calc(.375em + .1875rem) center;
             background-size: calc(.75em + .375rem) calc(.75em + .375rem);
         }
+
         .invalid-feedback {
             display: none;
             width: 100%;
@@ -34,7 +35,8 @@
             font-size: 80%;
             color: #dc3545;
         }
-        .form-control.is-invalid~.invalid-feedback {
+
+        .form-control.is-invalid ~ .invalid-feedback {
             display: block;
         }
 
@@ -59,36 +61,36 @@
 {% endblock %}
 <!-- {#nav-content#} -->
 {% block nav_content %}
-	<div class="container-fluid">
-    <div class="row flex-nowrap" style="color: #000;">
-        <div class="col-auto col-md-3 col-xl-2 bg-dark">
-            <div class="d-flex flex-column align-items-center align-items-sm-start text-white min-vh-100">
-                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start "
-                    id="menu">
-                    <li class="nav-item w-100">
-                        <a href="#" class="nav-link align-middle text-white">
-                            Trang chủ
-                        </a>
-                    </li>
-                    <li class="nav-item w-100">
-                        <a href="#" class="nav-link align-middle text-white">
-                            Phân công giảng dạy
-                        </a>
-                    </li>
-                    <li class="nav-item w-100">
-                        <a href="#" class="nav-link align-middle text-white">
-                            Tiếp nhận học sinh
-                        </a>
-                    </li>
-                </ul>
+    <div class="container-fluid">
+        <div class="row flex-nowrap" style="color: #000;">
+            <div class="col-auto col-md-3 col-xl-2 bg-dark">
+                <div class="d-flex flex-column align-items-center align-items-sm-start text-white min-vh-100">
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start "
+                        id="menu">
+                        <li class="nav-item w-100">
+                            <a href="#" class="nav-link align-middle text-white">
+                                Trang chủ
+                            </a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a href="#" class="nav-link align-middle text-white">
+                                Phân công giảng dạy
+                            </a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a href="#" class="nav-link align-middle text-white">
+                                Tiếp nhận học sinh
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- {#content#} -->
+            <div class="col py-3">
+                {% block content %}{% endblock %}
             </div>
         </div>
-        <!-- {#content#} -->
-        <div class="col py-3">
-            {% block content %}{% endblock %}
-        </div>
     </div>
-</div>
 {% endblock %}
 <!-- {#footer#} -->
 {% block footer %}
@@ -102,19 +104,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var scoreInputs = document.querySelectorAll(".score");
-
-        scoreInputs.forEach(function(input) {
-            input.addEventListener("blur", function() {
-                var value = parseFloat(this.value);
-                if (value < 0 || value > 10 || isNaN(value)) {
-                    $('#errorModal').modal('show');
-                }
-            });
-        });
-    });
+    {% block script %}{% endblock %}
 </script>
 
 </body>

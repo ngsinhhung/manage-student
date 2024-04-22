@@ -4,7 +4,13 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
+    return render_template("index.html")
+
+@app.route('/assignment')
+def teacher_assignment():
     return render_template("teacher/teacher_assignment.html")
+
+
 
 @app.route("/inputScore")
 def input_score():
