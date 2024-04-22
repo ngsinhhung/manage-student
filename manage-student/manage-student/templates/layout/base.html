@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <title>{% block tittle %}{% endblock %}</title>
+    <title>{% block title %}{% endblock %}</title>
     <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
             rel="stylesheet"
@@ -64,6 +64,7 @@
         </div>
         <!-- {#content#} -->
         <div class="col py-3">
+
             {% block content %}{% endblock %}
         </div>
     </div>
