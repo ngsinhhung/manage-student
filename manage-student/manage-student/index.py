@@ -18,5 +18,8 @@ def score_of_subject():
 def view_score():
     return render_template("viewScore.html")
 
+@app.route("/view_regulation")
+def view_regulations():
+    return render_template('viewRegulations.html')
 if __name__ == "__main__":
     app.run(debug=True)
