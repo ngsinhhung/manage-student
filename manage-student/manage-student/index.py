@@ -12,6 +12,10 @@ def login():
 def index():
     return render_template("index.html")
 
+@app.route('/assignment')
+def teacher_assignment():
+    return render_template("teacher/teacher_assignment.html")
+
 
 @app.route('/create_class')
 def create_class():

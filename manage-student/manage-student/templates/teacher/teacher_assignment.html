@@ -56,24 +56,29 @@
             </div>
         </div>
 
-        <div class="mt-5 container">
-            <div class="d-flex justify-content-end mb-2 fs-5">
-                <button type="submit" class="btn btn-danger rounded-pill px-3 mx-2">
-                    <i class="fa fa-trash" aria-hidden="true"></i>
-                    Xóa phân công
-                </button>
-                <button type="submit" class="btn btn-info rounded-pill px-3">
-                    <i class="fas fa-save"></i>
-                    Lưu
-                </button>
+        <div class="mt-5">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h4>
+                        Bảng phân công giảng dạy lớp <strong class="font-italic">10A1</strong>
+                    </h4>
+                </div>
+                <div class="mb-2 fs-5">
+                    <button type="submit" class="btn btn-danger rounded-pill px-3 mx-2">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                        Xóa phân công
+                    </button>
+                    <button type="submit" class="btn btn-info rounded-pill px-3">
+                        <i class="fas fa-save"></i>
+                        Lưu
+                    </button>
+                </div>
             </div>
             <div class="text-center">
                 <div class="row">
                     <div class="col col-sm-1 p-2 bg-info border ">STT</div>
-                    <div class="col col-md-1 p-2 bg-info border ">Lớp</div>
-                    <div class="col col-md-1 p-2 bg-info border ">Môn học</div>
-                    <div class="col col-md-3 p-2 bg-info border ">Tổ bộ môn</div>
-                    <div class="col col-md-3 p-2 bg-info border ">Giáo viên</div>
+                    <div class="col col-md-2 p-2 bg-info border ">Môn học</div>
+                    <div class="col col-md-6 p-2 bg-info border ">Giáo viên</div>
                     <div class="col col-sm-1 p-2 bg-info border ">Áp dụng cả 2 học kỳ</div>
                     <div class="col col-sm-1 p-2 bg-info border ">Học kỳ 1</div>
                     <div class="col col-sm-1 p-2 bg-info border ">Học kỳ 2</div>
@@ -81,17 +86,9 @@
                 {% for i in range(0,5) %}
                     <div class="row">
                         <div class="col col-sm-1 border ">{{ i }}</div>
-                        <div class="col col-md-1 border ">10A1</div>
-                        <div class="col col-md-1 border ">Môn học</div>
-                        <div class="col col-md-3 border d-flex justify-content-center align-items-center">
-                            <select class="form-select p-1 rounded-3 fs-6" style="width:200px; height: auto" id="sel1"
-                                    name="sellist">
-                                <option>Toán</option>
-                                <option>Văn</option>
-                            </select>
-                        </div>
-                        <div class="col col-md-3 border d-flex justify-content-center align-items-center">
-                            <select class="form-select p-1 rounded-3 fs-6" style="width:200px; height: auto" id="sel1"
+                        <div class="col col-md-2 border ">Môn học</div>
+                        <div class="col col-md-6 border d-flex justify-content-center align-items-center">
+                            <select class="form-select p-1 rounded-3 fs-6 w-100 h-auto " id="sel1"
                                     name="sellist">
                                 <option>Giáo viên A</option>
                                 <option>Giáo viên B</option>
@@ -110,6 +107,5 @@
                 {% endfor %}
             </div>
         </div>
-
     </div>
 {% endblock %}
