@@ -12,17 +12,17 @@ def login():
 def index():
     return render_template("index.html")
 
-@app.route('/assignment')
+@app.route('/teacher/assignment')
 def teacher_assignment():
-    return render_template("teacher/teacher_assignment.html")
+    return render_template("teacher_assignment.html")
 
 
-@app.route('/create_class')
+@app.route('/class/create')
 def create_class():
-    return render_template("createclass.html")
+    return render_template("create_class.html")
 
 
-@app.route('/class_edit')
+@app.route('/class/edit')
 def class_edit():
     return render_template("list_class.html")
 
@@ -32,7 +32,7 @@ def register():
     return render_template("register.html")
 
 
-@app.route('/info/<class_id>')
+@app.route('/<class_id>/info')
 def info(class_id):
     return render_template("class_info.html", class_id=class_id)
 
