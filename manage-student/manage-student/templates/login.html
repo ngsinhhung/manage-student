@@ -15,6 +15,7 @@
                            name="password">
                     <label for="password">Mật khẩu</label>
                 </div>
+                <div id="warning-caps-lock" class="invalid-feedback text-warning rounded-3" style="display: block" hidden="hidden"><i class="fa-solid fa-circle-exclamation"></i> Bạn đang bật Caps Lock</div>
                 <div class="invalid-feedback d-block text-danger rounded-3">Tên đăng nhập hoặc mật khẩu không đúng</div>
                 <div class="form-floating mt-3 mb-3" style="float: right">
                     <button class="btn btn-success" type="submit">Đăng nhập</button>
@@ -22,4 +23,17 @@
             </form>
         </div>
     </div>
+    <script>
+        const pwInput = document.getElementById("password")
+        const labelWarning = document.getElementById("warning-caps-lock")
+        pwInput.addEventListener('keyup',(event)=>{
+            console.log(labelWarning.display)
+            if(event.getModifierState("CapsLock"))
+                labelWarning.removeAttribute("hidden");
+            else{
+                labelWarning.setAttribute("hidden", "hidden");
+            }
+
+        })
+    </script>
 {% endblock %}

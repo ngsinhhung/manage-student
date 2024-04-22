@@ -1,0 +1,66 @@
+{% extends 'layout/base.html' %}
+{% block title %}
+    Quản lý học sinh
+{% endblock %}
+{% block content %}
+    <div>
+        <h1 style="text-align: center">Danh sách lớp</h1>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">id</th>
+                <th scope="col">Lớp</th>
+                <th scope="col">Khối</th>
+                <th scope="col">Giáo Viên Hướng dẫn</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th scope="row">1</th>
+                <td>10A1</td>
+                <td>K10</td>
+                <td>Nguyễn Văn A</td>
+                <td><a class="btn btn-success" href="/class_edit?name=10a1">Xem</a></td>
+            </tr>
+            <tr>
+                <th scope="row">2</th>
+                <td>10A1</td>
+                <td>K10</td>
+                <td>Nguyễn Văn A</td>
+                <td><a class="btn btn-success" href="/class_edit?name=10a1">Xem</a></td>
+            </tr>
+            <tr>
+                <th scope="row">3</th>
+                <td>10A1</td>
+                <td>K10</td>
+                <td>Nguyễn Văn A</td>
+                <td><a class="btn btn-success" href="/class_edit?name=10a1">Xem</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal" id="myModal">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Modal Heading</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    Modal body..
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

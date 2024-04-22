@@ -1,0 +1,100 @@
+{% extends 'layout/base.html' %}
+{% block title %}
+    Quản lý học sinh
+{% endblock %}
+{% block content %}
+    <div class="p-5">
+        <div id="year">Niên khóa: 2002-2003</div>
+    </div>
+    <div class="d-flex justify-content-between gap-5">
+        <div class="px-5 class-list d-flex flex-column gap-2">
+            <h2>Danh sách lớp đã tạo</h2>
+            <button class="btn btn-success col-sm-5 align-items-end" data-bs-toggle="modal" data-bs-target="#myModal">
+                Tạo lớp
+            </button>
+            <ul>
+                <li>Lớp 1 (Giáo viên: ABC, Số học sinh: 25)</li>
+                <li>Lớp 2 (Giáo viên: XYZ, Số học sinh: 30)</li>
+            </ul>
+        </div>
+        <div class="px-5 student-list d-flex flex-column gap-2">
+            <h2>Danh sách học sinh chưa có lớp</h2>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Handle</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                    <td>@fat</td>
+                </tr>
+                <tr>
+                    <th scope="row">3</th>
+                    <td colspan="2">Larry the Bird</td>
+                    <td>@twitter</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal" id="myModal">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Thông tin lớp mới</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form action="/">
+                        <div class="mb-3 mt-3">
+                            <label for="gvcn" class="form-label">Giáo viên chủ nhiệm:</label>
+                            <select id="gvcn" class="form-select" aria-label="Default select example">
+                                <option value="1">Nguyễn Văn A</option>
+                                <option value="2">Trần Thị B</option>
+                                <option value="3">Trần Văn C</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="grade" class="form-label">Khối:</label>
+                            <select id="grade" class="form-select" aria-label="Default select example">
+                                <option value="1">Khối 10</option>
+                                <option value="2">Khối 11</option>
+                                <option value="3">Khối 12</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="quantity" class="form-label">Sĩ số:</label>
+                            <input type="number" min="20" max="40" class="form-control" id="quantity"
+                                   placeholder="Nhập sĩ số" name="quantity">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var year = new Date()
+        if (year.getMonth() > 5)
+            document.querySelector("#year").innerHTML = `Niên khóa: ${year.getFullYear()} - ${year.getFullYear() + 1}`
+        else
+            document.querySelector("#year").innerHTML = `Niên khóa: ${year.getFullYear() - 1} - ${year.getFullYear()}`
+    </script>
+{% endblock %}
