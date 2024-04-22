@@ -37,9 +37,10 @@ def info(class_id):
     return render_template("class_info.html", class_id=class_id)
 
 
-@app.route("/view_regulation")
+@app.route("/regulations")
 def view_regulations():
-    return render_template('viewRegulations.html')
+    return render_template('view_regulations.html')
+
 if __name__ == "__main__":
     with app.app_context():
         app.run(debug=True)
