@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Xem Điểm</title>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+            crossorigin="anonymous"
+    />
+
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+</head>
+<body>
+<!-- {#header#} -->
+<header class="bg-dark">
+    <div class="container-fluid pt-2 pb-2">
+        <div class="d-flex justify-content-between">
+            <a class="navbar-brand text-white" href="#"></a>
+            <div class="d-flex" style="margin-right: 30px">
+                <div>
+                    <img
+                            src="https://github.com/mdo.png"
+                            alt="hugenerd"
+                            class="rounded-circle"
+                            style="margin-right: 5px; width:40px; height:40px"
+                    />
+                    <span class="text-white">Username </span>
+                </div>
+                <div>
+                    <i class="fa fa-sign-out text-white icon-header"
+                       style="padding: 10px; margin-left: 10px; font-size: 18px;" aria-hidden="true"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="container shadow-md d-flex gap-3 mt-2">
+    <div class="p-3 rounded-3 flex-grow-1" style="width:300px;background-color:#1668b3;">
+        <p style="color:white">Tra cứu kết quả học tập</p>
+        <label for="basic-url" style="color:white" class="form-label fs-6">Nhập số điện thoại</label>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon3">+84</span>
+            <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+        </div>
+        <label for="inputPassword5" style="color:white" class="form-label">Nhập OTP</label>
+        <div class="mb-2">
+            <input type="password" id="inputPassword5" class="form-control" aria-describedby="passwordHelpBlock">
+            <span class="" style="color:white;">Gửi lại <span class="m" style="cursor:pointer;text-decorator:underline">OTP</span></span>
+        </div>
+        <button class="btn btn-success" style="color:white">Xác nhận OTP</button>
+    </div>
+    <div class="p-3 shadow-sm flex-grow-1" style="width:700px">
+        <p>Để tra cứu điểm của học sinh <span style="font-weight:bold">Minh Tâm</span> vui lòng chọn kì học</p>
+        <label for="termSelect" style="color:#1668b3" class="form-label">Chọn kì học:</label>
+        <select class="form-select" id="termSelect">
+            <option value="term1">Kì 1</option>
+            <option value="term2">Kì 2</option>
+            <option value="wholeYear">Cả năm</option>
+        </select>
+        <button class="btn btn-info mt-2" style="color:white">Xác nhận</button>
+        <div>
+            <div class="container mt-3">
+                <p class="text-center">Kết quả học tập của Minh Tâm học kì 1</p>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th scope="col">Môn học</th>
+                        <th scope="col">Điểm 15p</th>
+                        <th scope="col">Điểm 1 Tiết</th>
+                        <th scope="col">Điểm Thi</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Toán</td>
+                        <td>8.5</td>
+                        <td>8.0</td>
+                        <td>7.5</td>
+                    </tr>
+                    <tr>
+                        <td>Văn</td>
+                        <td>9.0</td>
+                        <td>8.5</td>
+                        <td>7.0</td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"
+></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+</body>
+</html>

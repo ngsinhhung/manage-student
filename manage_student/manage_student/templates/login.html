@@ -1,0 +1,39 @@
+{% extends 'layout/base.html' %}
+{% block nav_content %}
+	<div class="d-flex justify-content-center align-items-center" style="height: calc(100vh - 96px - 56px);">
+        <div class="col-lg-6 ">
+            <h2 class="text-center mb-2">Đăng nhập</h2>
+            <form method="post" action="/login">
+                <div class="form-floating mb-3 mt-3">
+                    <input required type="text" class="form-control" id="username" placeholder="Tên đăng nhập"
+                           name="username">
+                    <label for="username">Tên đăng nhập</label>
+                </div>
+
+                <div class="form-floating mt-3 mb-3">
+                    <input required type="password" class="form-control" id="password" placeholder="Mật khẩu"
+                           name="password">
+                    <label for="password">Mật khẩu</label>
+                </div>
+                <div id="warning-caps-lock" class="invalid-feedback text-warning rounded-3" style="display: block" hidden="hidden"><i class="fa-solid fa-circle-exclamation"></i> Bạn đang bật Caps Lock</div>
+                <div class="invalid-feedback d-block text-danger rounded-3">Tên đăng nhập hoặc mật khẩu không đúng</div>
+                <div class="form-floating mt-3 mb-3" style="float: right">
+                    <button class="btn btn-success" type="submit">Đăng nhập</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        const pwInput = document.getElementById("password")
+        const labelWarning = document.getElementById("warning-caps-lock")
+        pwInput.addEventListener('keyup',(event)=>{
+            console.log(labelWarning.display)
+            if(event.getModifierState("CapsLock"))
+                labelWarning.removeAttribute("hidden");
+            else{
+                labelWarning.setAttribute("hidden", "hidden");
+            }
+
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'layout/base.html' %}
+{% block title %}
+    Quản lý học sinh
+{% endblock %}
+{% block content %}
+    <form id="studentForm" class="d-flex flex-column justify-content-center gap-2">
+        <h4 class="text-center">Tiếp Nhận Học Sinh</h4>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="fullname" class="form-label">Họ tên:</label>
+                <input type="text" class="form-control" id="fullname" name="fullname">
+            </div>
+            <div class="col-md-6">
+                <label for="gender" class="form-label">Giới tính:</label>
+                <select class="form-select" id="gender" name="gender">
+                    <option value="male">Nam</option>
+                    <option value="female">Nữ</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="dob" class="form-label">Ngày sinh:</label>
+                <input type="date" class="form-control" id="dob" name="dob">
+            </div>
+            <div class="col-md-6">
+                <label for="address" class="form-label">Địa chỉ:</label>
+                <input type="text" class="form-control" id="address" name="address">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="phone" class="form-label">Số điện thoại:</label>
+                <input type="tel" class="form-control" id="phone" name="phone">
+            </div>
+            <div class="col-md-6">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" class="form-control" id="email" name="email">
+            </div>
+        </div>
+        <div class="row mb-3 ">
+            <div class="col-md-12 d-flex align-items-center justify-content-end gap-1 ">
+                <button type="button" class="btn btn-primary me-2">Lưu
+                </button>
+                <button type="button" class="btn btn-danger">Xóa</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}
