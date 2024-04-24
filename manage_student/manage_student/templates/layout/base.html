@@ -67,19 +67,34 @@
                 <div class="d-flex flex-column align-items-center align-items-sm-start text-white min-vh-100">
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start "
                         id="menu">
-                        <li class="nav-item w-100">
-                            <a href="#" class="nav-link align-middle text-white">
+                        <li class="nav-item w-100 my-1">
+                            <a href="/" class="nav-link align-middle text-white">
                                 Trang chủ
                             </a>
                         </li>
-                        <li class="nav-item w-100">
-                            <a href="#" class="nav-link align-middle text-white">
-                                Phân công giảng dạy
+                        <li class="nav-item w-100 my-1">
+                            <a href="/student/create" class="nav-link align-middle text-white">
+                                Tiếp nhận học sinh
+                            </a>
+                        </li>
+                        <li class="nav-item w-100 my-1">
+                            <a href="/class/create" class="nav-link align-middle text-white">
+                                Thêm mới lớp học
+                            </a>
+                        </li>
+                        <li class="nav-item w-100 my-1">
+                            <a href="/class/edit" class="nav-link align-middle text-white">
+                                Chỉnh sửa thông tin lớp học
+                            </a>
+                        </li>
+                        <li class="nav-item w-100 my-1">
+                            <a href="/grade" class="nav-link align-middle text-white">
+                                Thêm điểm môn học
                             </a>
                         </li>
                         <li class="nav-item w-100">
-                            <a href="#" class="nav-link align-middle text-white">
-                                Tiếp nhận học sinh
+                            <a href="/regulations" class="nav-link align-middle text-white">
+                                Quy định nhà trường
                             </a>
                         </li>
                     </ul>
@@ -102,6 +117,10 @@
         crossorigin="anonymous"
 ></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+<script>
+    document.getElementsByTagName("a").addEventListener("click", function (event) {
+        event.preventDefault()
+    });
+</script>
 </body>
 </html>
