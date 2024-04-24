@@ -1,6 +1,6 @@
-from flask import Flask, render_template
+from flask import render_template
 
-app = Flask(__name__)
+from manage_student import app
 
 
 
@@ -28,7 +28,7 @@ def class_edit():
     return render_template("list_class.html")
 
 
-@app.route('/register')
+@app.route('/student/create')
 def register():
     return render_template("register.html")
 
@@ -41,6 +41,18 @@ def info(class_id):
 @app.route("/regulations")
 def view_regulations():
     return render_template('view_regulations.html')
+
+@app.route("/grade")
+def InputGrade():
+    return render_template("input_score.html")
+@app.route("/grade/input")
+def InputGradeSubject():
+    return render_template("input_score_subject.html")
+
+@app.route("/grade")
+def view_grade():
+    return render_template("view_score.html")
+
 
 if __name__ == "__main__":
     with app.app_context():
