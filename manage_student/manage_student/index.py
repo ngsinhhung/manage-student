@@ -1,11 +1,18 @@
 from flask import render_template
 
 from manage_student import app
+from manage_student.form import *
 
-
-@app.route('/login')
+app.config['SECRET_KEY'] = 'secretkey'
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template("login.html")
+    form = LoginForm()
+    if form.SubmitFieldLogin():
+        username = form.username.data
+        password  = form.password.data
+        print(username)
+        print(password)
+    return render_template('login.html', form=form)
 
 
 @app.route('/')
@@ -17,9 +24,12 @@ def teacher_assignment():
     return render_template("teacher_assignment.html")
 
 
-@app.route('/class/create')
+@app.route('/class/create',methods=['GET', 'POST'])
 def create_class():
-    return render_template("create_class.html")
+    form_create_class = CreateClass()
+    if form_create_class.validate_on_submit():
+        pass
+    return render_template("create_class.html",form_create_class=form_create_class)
 
 
 @app.route('/class/edit')
@@ -29,7 +39,10 @@ def class_edit():
 
 @app.route('/student/create')
 def register():
-    return render_template("register.html")
+    form_student = AdmisionStudent()
+    if form_student.validate_on_submit():
+        pass
+    return render_template("register.html",form_student=form_student)
 
 
 @app.route('/<class_id>/info')
