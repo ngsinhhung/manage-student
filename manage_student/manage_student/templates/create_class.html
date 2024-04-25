@@ -1,10 +1,14 @@
 {% extends 'layout/base.html' %}
 {% block title %}
-    Quản lý học sinh
+    Thêm mới lớp học
 {% endblock %}
 {% block content %}
-    <div class="p-5">
-        <div id="year">Niên khóa: 2002-2003</div>
+    <div class="d-flex align-items-center p-5">
+        <p style="margin-top: 16px">Năm học: </p>
+        <select class="form-select ms-3 rounded-pill" style="width:150px; height: 40px" id="sel1"
+                name="sellist">
+            <option id="year">2023 - 2024</option>
+        </select>
     </div>
     <div class="d-flex justify-content-between gap-5">
         <div class="px-5 class-list d-flex flex-column gap-2">
@@ -93,8 +97,8 @@
     <script>
         var year = new Date()
         if (year.getMonth() > 5)
-            document.querySelector("#year").innerHTML = `Niên khóa: ${year.getFullYear()} - ${year.getFullYear() + 1}`
+            document.querySelector("#year").innerHTML = `${year.getFullYear()} - ${year.getFullYear() + 1}`
         else
-            document.querySelector("#year").innerHTML = `Niên khóa: ${year.getFullYear() - 1} - ${year.getFullYear()}`
+            document.querySelector("#year").innerHTML = `${year.getFullYear() - 1} - ${year.getFullYear()}`
     </script>
 {% endblock %}

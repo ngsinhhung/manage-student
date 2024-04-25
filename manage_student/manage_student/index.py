@@ -12,7 +12,6 @@ def login():
 def index():
     return render_template("index.html")
 
-
 @app.route('/teacher/assignment')
 def teacher_assignment():
     return render_template("teacher_assignment.html")
@@ -28,7 +27,7 @@ def class_edit():
     return render_template("list_class.html")
 
 
-@app.route('/register')
+@app.route('/student/create')
 def register():
     return render_template("register_student.html")
 
@@ -41,7 +40,6 @@ def info(class_id):
 @app.route("/regulations")
 def view_regulations():
     return render_template('view_regulations.html')
-
 
 if __name__ == "__main__":
     with app.app_context():
