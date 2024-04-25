@@ -2,9 +2,6 @@ from flask import render_template, redirect, url_for
 from flask_login import current_user, login_required,logout_user
 from manage_student import app
 
-@login.user_loader
-def user_load(user_id):
-    return dao.load_user(user_id)
 
 @app.route('/login')
 def login():
