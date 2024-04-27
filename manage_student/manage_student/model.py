@@ -134,19 +134,84 @@ class Score(db.Model):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-        p1 = Profile(name="Trần An Tiến")
-        p2 = Profile(name="Nguyễn Sinh Hùng")
-        p3 = Profile(name="Ngô Trịnh Minh Tâm")
-        db.session.add_all([p1, p2, p3])
-        db.session.commit()
-        acc1 = User(id=p1.id, username="supertien", password="123", user_role=UserRole.ADMIN)
-        acc2 = User(id=p2.id, username="chosh", password="123", user_role=UserRole.STAFF)
-        acc3 = User(id=p3.id, username="mintam", password="123", user_role=UserRole.TEACHER)
-        db.session.add_all([acc1, acc2, acc3])
-        db.session.commit()
+        # p1 = Profile(name="Trần An Tiến")
+        # p2 = Profile(name="Nguyễn Sinh Hùng")
+        # p3 = Profile(name="Võ Quốc Huy")
+        # db.session.add(p3)
+        # db.session.commit()
+        # acc1 = User(id=p1.id, username="supertien", password="123", user_role=UserRole.ADMIN)
+        # acc2 = User(id=p2.id, username="chosh", password="123", user_role=UserRole.STAFF)
+        # acc3 = User(id=p3.id, username="mintam", password="123", user_role=UserRole.TEACHER)
+        # db.session.add_all([acc1, acc2, acc3])
+        # db.session.commit()
+        # acc3 = User(id=4, username="qh", password="123", user_role=UserRole.TEACHER)
+        # db.session.add(acc3)
+        # db.session.commit()
+        # staff = Staff(id=acc2.id)
+        # teacher = Teacher(id=4, title=Title.BACHELOR)
+        # db.session.add( teacher)
+        # db.session.commit()
 
-        staff = Staff(id=acc2.id)
-        teacher = Teacher(id=acc3.id, title=Title.BACHELOR)
-        db.session.add_all([staff, teacher])
-        db.session.commit()
+        # =====================================================
+
+        # grade1 = Class(grade = GRADE.K10,count = 1,amount = 40,teacher_id = 3)
+        # grade2 = Class(grade = GRADE.K12,count = 1,amount = 40,teacher_id = 3)
+        # grade3 = Class(grade = GRADE.K11,count = 1,amount = 40,teacher_id = 3)
+        # grade4 = Class(grade = GRADE.K12,count = 1,amount = 40,teacher_id = 3)
+        # db.session.add_all([grade1,grade2,grade3,grade4])
+        # db.session.commit()
+
+        # semster = Semester(semester_name = "Ki 1")
+        # db.session.add(semster)
+        # db.session.commit()
+
+        # subjects = [
+        #     Subject(name='Toán', grade=GRADE.K10, number_of_15p=2, number_of_45p=1),
+        #     Subject(name='Văn', grade=GRADE.K10, number_of_15p=2, number_of_45p=1),
+        #     Subject(name='Anh', grade=GRADE.K10, number_of_15p=1, number_of_45p=1),
+        #     Subject(name='Lý', grade=GRADE.K11, number_of_15p=2, number_of_45p=1),
+        #     Subject(name='Hóa', grade=GRADE.K11, number_of_15p=2, number_of_45p=1),
+        #     Subject(name='Sinh', grade=GRADE.K11, number_of_15p=2, number_of_45p=1),
+        # ]
+        # for subject in subjects:
+        #     db.session.add(subject)
+        # db.session.commit()
+        # teaching_plan = Teaching_plan(
+        #     score_deadline=datetime.now(),
+        #     teacher_id=4,
+        #     class_id=1,
+        #     semester_id=1,
+        #     subject_id=3
+        # )
+        # db.session.add(teaching_plan)
+        # db.session.commit()
+
+        # profiles_data = [
+        #     {"id": 5, "name": "Trần Lưu Quốc Tuấn", "email": "john@example.com", "dob": "2003-01-15", "gender": True,
+        #      "address": "123 Main St", "phone": "1234567890"},
+        #     {"id": 6, "name": "Nguyễn Thế Anh", "email": "jane@example.com", "dob": "2003-05-20", "gender": False,
+        #      "address": "456 Elm St", "phone": "9876543210"},
+        #     # Thêm thông tin hồ sơ cho sinh viên khác nếu cần
+        # ]
+        # for profile_info in profiles_data:
+        #     profile = Profile(**profile_info)
+        #     db.session.add(profile)
+        #
+        # # db.session.commit()
+        # students_data = [
+        #     {"id": 5,  "grade": GRADE.K10},
+        #     {"id": 6,  "grade": GRADE.K10},
+        #
+        #     # Thêm sinh viên khác nếu cần
+        # ]
+        # #
+        # for student_info in students_data:
+        #     student = Student(**student_info)
+        #     db.session.add(student)
+        #
+        # db.session.commit()
+        # #
+        # student_class = Students_Classes(class_id = 1,student_id = 6)
+        # db.session.add(student_class)
+        # db.session.commit()
 
