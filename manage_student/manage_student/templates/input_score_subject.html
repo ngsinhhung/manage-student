@@ -8,12 +8,12 @@ Quản lý học sinh
     <p>Nhập điểm từ hệ thống</p>
     <div class="ms-auto d-flex justify-content-between" style="gap: 10px;">
         <div class="d-flex align-items-center" style="gap:20px;color:#333;">
-            <p>Lớp: 12B1</p>
-            <p>Môn học: Sử</p>
-            <p>Kì học: 2</p>
+            <p>Lớp: {{ class_obj.grade.name[1:] }}A{{class_obj.count}}</p>
+            <p>Môn học: {{ subject.name }}</p>
+            <p>Kì học: {{ semester.semester_name }}</p>
         </div>
         <div class="action">
-            <button class="btn btn-success">Cập nhật điểm</button>
+            <button class="btn btn-success" id="updateButton" onclick="updateScore({{subject.id}})">Cập nhật điểm</button>
             <button class="btn btn-danger">Xóa nội dung</button>
             <button class="btn btn-primary">Xuất phiếu</button>
         </div>
@@ -31,37 +31,33 @@ Quản lý học sinh
     </tr>
     </thead>
     <tbody>
+    {% for student in profile_students %}
     <tr>
-        <td>1</td>
-        <td>Ngô Trịnh Minh Tâm</td>
-        <td>12/02/2002</td>
+        <td>{{ loop.index }}</td>
+        <td>{{ student.name }}</td>
+        <td>{% if student.dob %}{{ student.dob.strftime("%d/%m/%Y") }}{% endif %}</td>
         <td>
-            <input type="text" class="score" name="score_15p_1" data-validate="score_15p"   required min="0" max="10"
+            {% for i in range(subject.number_of_15p) %}
+            <input type="number" class="score" name="score_15p_{{ i+1 }}"  value="" data-validate="score_15p" required min="0"
+                   max="10" data-student-id="{{ student.id }}"
                    style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
-            <input type="text" class="score" name="score_15p_2" data-validate="score_15p" required min="0" max="10"
-                   style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
-            <input type="text" class="score" name="score_15p_3" data-validate="score_15p" required min="0" max="10"
-                   style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
-            <input type="text" class="score" name="score_15p_4" data-validate="score_15p" required min="0" max="10"
-                   style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
-            <input type="text" class="score" name="score_15p_5" data-validate="score_15p" required min="0" max="10"
-                   style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
+            {% endfor %}
             <span class="error-message" style="color: red; display: none;">Điểm không được âm</span>
         </td>
         <td>
-            <input type="text" class="score" name="score_1_tiet_1" data-validate="score_1_tiet" required min="0" max="10"
+            {% for i in range(subject.number_of_45p) %}
+            <input type="number" class="score" name="score_45p_{{ i+1 }}" data-validate="score_45p" required min="0"
+                   max="10" data-student-id="{{ student.id }}"
                    style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
-            <input type="text" class="score" name="score_1_tiet_2" data-validate="score_1_tiet" required min="0" max="10"
-                   style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
-            <input type="text" class="score" name="score_1_tiet_3" data-validate="score_1_tiet" required min="0" max="10"
-                   style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
+            {% endfor %}
             <span class="error-message" style="color: red; display: none;">Điểm không được âm</span>
         </td>
 
-        <td><input type="text" name=""
+        <td><input type="text" name="score_thi" data-student-id="{{ student.id }}"
                    style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
         </td>
     </tr>
+    {%endfor%}
     </tbody>
 </table>
 <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel"
@@ -83,6 +79,5 @@ Quản lý học sinh
         </div>
     </div>
 </div>
-
+<script src="{{ url_for('static', filename='js/score.js') }}"></script>
 {% endblock %}
-
