@@ -1,9 +1,10 @@
+
 from flask import render_template
 
 from manage_student import app
+from manage_student.dao import *
 from manage_student.form import *
-
-app.config['SECRET_KEY'] = 'secretkey'
+from manage_student.controller import *
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -56,14 +57,19 @@ def view_regulations():
 
 @app.route("/grade")
 def InputGrade():
-    return render_template("input_score.html")
-@app.route("/grade/input")
-def InputGradeSubject():
-    return render_template("input_score_subject.html")
+    return render_template("input_score.html",teacher_class = get_class_of_teacher(3),check_deadline_score = check_deadline_score)
 
-@app.route("/grade")
+@app.route("/grade/input/<subject_id>")
+def InputGradeSubject(subject_id):
+    subject_params = int(subject_id.split('=')[-1])
+    class_obj,semester,subject,profile_students = get_teaching_plan_details(subject_params)
+    print(profile_students)
+    return render_template("input_score_subject.html",class_obj=class_obj,semester=semester,subject=subject,profile_students=profile_students)
+
+@app.route("/view_score")
 def view_grade():
     return render_template("view_score.html")
+
 
 
 if __name__ == "__main__":
