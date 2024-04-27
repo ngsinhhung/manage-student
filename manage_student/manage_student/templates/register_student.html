@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block content %}
-    <form id="studentForm" class="d-flex flex-column justify-content-center gap-2">
+    <form method="post" id="studentForm" class="d-flex flex-column justify-content-center gap-2" action="/student/register">
         <h4 class="text-center">Tiếp Nhận Học Sinh</h4>
         {{ form_student.csrf_token }}
         <div class="row mb-3">
