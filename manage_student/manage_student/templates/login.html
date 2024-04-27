@@ -14,6 +14,10 @@
                     <label class="form-label">Mật khẩu:</label>
                     {{ form.password(class="form-control") }}
                 </div>
+                <p class="text-warning" id="warning-caps-lock" hidden="hidden"><i class="fa-solid fa-circle-exclamation"></i> Bạn đang bật Caps lock</p>
+                {% if mse %}
+                    <p class="text-danger">{{ mse }}</p>
+                {% endif %}
                 <button type="submit" class="btn btn-primary w-100">{{ form.SubmitFieldLogin.label }}</button>
             </form>
         </div>
