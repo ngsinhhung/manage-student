@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from flask_login import UserMixin
 from sqlalchemy import Column, String, Float, Integer, ForeignKey, Boolean, DateTime, Enum, Text
 from sqlalchemy.orm import relationship
@@ -53,7 +52,7 @@ class User(db.Model, UserMixin):
     notifications = relationship("Notification", backref="user", lazy=True)
 
     def __str__(self):
-        return self.name
+        return self.username
 
 
 class Staff(db.Model):
@@ -96,7 +95,7 @@ class Student(db.Model):
 
 
 class Students_Classes(db.Model):
-    id = Column(Integer, primary_key=True, nullable=False,autoincrement=True)
+    id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     class_id = Column(Integer, ForeignKey(Class.id), nullable=False)
     student_id = Column(Integer, ForeignKey(Student.id), nullable=False)
 
@@ -133,7 +132,7 @@ class Score(db.Model):
 
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()
+        # db.create_all()
         p1 = Profile(name="Trần An Tiến")
         p2 = Profile(name="Nguyễn Sinh Hùng")
         p3 = Profile(name="Ngô Trịnh Minh Tâm")
@@ -145,8 +144,20 @@ if __name__ == '__main__':
         db.session.add_all([acc1, acc2, acc3])
         db.session.commit()
 
+
         staff = Staff(id=acc2.id)
         teacher = Teacher(id=acc3.id, title=Title.BACHELOR)
         db.session.add_all([staff, teacher])
         db.session.commit()
 
+        cl101 = Class(grade=GRADE.K10, count=1, amount=10, teacher_id=teacher.id)
+        cl102 = Class(grade=GRADE.K10, count=2, amount=11, teacher_id=teacher.id)
+        cl103 = Class(grade=GRADE.K10, count=3, amount=12, teacher_id=teacher.id)
+        cl111 = Class(grade=GRADE.K11, count=1, amount=7, teacher_id=teacher.id)
+        cl112 = Class(grade=GRADE.K11, count=2, amount=8, teacher_id=teacher.id)
+        cl113 = Class(grade=GRADE.K11, count=3, amount=9, teacher_id=teacher.id)
+        cl121 = Class(grade=GRADE.K12, count=1, amount=1, teacher_id=teacher.id)
+        cl122 = Class(grade=GRADE.K12, count=2, amount=2, teacher_id=teacher.id)
+        cl123 = Class(grade=GRADE.K12, count=3, amount=3, teacher_id=teacher.id)
+        db.session.add_all([cl101, cl102, cl103, cl111, cl112, cl113, cl121, cl122, cl123])
+        db.session.commit()

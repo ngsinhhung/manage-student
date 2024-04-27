@@ -9,7 +9,7 @@ def login():
     form = LoginForm()
     if form.SubmitFieldLogin():
         username = form.username.data
-        password  = form.password.data
+        password = form.password.data
         print(username)
         print(password)
     return render_template('login.html', form=form)
@@ -24,7 +24,7 @@ def teacher_assignment():
     return render_template("teacher_assignment.html")
 
 
-@app.route('/class/create',methods=['GET', 'POST'])
+@app.route('/class/create', methods=['GET', 'POST'])
 def create_class():
     form_create_class = CreateClass()
     if form_create_class.validate_on_submit():
@@ -37,12 +37,12 @@ def class_edit():
     return render_template("list_class.html")
 
 
-@app.route('/student/create')
+@app.route('/student/register')
 def register():
     form_student = AdmisionStudent()
     if form_student.validate_on_submit():
         pass
-    return render_template("register_student.html",form_student=form_student)
+    return render_template("register_student.html", form_student=form_student)
 
 
 @app.route('/<class_id>/info')
