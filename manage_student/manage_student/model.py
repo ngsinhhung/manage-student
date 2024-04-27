@@ -1,8 +1,10 @@
+import hashlib
 from datetime import datetime
+
 from flask_login import UserMixin
 from sqlalchemy import Column, String, Float, Integer, ForeignKey, Boolean, DateTime, Enum, Text
 from sqlalchemy.orm import relationship
-from manage_student import db,app
+from manage_student import db, app
 import enum
 
 
@@ -29,11 +31,6 @@ class TYPEEXAM(enum.Enum):
     EXAM_45P = 2
 
 
-class Semester(db.Model):
-    id = Column(Integer, primary_key=True,autoincrement=True)
-    semester_name = Column(String(50))
-
-
 class Profile(db.Model):
     id = Column(Integer, autoincrement=True, primary_key=True)
     name = Column(String(50))
@@ -51,12 +48,12 @@ class User(db.Model, UserMixin):
     user_role = Column(Enum(UserRole))
     notifications = relationship("Notification", backref="user", lazy=True)
 
-    def __str__(self):
-        return self.username
+    profile = relationship("Profile", backref="user", lazy=True)
 
 
 class Staff(db.Model):
     id = Column(Integer, ForeignKey(User.id), primary_key=True, unique=True, nullable=False)
+    user = relationship("User", backref="staff", lazy=True)
 
 
 class Teacher(db.Model):
@@ -64,6 +61,7 @@ class Teacher(db.Model):
     title = Column(Enum(Title))
 
     class_teach = relationship("Class", backref="class_teach", lazy=True)
+    user = relationship("User", backref="teacher", lazy=True)
 
 
 class Notification(db.Model):
@@ -71,14 +69,6 @@ class Notification(db.Model):
     noi_dung = Column(Text)
     created_at = Column(DateTime, default=datetime.now())
     user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
-
-
-class Class(db.Model):
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    grade = Column(Enum(GRADE))
-    count = Column(Integer)
-    amount = Column(Integer, default=0)
-    teacher_id = Column(Integer, ForeignKey(Teacher.id))
 
 
 class Subject(db.Model):
@@ -89,9 +79,23 @@ class Subject(db.Model):
     number_of_45p = Column(Integer)
 
 
+class Class(db.Model):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    grade = Column(Enum(GRADE))
+    count = Column(Integer)
+    amount = Column(Integer, default=0)
+    year = Column(Integer,default=datetime.now().year)
+    teacher_id = Column(Integer, ForeignKey(Teacher.id))
+
+    students = relationship("Students_Classes", backref="class", lazy=True)
+
+
 class Student(db.Model):
     id = Column(Integer, ForeignKey(Profile.id), primary_key=True, unique=True)
     grade = Column(Enum(GRADE), default=GRADE.K10)
+    classes = relationship("Students_Classes", backref="student", lazy=True)
+
+    profile = relationship("Profile", backref="student", lazy=True)
 
 
 class Students_Classes(db.Model):
@@ -101,9 +105,14 @@ class Students_Classes(db.Model):
 
 
 class Teachers_Subject(db.Model):
-    id = Column(Integer, primary_key=True, nullable=False,autoincrement=True)
+    id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     teacher_id = Column(Integer, ForeignKey(Teacher.id), nullable=False)
     subject_id = Column(Integer, ForeignKey(Subject.id), nullable=False)
+
+
+class Semester(db.Model):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    semester_name = Column(String(50))
 
 
 class Teaching_plan(db.Model):
@@ -132,22 +141,33 @@ class Score(db.Model):
 
 if __name__ == '__main__':
     with app.app_context():
-        # db.create_all()
+        db.create_all()
         p1 = Profile(name="Trần An Tiến")
         p2 = Profile(name="Nguyễn Sinh Hùng")
         p3 = Profile(name="Ngô Trịnh Minh Tâm")
         db.session.add_all([p1, p2, p3])
         db.session.commit()
-        acc1 = User(id=p1.id, username="supertien", password="123", user_role=UserRole.ADMIN)
-        acc2 = User(id=p2.id, username="chosh", password="123", user_role=UserRole.STAFF)
-        acc3 = User(id=p3.id, username="mintam", password="123", user_role=UserRole.TEACHER)
+        acc1 = User(id=p1.id, username="supertien", password= hashlib.md5("123".encode("utf-8")).hexdigest(), user_role=UserRole.ADMIN)
+        acc2 = User(id=p2.id, username="chosh", password= hashlib.md5("123".encode("utf-8")).hexdigest(), user_role=UserRole.STAFF)
+        acc3 = User(id=p3.id, username="mintam", password= hashlib.md5("123".encode("utf-8")).hexdigest(), user_role=UserRole.TEACHER)
         db.session.add_all([acc1, acc2, acc3])
         db.session.commit()
-
 
         staff = Staff(id=acc2.id)
         teacher = Teacher(id=acc3.id, title=Title.BACHELOR)
         db.session.add_all([staff, teacher])
+        db.session.commit()
+
+        for i in range(15):
+            profile = Profile(name="student " + str(i), email=str(i) + "@gmail.com", dob=datetime.now(),phone=str(1000000000+i),gender=0,address="chossh")
+            db.session.add(profile)
+            db.session.commit()
+            stu = Student(id=profile.id)
+            db.session.add(stu)
+            db.session.commit()
+
+        class1 = Class(grade=GRADE.K10, count=100, amount=0, year=datetime.now().year)
+        db.session.add(class1)
         db.session.commit()
 
         cl101 = Class(grade=GRADE.K10, count=1, amount=10, teacher_id=teacher.id)

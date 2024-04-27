@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8"/>
     <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+          integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+          crossorigin="anonymous"/>
     <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
             rel="stylesheet"
@@ -18,6 +21,8 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     />
+    <link rel="stylesheet"
+          src="{{ url_for('static', filename='style.css') }}"/>
     <style>
         .form-control.is-invalid {
             border-color: #dc3545;
@@ -59,8 +64,9 @@
 {% block header %}
     {% include 'layout/header.html' %}
 {% endblock %}
-<!-- {#nav-content#} -->
+
 {% block nav_content %}
+    <div id="toast"></div>
     <div class="container-fluid">
         <div class="row flex-nowrap" style="color: #000;">
             <div class="col-auto col-md-3 col-xl-2 bg-dark">
