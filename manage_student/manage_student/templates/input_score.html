@@ -16,9 +16,9 @@ Quản lý học sinh
         {% for teacher in teacher_class %}
         <div class="list-group-item list-group-item-action">
             <div class="d-flex align-items-center justify-content-between">
-                <p class="mb-1">Lớp: {{ teacher[1].name[1:] }}A{{teacher[2]}} - Môn: {{ teacher[0].name }}</p>
+                <p class="mb-1">Lớp: {{ teacher[2].name[1:] }}A{{teacher[3]}} - Môn: {{ teacher[0].name }}</p>
                 {% if check_deadline_score(teacher[0].id) %}
-                <a href="/grade/input/subject_id={{teacher[0].id}}" class="btn btn-info"
+                <a href="/grade/input/class_id={{teacher[1]}}/score" class="btn btn-info"
                    style="text-decoration:none;color:white">Nhập điểm</a>
                 {% else %}
                 <button class="btn btn-secondary disabled" disabled>Quá thời hạn nhập điểm</button>
@@ -55,7 +55,5 @@ Quản lý học sinh
          searchInput.classList.add('is-invalid'); // Add the is-invalid class
      }
  });
-
 </script>
-
 {% endblock %}

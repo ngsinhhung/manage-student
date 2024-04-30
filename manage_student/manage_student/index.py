@@ -1,18 +1,13 @@
-from flask import render_template, redirect, url_for,request
+from flask import render_template, redirect, url_for
 from flask_login import current_user, login_required, logout_user, login_user
 from manage_student import app, login
+from manage_student.dao import auth
 from manage_student.dao.auth import auth_user, get_info_by_id
 from manage_student.dao.student import create_student
-
-from flask import render_template
-
-from manage_student import app
-from manage_student.dao import *
+from manage_student.dao.teacher import get_class_of_teacher, check_deadline_score, get_teaching_plan_details
 from manage_student.form import *
-from dao import auth
-from manage_student.model import UserRole
-
-
+from manage_student.controller.teach import *
+from manage_student.controller.student import *
 
 @login.user_loader
 def user_load(user_id):
@@ -28,7 +23,6 @@ def index():
     return redirect(url_for('login'))
 
 
-from manage_student.controller import *
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     mse = ""
@@ -96,15 +90,17 @@ def view_regulations():
     return render_template('view_regulations.html')
 
 @app.route("/grade")
+@login_required
 def InputGrade():
-    return render_template("input_score.html",teacher_class = get_class_of_teacher(3),check_deadline_score = check_deadline_score)
+    profile = get_info_by_id(current_user.id)
+    return render_template("input_score.html",teacher_class = get_class_of_teacher(profile.id),check_deadline_score = check_deadline_score)
 
-@app.route("/grade/input/<subject_id>")
-def InputGradeSubject(subject_id):
-    subject_params = int(subject_id.split('=')[-1])
-    class_obj,semester,subject,profile_students = get_teaching_plan_details(subject_params)
-    print(profile_students)
-    return render_template("input_score_subject.html",class_obj=class_obj,semester=semester,subject=subject,profile_students=profile_students)
+@app.route("/grade/input/<class_id>/score")
+@login_required
+def InputGradeSubject(class_id):
+    class_params = int(class_id.split('=')[-1])
+    class_obj,semester,subject,profile_students,teacher_planing = get_teaching_plan_details(class_params)
+    return render_template("input_score_subject.html",class_obj=class_obj,semester=semester,subject=subject,profile_students=profile_students,teacher_planing=teacher_planing)
 
 @app.route("/view_score")
 def view_grade():

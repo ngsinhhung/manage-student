@@ -1,8 +1,5 @@
-from sqlalchemy import select, create_engine
-import datetime
-from manage_student import db
-from manage_student.model import *
 
+from manage_student.model import *
 
 def create_student(form):
     profile = Profile(name=form.full_name.data,
@@ -23,6 +20,8 @@ def student_no_class():
     student_had_class = db.session.query(Student.id).join(Students_Classes).join(Class).filter(Class.year == 2024).all()
     non_class_students = db.session.query(Student).filter(Student.id.not_in(student_had_class)).all()
     return non_class_students
+
+
 
 
 if __name__ == '__main__':
