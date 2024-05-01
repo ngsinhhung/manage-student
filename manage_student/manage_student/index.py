@@ -7,7 +7,6 @@ from manage_student.dao.student import create_student
 from manage_student.dao.teacher import get_class_of_teacher, check_deadline_score, get_teaching_plan_details
 from manage_student.form import *
 from manage_student.controller.teach import *
-from manage_student.controller.student import *
 
 @login.user_loader
 def user_load(user_id):

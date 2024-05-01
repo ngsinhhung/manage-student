@@ -14,10 +14,8 @@ Quản lý học sinh
             <p>Kì học: {{ semester.semester_name }}</p>
         </div>
         <div class="action">
-            <button class="btn btn-success" id="updateButton" onclick="updateScores({{ teacher_planing.id }})">Cập nhật
-                điểm
+            <button class="btn btn-success" id="updateButton" onclick="updateScores({{ teacher_planing.id }})">Lưu điểm
             </button>
-            <button class="btn btn-danger">Xóa nội dung</button>
             <button class="btn btn-primary">Xuất phiếu</button>
         </div>
     </div>
@@ -31,12 +29,13 @@ Quản lý học sinh
         <th>Điểm 15p</th>
         <th>Điểm 1 Tiết</th>
         <th>Điểm Thi</th>
+        <th class="action_deleted"></th>
 
     </tr>
     </thead>
     <tbody>
     {% for student in profile_students %}
-        <tr>
+        <tr id="student_{{ student.id }}">
             <td>{{ loop.index }}</td>
             <td>{{ student.name }}</td>
             <td>{% if student.dob %}{{ student.dob.strftime("%d/%m/%Y") }}{% endif %}</td>
@@ -61,7 +60,11 @@ Quản lý học sinh
                 <input type="text" name="score_thi_student_{{ student.id }}"
                        style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
             </td>
+            <td>
+                <button class="btn btn-danger" style="display: none"></button>
+            </td>
         </tr>
+
     {% endfor %}
 
 
