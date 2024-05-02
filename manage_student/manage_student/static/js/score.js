@@ -4,14 +4,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function checkExistingScores() {
     var studentRows = document.querySelectorAll("table tbody tr");
-    console.log("studentRows", studentRows)
+    console.log("studentRows", studentRows);
     studentRows.forEach(function (row) {
         var studentId = row.id.split("_")[1];
-        console.log(studentId)
+        console.log(studentId);
         fetch(`/api/exam/get_score_student/${studentId}/scores`)
-            .then(response => response.json())
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else if (response.status === 404) {
+                    return {}; // Trả về một đối tượng trống nếu không tìm thấy sinh viên
+                } else {
+                    throw new Error("Error fetching existing scores: " + response.statusText);
+                }
+            })
             .then(data => {
-                if (data && Object.keys(data).length > 0) {
+                if (Object.keys(data).length > 0) {
                     disableInputsAndShowEditButton(row, studentId, data);
                 }
             })
@@ -19,11 +27,13 @@ function checkExistingScores() {
     });
 }
 
+
 function disableInputsAndShowEditButton(row, studentId, data) {
     var score15pInputs = row.querySelectorAll(`input[name^='score_15p_student_${studentId}']`);
     var score45pInputs = row.querySelectorAll(`input[name^='score_45p_student_${studentId}']`);
     var scoresFinalPoints = document.getElementById(`score_thi_student_${studentId}`);
     const successButton = document.getElementById("updateButton")
+    const btnEdit = document.getElementById(`btn-action-edit_${studentId}`)
     if (score15pInputs.length > 0 && score45pInputs.length > 0) {
         var isValidData = checkDataValidity(data);
         console.log(data)
@@ -43,6 +53,9 @@ function disableInputsAndShowEditButton(row, studentId, data) {
 
             successButton.innerHTML = "Điểm đã được cập nhật"
             successButton.disabled = true
+
+            btnEdit.innerHTML = "Chỉnh sửa"
+            btnEdit.style.display = "block"
         }
     }
 }
@@ -118,23 +131,15 @@ function updateScores(teachingPlanId) {
 }
 
 function updateUI(data) {
-    var tbody = document.querySelector("table tbody");
     const successButton = document.getElementById("updateButton")
+    const btnEdit = document.getElementById(`btn-action-edit_${studentId}`)
     Object.keys(data).forEach(function (studentId) {
         var studentData = data[studentId];
         console.log(studentData)
         var row = document.getElementById(`student_${studentId}`);
         if (row) {
-            var th = document.createElement("th");
-            var td = document.createElement("td");
-
-            var editButton = document.createElement("button");
-            editButton.className = `btn btn-primary ${studentId}`;
-            editButton.textContent = "Sửa điểm";
-            td.appendChild(editButton);
-
-            row.appendChild(th);
-            row.appendChild(td);
+            btnEdit.innerHTML = "Chỉnh sửa"
+            btnEdit.style.display = "block"
             var inputs_15p = row.querySelectorAll(".score_15p");
             var inputs_45p = row.querySelectorAll(".score_45p");
             var input_thi = row.querySelector(`[name='score_thi_student_${studentId}']`);
@@ -156,7 +161,11 @@ function updateUI(data) {
                 input_thi.disabled = true
 
                 successButton.disabled = true
-                successButton.innerHTML = "Cập nhật điểm thành công"
+                successButton.innerHTML = "Điểm đã lưu"
+
+
+                btnEdit.innerHTML = "Chỉnh sửa"
+                btnEdit.style.display = "block"
             } else {
                 console.log("Not FOUND")
             }
@@ -167,6 +176,9 @@ function updateUI(data) {
     });
 }
 
+function editScore(studentId) {
+
+}
 
 
 

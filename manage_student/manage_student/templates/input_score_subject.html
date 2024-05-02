@@ -61,13 +61,11 @@ Quản lý học sinh
                        style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
             </td>
             <td>
-                <button class="btn btn-danger" style="display: none"></button>
+                <button class="btn btn-danger" id="btn-action-edit_{{ student.id }}" onclick=""
+                        style="display: none"></button>
             </td>
         </tr>
-
     {% endfor %}
-
-
     </tbody>
 </table>
 <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel"

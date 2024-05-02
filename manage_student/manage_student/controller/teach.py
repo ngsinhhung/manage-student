@@ -68,9 +68,12 @@ def get_student_scores(student_id):
             scores_data = extract_scores(exam)
             return jsonify(scores_data), 200
         else:
-            return jsonify({}), 404
+            return jsonify({"message": "Exam does not exist"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-@app.route('/api/exam/<int:subject_id>', methods=['PUT'])
-def edit_exam(subject_id):
-    pass
+@app.route('/api/exam/<int:student_id>/edit_score', methods=['PUT'])
+def edit_exam(student_id):
+    try:
+        pass
+    except:
+        pass
