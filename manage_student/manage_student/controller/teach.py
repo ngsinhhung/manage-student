@@ -1,7 +1,10 @@
 
 from flask import request, jsonify
+from sqlalchemy import and_
 
 from manage_student.model import *
+
+
 def extract_scores(exam):
     return {
         "score_15p": [score.points for score in exam.scores if score.type == TYPEEXAM.EXAM_15P],
@@ -71,9 +74,30 @@ def get_student_scores(student_id):
             return jsonify({"message": "Exam does not exist"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
 @app.route('/api/exam/<int:student_id>/edit_score', methods=['PUT'])
 def edit_exam(student_id):
     try:
-        pass
-    except:
-        pass
+        data = request.json
+        if not isinstance(data, dict):
+            raise ValueError("Invalid JSON data")
+        teaching_plan = Teaching_plan.query.filter_by(student_id=student_id).first()
+        if teaching_plan is None:
+            return jsonify({"message": "Not found teaching plan for the student"}), 500
+        get_exam_15min = Exam.query.filter(and_(Exam.student_id == student_id, Exam.teach_plan_id == teaching_plan.id,
+                                                Score.type == TYPEEXAM.EXAM_15P)).scalar()
+        exam_45p_id = Exam.query.filter(and_(Exam.student_id == student_id, Exam.teach_plan_id == teaching_plan.id,
+                                             Score.type == TYPEEXAM.EXAM_45P)).scalar()
+        if exam_45p_id is None:
+            db.session.query(Score).filter_by(Exam_id=get_exam_15min).update({"points": data.get("score_15p")})
+        if exam_45p_id is None:
+            db.session.query(Score).filter_by(Exam_id=exam_45p_id).update({"points": data.get("score_45p")})
+        db.session.query(Exam).filter(
+                and_(Exam.student_id == student_id, Exam.teach_plan_id == teaching_plan.id)).update(
+                {"final_points": data.get("score_final")})
+        db.session.commit()
+        return jsonify({'message': 'Exam successfully updated'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500

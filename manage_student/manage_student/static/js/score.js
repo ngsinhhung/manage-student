@@ -1,7 +1,43 @@
+function setupInputValidation() {
+    // Lắng nghe sự kiện change hoặc input trên tất cả các input score
+    document.querySelectorAll('.score_15p, .score_45p').forEach(function (input) {
+        input.addEventListener('change', function () {
+            validateInput(input);
+        });
+
+        input.addEventListener('input', function () {
+            validateInput(input);
+        });
+    });
+}
+
+function validateInput(input) {
+    var value = parseFloat(input.value);
+    var errorMessage = document.getElementById("message-error")
+    var parentAlter = document.getElementById("alterMessage")
+    console.log(parentAlter)
+    if (isNaN(value) || value < 0 || value > 10) {
+        errorMessage.innerHTML = "Điểm phải là số từ 0 đến 10";
+        parentAlter.style.display = 'flex';
+        return false;
+    } else if (value < 0) {
+        errorMessage.innerHTML = "Điểm không được âm";
+        parentAlter.style.display = 'flex';
+        return false;
+    } else if (value > 10) {
+        errorMessage.innerHTML = "Điểm không được lớn hơn 10";
+        parentAlter.style.display = 'flex';
+        return false;
+    } else {
+        errorMessage.textContent = "";
+        parentAlter.style.display = 'none';
+        return true;
+    }
+}
 document.addEventListener("DOMContentLoaded", function () {
+    setupInputValidation();
     checkExistingScores();
 });
-
 function checkExistingScores() {
     var studentRows = document.querySelectorAll("table tbody tr");
     console.log("studentRows", studentRows);
@@ -83,8 +119,8 @@ function fail(message) {
 }
 
 function updateScores(teachingPlanId) {
+    setupInputValidation();
     var data = {};
-
     $("table tbody tr").each(function () {
         var studentId = $(this).find("input[name^='score_15p']").attr('name').split('_')[3];
         var scores_15p = [];
@@ -135,6 +171,7 @@ function updateUI(data) {
     const btnEdit = document.getElementById(`btn-action-edit_${studentId}`)
     Object.keys(data).forEach(function (studentId) {
         var studentData = data[studentId];
+        const btnEdit = document.getElementById(`btn-action-edit_${studentId}`)
         console.log(studentData)
         var row = document.getElementById(`student_${studentId}`);
         if (row) {
