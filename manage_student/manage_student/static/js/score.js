@@ -1,3 +1,57 @@
+document.addEventListener("DOMContentLoaded", function () {
+    checkExistingScores();
+});
+
+function checkExistingScores() {
+    var studentRows = document.querySelectorAll("table tbody tr");
+    console.log("studentRows", studentRows)
+    studentRows.forEach(function (row) {
+        var studentId = row.id.split("_")[1];
+        console.log(studentId)
+        fetch(`/api/exam/get_score_student/${studentId}/scores`)
+            .then(response => response.json())
+            .then(data => {
+                if (data && Object.keys(data).length > 0) {
+                    disableInputsAndShowEditButton(row, studentId, data);
+                }
+            })
+            .catch(error => console.error("Error fetching existing scores:", error));
+    });
+}
+
+function disableInputsAndShowEditButton(row, studentId, data) {
+    var score15pInputs = row.querySelectorAll(`input[name^='score_15p_student_${studentId}']`);
+    var score45pInputs = row.querySelectorAll(`input[name^='score_45p_student_${studentId}']`);
+    var scoresFinalPoints = document.getElementById(`score_thi_student_${studentId}`);
+    const successButton = document.getElementById("updateButton")
+    if (score15pInputs.length > 0 && score45pInputs.length > 0) {
+        var isValidData = checkDataValidity(data);
+        console.log(data)
+        if (isValidData) {
+            score15pInputs.forEach(function (input, index) {
+                input.value = data.score_15p[index];
+                input.disabled = true;
+
+            });
+
+            score45pInputs.forEach(function (input, index) {
+                input.value = data.score_45p[index];
+                input.disabled = true;
+            });
+            scoresFinalPoints.value = data.score_final
+            scoresFinalPoints.disabled = true
+
+            successButton.innerHTML = "Điểm đã được cập nhật"
+            successButton.disabled = true
+        }
+    }
+}
+
+function checkDataValidity(data) {
+    return data.hasOwnProperty("score_15p") && data.score_15p.length > 0 &&
+        data.hasOwnProperty("score_45p") && data.score_45p.length > 0 &&
+        data.hasOwnProperty("score_final") && data.score_final !== null;
+}
 function success(message) {
     toast({
         title: "Thành công",
@@ -6,7 +60,6 @@ function success(message) {
         duration: 5000,
     });
 }
-
 function fail(message) {
     toast({
         title: "Thất bại",
@@ -75,21 +128,16 @@ function updateUI(data) {
             var th = document.createElement("th");
             var td = document.createElement("td");
 
-            // Tạo nút "Sửa điểm" và thêm vào td
             var editButton = document.createElement("button");
             editButton.className = `btn btn-primary ${studentId}`;
             editButton.textContent = "Sửa điểm";
             td.appendChild(editButton);
 
-            // Thêm td vào hàng
             row.appendChild(th);
             row.appendChild(td);
             var inputs_15p = row.querySelectorAll(".score_15p");
             var inputs_45p = row.querySelectorAll(".score_45p");
             var input_thi = row.querySelector(`[name='score_thi_student_${studentId}']`);
-            console.log(studentData.score_15p)
-            console.log(studentData.score_45p)
-            console.log(studentData.score_final)
             if (studentData.score_15p && studentData.score_45p) {
                 studentData.score_15p.forEach(function (score, index) {
                     if (inputs_15p[index]) {

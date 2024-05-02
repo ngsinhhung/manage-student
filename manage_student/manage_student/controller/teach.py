@@ -1,8 +1,13 @@
 
-from manage_student.model import *
 from flask import request, jsonify
 
-
+from manage_student.model import *
+def extract_scores(exam):
+    return {
+        "score_15p": [score.points for score in exam.scores if score.type == TYPEEXAM.EXAM_15P],
+        "score_45p": [score.points for score in exam.scores if score.type == TYPEEXAM.EXAM_45P],
+        "score_final": exam.final_points
+    }
 @app.route('/api/exam/<int:teaching_plan_id>/scores', methods=['POST'])
 def enter_scores(teaching_plan_id):
     try:
@@ -49,17 +54,23 @@ def get_score_students():
         scores_data = {}
         exams = Exam.query.all()
         for exam in exams:
-            scores_data[exam.student_id] = {
-                "score_15p": [score.points for score in exam.scores if score.type == TYPEEXAM.EXAM_15P],
-                "score_45p": [score.points for score in exam.scores if score.type == TYPEEXAM.EXAM_45P],
-                "score_final": exam.final_points
-            }
-
+            scores_data[exam.student_id] = extract_scores(exam)
         return jsonify(scores_data), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 
+@app.route('/api/exam/get_score_student/<int:student_id>/scores', methods=['GET'])
+def get_student_scores(student_id):
+    try:
+        exam = Exam.query.filter_by(student_id=student_id).first()
+        if exam:
+            scores_data = extract_scores(exam)
+            return jsonify(scores_data), 200
+        else:
+            return jsonify({}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 @app.route('/api/exam/<int:subject_id>', methods=['PUT'])
 def edit_exam(subject_id):
     pass

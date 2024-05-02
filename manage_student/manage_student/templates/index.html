@@ -1,8 +1,48 @@
 {% extends 'layout/base.html' %}
 {% block title %}
-	Quản lý học sinh
+    Quản lý học sinh
 {% endblock %}
 {% block content %}
+    <div class="container px-4 py-5 my-5 text-center">
+        <h1 class="display-5 fw-bold">Chào mừng {{ profile.name }}</h1>
+        <div class="col-lg-6 mx-auto">
+            <p class="lead mb-4">Các thông báo sẽ được cập nhật tại đây.</p>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <button type="button" class="btn btn-primary btn-lg px-4 gap-3">Cập nhật thông báo</button>
+            </div>
+            <h2 class="display-6 fw-bold text-center mt-5 mb-5">Thông báo hôm nay</h2>
+        </div>
+    </div>
+    <div class="container px-4 py-2 my-2">
 
-	<h1>Chào {{ profile.name }}</h1>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Thông báo: Thay đổi độ tuổi tiếp nhận học sinh</h5>
+                        <div class="content">
+                            <p>Từ ngày mai, độ tuổi tiếp nhận học sinh sẽ thay đổi. Xin vui lòng cập nhật thông tin liên
+                                hệ để phản ánh thay đổi này.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Thông báo : Thay đổi sỉ số lớp</h5>
+                        <p class="card-text"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Thông báo 3</h5>
+                        <p class="card-text">Nội dung thông báo 3.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
