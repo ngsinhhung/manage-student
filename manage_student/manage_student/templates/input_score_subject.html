@@ -48,24 +48,28 @@ Quản lý học sinh
                 {% for i in range(subject.number_of_15p) %}
                     <input type="number" class="score_15p" name="score_15p_student_{{ student.id }}_{{ i+1 }}" value=""
                            required min="0" max="10"
-                           style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
+                           style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;"/>
                 {% endfor %}
             </td>
             <td>
                 {% for i in range(subject.number_of_45p) %}
                     <input type="number" class="score_45p" name="score_45p_student_{{ student.id }}_{{ i+1 }}" required
                            min="0" max="10"
-                           style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
+                           style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;"/>
                 {% endfor %}
             </td>
 
             <td>
                 <input type="text" id="score_thi_student_{{ student.id }}" name="score_thi_student_{{ student.id }}"
-                       style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
+                       style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;"/>
             </td>
             <td>
-                <button class="btn btn-danger" id="btn-action-edit_{{ student.id }}" onclick=""
+                <button class="btn btn-danger" id="btn-action-edit_{{ student.id }}"
+                        onclick="editScore({{ student.id }})"
                         style="display: none"></button>
+                <button class="btn btn-success" id="btn-action-approved_{{ student.id }}"
+                        onclick="approvedEditStudent({{ student.id }})"
+                        style="display: none">Xác nhận chỉnh sửa</button>
             </td>
         </tr>
     {% endfor %}

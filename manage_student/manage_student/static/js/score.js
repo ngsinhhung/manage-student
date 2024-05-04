@@ -1,5 +1,4 @@
 function setupInputValidation() {
-    // Lắng nghe sự kiện change hoặc input trên tất cả các input score
     document.querySelectorAll('.score_15p, .score_45p').forEach(function (input) {
         input.addEventListener('change', function () {
             validateInput(input);
@@ -119,7 +118,6 @@ function fail(message) {
 }
 
 function updateScores(teachingPlanId) {
-    setupInputValidation();
     var data = {};
     $("table tbody tr").each(function () {
         var studentId = $(this).find("input[name^='score_15p']").attr('name').split('_')[3];
@@ -168,11 +166,9 @@ function updateScores(teachingPlanId) {
 
 function updateUI(data) {
     const successButton = document.getElementById("updateButton")
-    const btnEdit = document.getElementById(`btn-action-edit_${studentId}`)
     Object.keys(data).forEach(function (studentId) {
         var studentData = data[studentId];
         const btnEdit = document.getElementById(`btn-action-edit_${studentId}`)
-        console.log(studentData)
         var row = document.getElementById(`student_${studentId}`);
         if (row) {
             btnEdit.innerHTML = "Chỉnh sửa"
@@ -214,8 +210,74 @@ function updateUI(data) {
 }
 
 function editScore(studentId) {
+    var score15pInputs = document.querySelectorAll(`input[name^='score_15p_student_${studentId}']`);
+    var score45pInputs = document.querySelectorAll(`input[name^='score_45p_student_${studentId}']`);
+    var scoreFinalInput = document.getElementById(`score_thi_student_${studentId}`);
 
+
+    score15pInputs.forEach(function (input) {
+        input.disabled = false;
+    });
+
+    score45pInputs.forEach(function (input) {
+        input.disabled = false;
+    });
+
+    scoreFinalInput.disabled = false;
+
+    // Ẩn nút "Chỉnh sửa" và hiển thị nút "Xác nhận chỉnh sửa"
+    document.getElementById(`btn-action-edit_${studentId}`).style.display = 'none';
+    document.getElementById(`btn-action-approved_${studentId}`).style.display = 'inline-block';
 }
+
+function approvedEditStudent(studentId) {
+    var score15pInputs = document.querySelectorAll(`input[name^='score_15p_student_${studentId}']`);
+    var score45pInputs = document.querySelectorAll(`input[name^='score_45p_student_${studentId}']`);
+    var scoreFinalInput = document.getElementById(`score_thi_student_${studentId}`);
+
+    var score15pValues = [];
+    var score45pValues = [];
+
+    score15pInputs.forEach(function (input) {
+        score15pValues.push(input.value);
+    });
+
+    score45pInputs.forEach(function (input) {
+        score45pValues.push(input.value);
+    });
+
+    const data = {
+        "score_15p": score15pValues,
+        "score_45p": score45pValues,
+        "score_final": scoreFinalInput.value
+    }
+
+    fetch('/api/exam/' + studentId + '/edit_score', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error updating scores');
+            }
+            return response.json();
+        })
+        .then(data => {
+            success("Sửa điểm thành công")
+            document.getElementById(`btn-action-approved_${studentId}`).style.display = 'none';
+              document.getElementById(`btn-action-edit_${studentId}`).style.display = 'block';
+            console.log('Update successful:', data);
+        })
+        .catch(error => {
+            // Xử lý lỗi nếu có
+            console.error('Update error:', error);
+        });
+}
+
+
 
 
 

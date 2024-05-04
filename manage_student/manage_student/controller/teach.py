@@ -1,7 +1,6 @@
-
 from flask import request, jsonify
-from sqlalchemy import and_
 
+from manage_student.dao.teacher import get_exam_for_edition_query
 from manage_student.model import *
 
 
@@ -11,6 +10,13 @@ def extract_scores(exam):
         "score_45p": [score.points for score in exam.scores if score.type == TYPEEXAM.EXAM_45P],
         "score_final": exam.final_points
     }
+
+def update_scores(scores, values):
+    for score, value in zip(scores, values):
+        if value is not None:
+            db.session.query(Score).filter(
+                Score.id == score.id
+            ).update({"points": value})
 @app.route('/api/exam/<int:teaching_plan_id>/scores', methods=['POST'])
 def enter_scores(teaching_plan_id):
     try:
@@ -50,7 +56,6 @@ def enter_scores(teaching_plan_id):
         return jsonify({"error": str(e)}), 500
 
 
-
 @app.route('/api/exam/get_score_student/scores', methods=['GET'])
 def get_score_students():
     try:
@@ -82,22 +87,32 @@ def edit_exam(student_id):
         data = request.json
         if not isinstance(data, dict):
             raise ValueError("Invalid JSON data")
-        teaching_plan = Teaching_plan.query.filter_by(student_id=student_id).first()
+
+        teaching_plan = Teaching_plan.query.join(Exam, Teaching_plan.id == Exam.teach_plan_id) \
+            .filter(Exam.student_id == student_id).first()
+
         if teaching_plan is None:
             return jsonify({"message": "Not found teaching plan for the student"}), 500
-        get_exam_15min = Exam.query.filter(and_(Exam.student_id == student_id, Exam.teach_plan_id == teaching_plan.id,
-                                                Score.type == TYPEEXAM.EXAM_15P)).scalar()
-        exam_45p_id = Exam.query.filter(and_(Exam.student_id == student_id, Exam.teach_plan_id == teaching_plan.id,
-                                             Score.type == TYPEEXAM.EXAM_45P)).scalar()
-        if exam_45p_id is None:
-            db.session.query(Score).filter_by(Exam_id=get_exam_15min).update({"points": data.get("score_15p")})
-        if exam_45p_id is None:
-            db.session.query(Score).filter_by(Exam_id=exam_45p_id).update({"points": data.get("score_45p")})
+
+        exam_15p_query = get_exam_for_edition_query(student_id, teaching_plan.id, TYPEEXAM.EXAM_15P)
+        exam_45p_query = get_exam_for_edition_query(student_id, teaching_plan.id, TYPEEXAM.EXAM_45P)
+
+        score_15p_values = data.get("score_15p", [])
+        score_45p_values = data.get("score_45p", [])
+
+        update_scores(exam_15p_query, score_15p_values)
+        update_scores(exam_45p_query, score_45p_values)
+
         db.session.query(Exam).filter(
-                and_(Exam.student_id == student_id, Exam.teach_plan_id == teaching_plan.id)).update(
-                {"final_points": data.get("score_final")})
+            Exam.student_id == student_id,
+            Exam.teach_plan_id == teaching_plan.id
+        ).update(
+            {"final_points": data.get("score_final")}
+        )
+
         db.session.commit()
         return jsonify({'message': 'Exam successfully updated'}), 200
+
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
