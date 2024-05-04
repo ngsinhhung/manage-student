@@ -1,9 +1,5 @@
 function setupInputValidation() {
-    document.querySelectorAll('.score_15p, .score_45p').forEach(function (input) {
-        input.addEventListener('change', function () {
-            validateInput(input);
-        });
-
+    document.querySelectorAll('.score_15p, .score_45p, .score_final').forEach(function (input) {
         input.addEventListener('input', function () {
             validateInput(input);
         });
@@ -12,26 +8,26 @@ function setupInputValidation() {
 
 function validateInput(input) {
     var value = parseFloat(input.value);
-    var errorMessage = document.getElementById("message-error")
-    var parentAlter = document.getElementById("alterMessage")
-    console.log(parentAlter)
-    if (isNaN(value) || value < 0 || value > 10) {
-        errorMessage.innerHTML = "Điểm phải là số từ 0 đến 10";
-        parentAlter.style.display = 'flex';
-        return false;
+    var errorMessage = document.getElementById("message-error");
+    var parentAlter = document.getElementById("alterMessage");
+
+    var isValid = true;
+    var message = "";
+
+    if (value >= 0 && value <= 10) {
+        message = "Điểm phải là số từ 0 đến 10";
+        isValid = false;
     } else if (value < 0) {
-        errorMessage.innerHTML = "Điểm không được âm";
-        parentAlter.style.display = 'flex';
-        return false;
+        message = "Điểm không được âm";
+        isValid = false;
     } else if (value > 10) {
-        errorMessage.innerHTML = "Điểm không được lớn hơn 10";
-        parentAlter.style.display = 'flex';
-        return false;
-    } else {
-        errorMessage.textContent = "";
-        parentAlter.style.display = 'none';
-        return true;
+        message = "Điểm không được lớn hơn 10";
+        isValid = false;
     }
+
+    errorMessage.innerHTML = message;
+    parentAlter.style.display = isValid ? 'none' : 'flex';
+    return isValid;
 }
 document.addEventListener("DOMContentLoaded", function () {
     setupInputValidation();
@@ -46,6 +42,7 @@ function checkExistingScores() {
         fetch(`/api/exam/get_score_student/${studentId}/scores`)
             .then(response => {
                 if (response.ok) {
+
                     return response.json();
                 } else if (response.status === 404) {
                     return {}; // Trả về một đối tượng trống nếu không tìm thấy sinh viên
@@ -91,6 +88,8 @@ function disableInputsAndShowEditButton(row, studentId, data) {
 
             btnEdit.innerHTML = "Chỉnh sửa"
             btnEdit.style.display = "block"
+
+            document.getElementById("exportButton").disabled = false
         }
     }
 }
@@ -157,6 +156,7 @@ function updateScores(teachingPlanId) {
         .then(function (data) {
             updateUI(data);
             success(data.message);
+            document.getElementById("exportButton").disabled = false
         })
         .catch(function (error) {
             console.error("Error:", error);
@@ -228,6 +228,7 @@ function editScore(studentId) {
     // Ẩn nút "Chỉnh sửa" và hiển thị nút "Xác nhận chỉnh sửa"
     document.getElementById(`btn-action-edit_${studentId}`).style.display = 'none';
     document.getElementById(`btn-action-approved_${studentId}`).style.display = 'inline-block';
+    document.getElementById(`btn-action-cancel_${studentId}`).style.display = 'block'
 }
 
 function approvedEditStudent(studentId) {
@@ -272,12 +273,88 @@ function approvedEditStudent(studentId) {
             console.log('Update successful:', data);
         })
         .catch(error => {
-            // Xử lý lỗi nếu có
             console.error('Update error:', error);
         });
 }
 
+function cancelUpdateScore(studentId) {
+    document.getElementById(`btn-action-edit_${studentId}`).style.display = 'block'
+    document.getElementById(`btn-action-approved_${studentId}`).style.display = 'none';
+    document.getElementById(`btn-action-cancel_${studentId}`).style.display = 'none'
+    var score15pInputs = document.querySelectorAll(`input[name^='score_15p_student_${studentId}']`);
+    var score45pInputs = document.querySelectorAll(`input[name^='score_45p_student_${studentId}']`);
+    var scoreFinalInput = document.getElementById(`score_thi_student_${studentId}`);
 
+
+    score15pInputs.forEach(function (input) {
+        input.disabled = true
+    });
+
+    score45pInputs.forEach(function (input) {
+        input.disabled = true
+    });
+    scoreFinalInput.disabled = true
+
+}
+
+function createExcel(data, columns, fileName) {
+    const ws = XLSX.utils.aoa_to_sheet([columns, ...data]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+    const wscols = [
+        {wpx: 80},
+        {wpx: 200},
+        {wpx: 120},
+        {wpx: 100},
+        {wpx: 100},
+        {wpx: 100}
+    ];
+    ws['!cols'] = wscols;
+
+    XLSX.writeFile(wb, fileName);
+}
+
+function getDataFromInputs() {
+    const data = [];
+    const rows = document.querySelectorAll('table tbody tr');
+
+    rows.forEach(row => {
+        const rowData = [];
+        const score15pInputs = row.querySelectorAll('.score_15p');
+        const score45pInputs = row.querySelectorAll('.score_45p');
+        const scoreThiInput = row.querySelector('input[id^="score_thi_student"]');
+
+        const stt = row.querySelector('td:nth-child(1)').innerText;
+        rowData.push(stt);
+
+        const studentName = row.querySelector('td:nth-child(2)').innerText;
+        rowData.push(studentName);
+
+        const dob = row.querySelector('td:nth-child(3)').innerText;
+        rowData.push(dob);
+
+        const score15pValues = Array.from(score15pInputs).map(input => input.value);
+        rowData.push(score15pValues.join(' '));
+
+        const score45pValues = Array.from(score45pInputs).map(input => input.value);
+        rowData.push(score45pValues.join(' '));
+
+        const scoreThiValue = scoreThiInput.value;
+        rowData.push(scoreThiValue);
+
+        data.push(rowData);
+    });
+
+    return data;
+}
+
+
+document.getElementById('exportButton').addEventListener('click', function () {
+    const data = getDataFromInputs();
+    const columns = ['STT', 'Tên Học Sinh', 'Ngày Sinh', 'Điểm 15 phút', 'Điểm 45 phút', 'Điểm Thi'];
+    createExcel(data, columns, 'student_scores.xlsx');
+});
 
 
 

@@ -21,7 +21,7 @@ Quản lý học sinh
         <div class="action">
             <button class="btn btn-success" id="updateButton" onclick="updateScores({{ teacher_planing.id }})">Lưu điểm
             </button>
-            <button class="btn btn-primary">Xuất phiếu</button>
+            <button class="btn btn-primary" id="exportButton" disabled>Xuất file excel</button>
         </div>
     </div>
 </div>
@@ -60,16 +60,22 @@ Quản lý học sinh
             </td>
 
             <td>
-                <input type="text" id="score_thi_student_{{ student.id }}" name="score_thi_student_{{ student.id }}"
+                <input type="text" id="score_thi_student_{{ student.id }}" class="score_final" name="score_thi_student_{{ student.id }}"
                        style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;"/>
             </td>
             <td>
                 <button class="btn btn-danger" id="btn-action-edit_{{ student.id }}"
                         onclick="editScore({{ student.id }})"
                         style="display: none"></button>
-                <button class="btn btn-success" id="btn-action-approved_{{ student.id }}"
+                <div class="action-edit-score d-flex gap-2">
+                    <button class="btn btn-success" id="btn-action-approved_{{ student.id }}"
                         onclick="approvedEditStudent({{ student.id }})"
-                        style="display: none">Xác nhận chỉnh sửa</button>
+                        style="display: none">Xác nhận</button>
+                    <button class="btn btn-danger" id="btn-action-cancel_{{ student.id }}"
+                            onclick="cancelUpdateScore({{ student.id }})"
+                            style="display: none">Hủy
+                    </button>
+                </div>
             </td>
         </tr>
     {% endfor %}
