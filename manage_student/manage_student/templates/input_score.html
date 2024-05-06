@@ -3,28 +3,57 @@
 Quản lý học sinh
 {% endblock %}
 {% block content %}
+{% include 'components/toast.html' %}
 <div class="container mt-5">
     <h1 class="mb-4">Danh sách lớp giáo viên dạy</h1>
     <div class="form-group">
         <label class="mb-2">Tìm kiếm lớp</label>
-        <input type="text" class="form-control is-invalid" id="search_class" aria-describedby="emailHelp"
+        <input type="text" class="form-control" id="search_class" aria-describedby="emailHelp"
                placeholder="Tìm kiếm lớp...">
         <div class="invalid-feedback">Không tìm thấy lớp</div>
     </div>
     <div class="list-group mt-3" id="classList">
+        {% for teacher in teacher_class %}
         <div class="list-group-item list-group-item-action">
             <div class="d-flex align-items-center justify-content-between">
-                <p class="mb-1">Lớp: 12B1 - Môn : Sử</p>
-                <a href="/grade/input" class="btn btn-info"
+                <p class="mb-1">Lớp: {{ teacher[2].name[1:] }}A{{teacher[3]}} - Môn: {{ teacher[0].name }}</p>
+                {% if check_deadline_score(teacher[0].id) %}
+                <a href="/grade/input/class_id={{teacher[1]}}/score" class="btn btn-info"
                    style="text-decoration:none;color:white">Nhập điểm</a>
-            </div>
-        </div>
-        <div class="list-group-item list-group-item-action">
-            <div class="d-flex align-items-center justify-content-between">
-                <p class="mb-1">Lớp: 12B1 - Môn : Sử</p>
+                {% else %}
                 <button class="btn btn-secondary disabled" disabled>Quá thời hạn nhập điểm</button>
+                {% endif %}
             </div>
         </div>
+        {% endfor %}
     </div>
 </div>
+<script>
+    document.getElementById('search_class').addEventListener('keyup', function() {
+     var searchValue = this.value.trim().toLowerCase();
+     var classList = document.getElementById('classList').getElementsByClassName('list-group-item');
+     var noClassFound = document.querySelector('.invalid-feedback');
+     var searchInput = document.getElementById('search_class');
+     var found = false;
+
+     for (var i = 0; i < classList.length; i++) {
+         var classItem = classList[i];
+         var classText = classItem.querySelector('p').innerText.trim().toLowerCase();
+
+         if (classText.includes(searchValue)) {
+             classItem.style.display = 'block';
+             found = true;
+         } else {
+             classItem.style.display = 'none';
+         }
+     }
+     if (found || searchValue === '') {
+         noClassFound.style.display = 'none';
+         searchInput.classList.remove('is-invalid'); // Remove the is-invalid class
+     } else {
+         noClassFound.style.display = 'block';
+         searchInput.classList.add('is-invalid'); // Add the is-invalid class
+     }
+ });
+</script>
 {% endblock %}

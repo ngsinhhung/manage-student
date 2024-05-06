@@ -1,14 +1,18 @@
 from flask import render_template, redirect, url_for, request, jsonify
+from flask import render_template, redirect, url_for
 from flask_login import current_user, login_required, logout_user, login_user
 from manage_student import app, login
+from manage_student.dao import auth
 from manage_student.dao.auth import auth_user, get_info_by_id
 from manage_student.dao.student import create_student
+from manage_student.dao.teacher import get_class_of_teacher, check_deadline_score, get_teaching_plan_details
 from manage_student.form import *
 from dao import auth, assignments, teacher
 from dao import auth, student, group_class,teacher
 from manage_student.model import UserRole
 from manage_student import admin
 
+from manage_student.controller.teach import *
 
 @login.user_loader
 def user_load(user_id):
@@ -139,15 +143,19 @@ def view_regulations():
 
 
 @app.route("/grade")
+@login_required
 def InputGrade():
-    return render_template("input_score.html")
+    profile = get_info_by_id(current_user.id)
+    return render_template("input_score.html",teacher_class = get_class_of_teacher(profile.id),check_deadline_score = check_deadline_score)
 
+@app.route("/grade/input/<class_id>/score")
+@login_required
+def InputGradeSubject(class_id):
+    class_params = int(class_id.split('=')[-1])
+    class_obj,semester,subject,profile_students,teacher_planing = get_teaching_plan_details(class_params)
+    return render_template("input_score_subject.html",class_obj=class_obj,semester=semester,subject=subject,profile_students=profile_students,teacher_planing=teacher_planing)
 
-@app.route("/grade/input")
-def InputGradeSubject():
-    return render_template("input_score_subject.html")
-
-@app.route("/grade")
+@app.route("/view_score")
 def view_grade():
     return render_template("view_score.html")
 

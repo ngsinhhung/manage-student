@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
           integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
@@ -21,8 +22,7 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     />
-    <link rel="stylesheet"
-          src="{{ url_for('static', filename='style.css') }}"/>
+     <link rel="stylesheet" href="{{url_for('static', filename = 'css/toast.css')}}">
     <style>
         .form-control.is-invalid {
             border-color: #dc3545;
@@ -64,9 +64,8 @@
 {% block header %}
     {% include 'layout/header.html' %}
 {% endblock %}
-
+<!-- {#nav-content#} -->
 {% block nav_content %}
-    <div id="toast"></div>
     <div class="container-fluid">
         <div class="row flex-nowrap" style="color: #000;">
             <div class="col-auto col-md-3 col-xl-2 bg-dark">
@@ -79,7 +78,7 @@
                             </a>
                         </li>
                         <li class="nav-item w-100 my-1">
-                            <a href="/student/register" class="nav-link align-middle text-white">
+                            <a href="/student/create" class="nav-link align-middle text-white">
                                 Tiếp nhận học sinh
                             </a>
                         </li>
@@ -128,5 +127,8 @@
         crossorigin="anonymous"
 ></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://unpkg.com/jspdf-invoice-template@1.4.0/dist/index.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.0/xlsx.full.min.js"></script>
+
 </body>
 </html>

@@ -4,7 +4,6 @@ import random
 from manage_student.model import *
 from manage_student.utils import *
 
-
 def create_student(form):
     profile = Profile(name=form.full_name.data,
                       gender=int(form.gender.data),
@@ -37,4 +36,4 @@ def get_list_student_no_class_by_grade(size,grade):
 if __name__ == '__main__':
     with app.app_context():
         for student in student_no_class():
-            print(student)
+            print(student.profile.name)

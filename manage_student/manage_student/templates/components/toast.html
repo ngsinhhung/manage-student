@@ -1,0 +1,9 @@
+<div id="toast"></div>
+<script>
+    {% set toast_css = url_for('static', filename='css/toast.css') %}
+    var link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "{{ toast_css }}";
+    document.head.appendChild(link);
+</script>
+<script src="{{ url_for('static', filename='js/toast.js') }}"></script>

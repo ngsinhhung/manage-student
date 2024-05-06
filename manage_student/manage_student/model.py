@@ -1,3 +1,4 @@
+import enum
 import hashlib
 from datetime import datetime
 
@@ -5,7 +6,6 @@ from flask_login import UserMixin
 from sqlalchemy import Column, String, Float, Integer, ForeignKey, Boolean, DateTime, Enum, Text
 from sqlalchemy.orm import relationship
 from manage_student import db, app
-import enum
 
 
 class UserRole(enum.Enum):
@@ -47,7 +47,6 @@ class User(db.Model, UserMixin):
     password = Column(String(50))
     user_role = Column(Enum(UserRole))
     notifications = relationship("Notification", backref="user", lazy=True)
-
     profile = relationship("Profile", backref="user", lazy=True)
 
 
@@ -62,7 +61,6 @@ class Teacher(db.Model):
 
     class_teach = relationship("Class", backref="teacher", lazy=True)
     user = relationship("User", backref="teacher", lazy=True)
-
 
 
 class Notification(db.Model):
@@ -95,7 +93,6 @@ class Student(db.Model):
     id = Column(Integer, ForeignKey(Profile.id), primary_key=True, unique=True)
     grade = Column(Enum(GRADE), default=GRADE.K10)
     classes = relationship("Students_Classes", backref="student", lazy=True)
-
     profile = relationship("Profile", backref="student", lazy=True)
 
 
@@ -246,6 +243,9 @@ if __name__ == '__main__':
         for s in semesters:
             db.session.add(s)
         db.session.commit()
+        # semster = Semester(semester_name = "Ki 2")
+        # db.session.add(semster)
+        # db.session.commit()
 
         for i in range(15):
             profile = Profile(name="student " + str(i), email=str(i) + "@gmail.com", dob=datetime.now(),phone=str(1000000000+i),gender=0,address="chossh")
@@ -254,3 +254,43 @@ if __name__ == '__main__':
             stu = Student(id=profile.id)
             db.session.add(stu)
             db.session.commit()
+
+        # profiles_data = [
+        #     {"id": 5, "name": "Trần Lưu Quốc Tuấn", "email": "john@example.com", "dob": "2003-01-15", "gender": True,
+        #      "address": "123 Main St", "phone": "1234567890"},
+        #     {"id": 6, "name": "Nguyễn Thế Anh", "email": "jane@example.com", "dob": "2003-05-20", "gender": False,
+        #      "address": "456 Elm St", "phone": "9876543210"},
+        #     # Thêm thông tin hồ sơ cho sinh viên khác nếu cần
+        # ]
+        # for profile_info in profiles_data:
+        #     profile = Profile(**profile_info)
+        #     db.session.add(profile)
+        #
+        # # db.session.commit()
+        # students_data = [
+        #     {"id": 5,  "grade": GRADE.K10},
+        #     {"id": 6,  "grade": GRADE.K10},
+        #
+        #     # Thêm sinh viên khác nếu cần
+        # ]
+        # #
+        # for student_info in students_data:
+        #     student = Student(**student_info)
+        #     db.session.add(student)
+        #
+        # db.session.commit()
+        # #
+        # student_class = Students_Classes(class_id = 4,student_id = 8)
+        # student_class1 = Students_Classes(class_id = 4,student_id = 9)
+        # student_class2 = Students_Classes(class_id = 4,student_id = 10)
+        # student_class3 = Students_Classes(class_id = 4,student_id = 11)
+        # db.session.add_all([student_class,student_class1,student_class2,student_class3])
+        # db.session.commit()
+
+    # for i in range(15):
+    #     profile = Profile(name="student " + str(i), email=str(i) + "@gmail.com", dob=datetime.now(),phone=str(1000000000+i),gender=0,address="minhtan")
+    #     db.session.add(profile)
+    #     db.session.commit()
+    #     stu = Student(id=profile.id)
+    #     db.session.add(stu)
+    #     db.session.commit()
