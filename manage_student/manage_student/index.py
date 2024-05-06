@@ -56,7 +56,7 @@ def teacher_assignment():
     return render_template("teacher_assignment.html")
 
 
-@app.route('/class/create',methods=['GET', 'POST'])
+@app.route('/class/create', methods=['GET', 'POST'])
 def create_class():
     form_create_class = CreateClass()
     form_create_class.teacher.choices = [(temp_teacher.id,temp_teacher.user.profile.name)for temp_teacher in teacher.get_teacher_not_presidential()]
