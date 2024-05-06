@@ -1,18 +1,12 @@
 from flask import render_template, redirect, url_for, request, jsonify
-from flask import render_template, redirect, url_for
 from flask_login import current_user, login_required, logout_user, login_user
 from manage_student import app, login
-from manage_student.dao import auth
-from manage_student.dao.auth import auth_user, get_info_by_id
-from manage_student.dao.student import create_student
-from manage_student.dao.teacher import get_class_of_teacher, check_deadline_score, get_teaching_plan_details
 from manage_student.form import *
-from dao import auth, assignments, teacher
-from dao import auth, student, group_class,teacher
+from dao import auth, student, group_class,teacher,assignments
 from manage_student.model import UserRole
 from manage_student import admin
 
-from manage_student.controller.teach import *
+from manage_student.api.teach import *
 
 @login.user_loader
 def user_load(user_id):
@@ -35,7 +29,7 @@ def login():
     if request.method == "POST" and form.SubmitFieldLogin():
         username = form.username.data
         password = form.password.data
-        user = auth_user(username=username, password=password)
+        user = auth.auth_user(username=username, password=password)
         if user:
             login_user(user)
             return redirect(url_for("index"))
@@ -52,7 +46,7 @@ def logout():
 @app.route('/home')
 @login_required
 def home():
-    profile = get_info_by_id(current_user.id)
+    profile = auth.get_info_by_id(current_user.id)
     return render_template("index.html", profile=profile)
 
 
@@ -121,11 +115,11 @@ def register():
 
     if request.method == "POST" and form_student.submit():
         try:
-            student = create_student(form_student)
+            s = student.create_student(form_student)
         except Exception as e:
             print(e)
             return render_template("register_student.html",form_student=form_student)
-        if student:
+        if s:
             return redirect(url_for("index"))
     return render_template("register_student.html",form_student=form_student)
 
@@ -144,16 +138,17 @@ def view_regulations():
 
 @app.route("/grade")
 @login_required
-def InputGrade():
-    profile = get_info_by_id(current_user.id)
-    return render_template("input_score.html",teacher_class = get_class_of_teacher(profile.id),check_deadline_score = check_deadline_score)
+def input_grade():
+    profile = auth.get_info_by_id(current_user.id)
+    return render_template("input_score.html",teacher_class = teacher.get_class_of_teacher(profile.id), check_deadline_score =teacher.check_deadline_score)
 
 @app.route("/grade/input/<class_id>/score")
 @login_required
-def InputGradeSubject(class_id):
+def input_grade_subject(class_id):
     class_params = int(class_id.split('=')[-1])
-    class_obj,semester,subject,profile_students,teacher_planing = get_teaching_plan_details(class_params)
+    class_obj,semester,subject,profile_students,teacher_planing = teacher.get_teaching_plan_details(class_params)
     return render_template("input_score_subject.html",class_obj=class_obj,semester=semester,subject=subject,profile_students=profile_students,teacher_planing=teacher_planing)
+
 
 @app.route("/view_score")
 def view_grade():
