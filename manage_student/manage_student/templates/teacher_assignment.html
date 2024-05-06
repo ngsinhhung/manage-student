@@ -27,86 +27,96 @@
             <div class="bg-info p-1 h-auto">
                 <h4>Thông tin tìm kiếm</h4>
             </div>
-            <div class="d-flex justify-content-around p-2">
-                <div class="d-flex align-items-center">
-                    <label for="grade" class="form-label my-auto fs-6 me-3">Khối lớp: </label>
-                    <select class="form-select p-1 rounded-3 fs-6" style="width:200px; height: auto"
-                            id="grade"
-                            name="grade-list">
-                        <option value="10">Khối 10</option>
-                        <option value="11">Khối 11</option>
-                        <option value="12">Khối 12</option>
-                    </select>
+            <form id="form-search" method="post" action="/teacher/assignment">
+                <div class="d-flex justify-content-around p-2">
+                    <div class="d-flex align-items-center">
+                        <label for="grade" class="form-label my-auto fs-6 me-3">Khối lớp: </label>
+                        <select class="form-select p-1 rounded-3 fs-6" style="width:200px; height: auto"
+                                id="grade"
+                                name="grade-list"
+                                onchange="get_class_by_grade()">
+                            <option selected disabled hidden="true">Chọn khối lớp</option>
+                            <option value="10">Khối 10</option>
+                            <option value="11">Khối 11</option>
+                            <option value="12">Khối 12</option>
+                        </select>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <label for="class-list" class="form-label my-auto fs-6 me-3">Lớp:</label>
+                        <select class="form-select p-1 rounded-3 fs-6" style="width:200px; height: auto" id="class-list"
+                                name="class-list">
+                            <option selected disabled hidden="true">Chọn lớp</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="d-flex align-items-center">
-                    <label for="class" class="form-label my-auto fs-6 me-3">Lớp:</label>
-                    <select class="form-select p-1 rounded-3 fs-6" style="width:200px; height: auto" id="class"
-                            name="class-list">
-                        <option>10A1</option>
-                        <option>10A2</option>
-                        <option>10A3</option>
-                        <option>10A4</option>
-                    </select>
+                <div class="d-flex p-2">
+                    <button type="submit" onsubmit="" class="btn btn-success rounded-3 px-2 mx-auto" name="form-search-submit">
+                        <i class="fa fa-search mr-1" aria-hidden="true"></i>
+                        Tìm kiếm
+                    </button>
                 </div>
-            </div>
-            <div class="d-flex p-2">
-                <button type="submit" class="btn btn-success rounded-3 px-2 mx-auto">
-                    <i class="fa fa-search mr-1" aria-hidden="true"></i>
-                    Tìm kiếm
-                </button>
-            </div>
+            </form>
         </div>
 
-        <div class="mt-5 px-3 py-3 shadow-lg my-2">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h4>
-                        Bảng phân công giảng dạy lớp <strong class="font-italic">10A1</strong>
-                    </h4>
-                </div>
-                <div class="mb-2 fs-5">
-                    <button type="submit" class="btn btn-danger  px-3 mx-2">
-                        <i class="fa fa-trash" aria-hidden="true"></i>
-                        Xóa phân công
-                    </button>
-                    <button type="submit" class="btn btn-info  px-3">
-                        <i class="fas fa-save"></i>
-                        Lưu
-                    </button>
-                </div>
-            </div>
-            <div class="text-center">
-                <div class="row">
-                    <div class="col col-sm-1 p-2 bg-info border "><strong>STT</strong></div>
-                    <div class="col col-md-2 p-2 bg-info border "><strong>Môn học</strong></div>
-                    <div class="col col-md-5 p-2 bg-info border "><strong>Giáo viên</strong></div>
-                    <div class="col col-sm-2 p-2 bg-info border "><strong>Áp dụng cả 2 học kỳ</strong></div>
-                    <div class="col col-sm-1 p-2 bg-info border "><strong>Học kỳ 1</strong></div>
-                    <div class="col col-sm-1 p-2 bg-info border "><strong>Học kỳ 2</strong></div>
-                </div>
-                {% for i in range(0,5) %}
-                    <div class="row">
-                        <div class="col col-sm-1 border py-2 ">{{ i }}</div>
-                        <div class="col col-md-2 border py-2 ">Môn học</div>
-                        <div class="col col-md-5 border py-2 text-center">
-                            <select class="form-select p-1 rounded-3 fs-6 w-100 h-auto " id="sel1"
-                                    name="sellist">
-                                <option>Giáo viên A</option>
-                                <option>Giáo viên B</option>
-                            </select>
-                        </div>
-                        <div class="col col-sm-2 border d-flex py-2 justify-content-center align-items-center">
-                            <input class="form-check-input" type="checkbox" value="" id="">
-                        </div>
-                        <div class="col col-sm-1 border d-flex py-2 justify-content-center align-items-center">
-                            <input class="form-check-input" type="checkbox" value="" id="">
-                        </div>
-                        <div class="col col-sm-1 border d-flex py-2 justify-content-center align-items-center">
-                            <input class="form-check-input" type="checkbox" value="" id="">
-                        </div>
+        <form id="assignment-table" method="post" action="/teacher/assignment/{{ grade }}/{{ classname }}">
+            <div class="mt-5 px-3 py-3 shadow-lg my-2">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4>
+                            Bảng phân công giảng dạy lớp <strong class="font-italic">{{ classname }}</strong>
+                        </h4>
                     </div>
-                {% endfor %}
+                    <div class="mb-2 fs-5">
+                        <button type="submit" class="btn btn-danger  px-3 mx-2">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                            Xóa phân công
+                        </button>
+                        <button type="submit" class="btn btn-info px-3" name="form-assignment-save">
+                            <i class="fas fa-save"></i>
+                            Lưu
+                        </button>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="row">
+                        <div class="col col-sm-1 p-2 bg-info border "><strong>STT</strong></div>
+                        <div class="col col-md-2 p-2 bg-info border "><strong>Môn học</strong></div>
+                        <div class="col col-md-5 p-2 bg-info border "><strong>Giáo viên</strong></div>
+                        <div class="col col-sm-2 p-2 bg-info border "><strong>Áp dụng cả 2 học kỳ</strong></div>
+                        <div class="col col-sm-1 p-2 bg-info border "><strong>Học kỳ 1</strong></div>
+                        <div class="col col-sm-1 p-2 bg-info border "><strong>Học kỳ 2</strong></div>
+                    </div>
+                    {% for subject in subjects %}
+                        <div class="row">
+                            <div class="col col-sm-1 border py-2 ">0</div>
+                            <div class="col col-md-2 border py-2 ">{{ subject.name }}</div>
+                            <div class="col col-md-5 border py-2 text-center">
+                                <select class="form-select p-1 rounded-3 fs-6 w-100 h-auto " id="sel1"
+                                        name="teacher-assigned">
+                                    <option selected disabled hidden="true">Chọn giáo viên</option>
+                                    {% for teacher in teachers %}
+                                        <option value="{{ teacher.user.profile.id }}">ID: {{ teacher.user.profile.id }}
+                                            | {{ teacher.user.profile.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col col-sm-2 border d-flex py-2 justify-content-center align-items-center">
+                                <input class="form-check-input" type="checkbox" value="" id="total_year"
+                                       onchange="checkSemeter()">
+                            </div>
+                            <div class="col col-sm-1 border d-flex py-2 justify-content-center align-items-center">
+                                <input class="form-check-input" type="checkbox" value="" id="seme1"
+                                       onchange="checkTotalYear()">
+                            </div>
+                            <div class="col col-sm-1 border d-flex py-2 justify-content-center align-items-center">
+                                <input class="form-check-input" type="checkbox" value="" id="seme2"
+                                       onchange="checkTotalYear()">
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
+        </form>
     </div>
+    <script src="{{ url_for('static', filename='/js/assignments.js') }}"></script>
 {% endblock %}

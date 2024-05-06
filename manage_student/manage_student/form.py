@@ -16,8 +16,8 @@ class AdmisionStudent(FlaskForm):
     gender = SelectField("Giới tính", choices=[(0, "Nam"), (1, "Nữ")],
                          validators=[InputRequired()],
                          render_kw={"placeholder": "Chọn giới tính"})
-    birth_date = DateField("Ngày sinh", validators=[InputRequired()],
-                           render_kw={"placeholder": "Chọn ngày sinh"},format="%d-%m-%y")
+    birth_date = DateField("Ngày sinh", validators=[DataRequired()],
+                           render_kw={"placeholder": "Chọn ngày sinh"},format="%Y-%m-%d")
     address = StringField("Địa chỉ", validators=[InputRequired(), Length(max=255)],
                           render_kw={"placeholder": "Nhập địa chỉ"})
     phone_number = StringField("Số điện thoại",validators=[
@@ -30,11 +30,12 @@ class AdmisionStudent(FlaskForm):
 
 
 class CreateClass(FlaskForm):
-    teacher = SelectField("Giáo viên chủ nhiệm", validators=[InputRequired()])
+    teacher = SelectField("Giáo viên chủ nhiệm",
+                          validators=[InputRequired()])
     grade = SelectField("Khối học", choices=[("K10", "Khối 10"), ("K11", "Khối 11"), ("K12", "Khối 12")],
                         validators=[InputRequired()],
                         render_kw={"placeholder": "Chọn khối học"})
-    class_size = IntegerField("Số lượng học sinh", validators=[InputRequired(), NumberRange(min=0)],
+    class_size = IntegerField("Số lượng học sinh", validators=[InputRequired(), NumberRange(min=0,max=40)],
                               render_kw={"placeholder": "Sỉ số lớp"})
     submit = SubmitField("Lưu")
 

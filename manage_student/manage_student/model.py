@@ -5,7 +5,6 @@ from datetime import datetime
 from flask_login import UserMixin
 from sqlalchemy import Column, String, Float, Integer, ForeignKey, Boolean, DateTime, Enum, Text
 from sqlalchemy.orm import relationship
-
 from manage_student import db, app
 
 
@@ -22,9 +21,9 @@ class Title(enum.Enum):
 
 
 class GRADE(enum.Enum):
-    K10 = 1
-    K11 = 2
-    K12 = 3
+    K10 = 10
+    K11 = 11
+    K12 = 12
 
 
 class TYPEEXAM(enum.Enum):
@@ -36,7 +35,7 @@ class Profile(db.Model):
     id = Column(Integer, autoincrement=True, primary_key=True)
     name = Column(String(50))
     email = Column(String(50), unique=True)
-    dob = Column(DateTime)
+    birthday = Column(DateTime)
     gender = Column(Boolean)
     address = Column(Text)
     phone = Column(String(10), unique=True)
@@ -59,7 +58,8 @@ class Staff(db.Model):
 class Teacher(db.Model):
     id = Column(Integer, ForeignKey(User.id), primary_key=True, unique=True, nullable=False)
     title = Column(Enum(Title))
-    class_teach = relationship("Class", backref="class_teach", lazy=True)
+
+    class_teach = relationship("Class", backref="teacher", lazy=True)
     user = relationship("User", backref="teacher", lazy=True)
 
 
@@ -83,7 +83,7 @@ class Class(db.Model):
     grade = Column(Enum(GRADE))
     count = Column(Integer)
     amount = Column(Integer, default=0)
-    year = Column(Integer,default=datetime.now().year)
+    year = Column(Integer, default=datetime.now().year)
     teacher_id = Column(Integer, ForeignKey(Teacher.id))
 
     students = relationship("Students_Classes", backref="class", lazy=True)
