@@ -46,14 +46,14 @@ Quản lý học sinh
             <td>{% if student.dob %}{{ student.dob.strftime("%d/%m/%Y") }}{% endif %}</td>
             <td>
                 {% for i in range(subject.number_of_15p) %}
-                    <input type="number" class="score_15p" name="score_15p_student_{{ student.id }}_{{ i+1 }}" value=""
+                    <input type="number" class="score_15p" name="score_15p_student_{{ student.id }}_{{ i + 1 }}" value=""
                            required min="0" max="10"
                            style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;"/>
                 {% endfor %}
             </td>
             <td>
                 {% for i in range(subject.number_of_45p) %}
-                    <input type="number" class="score_45p" name="score_45p_student_{{ student.id }}_{{ i+1 }}" required
+                    <input type="number" class="score_45p" name="score_45p_student_{{ student.id }}_{{ i + 1 }}" required
                            min="0" max="10"
                            style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;"/>
                 {% endfor %}
