@@ -12,7 +12,7 @@ from dao import auth, student, group_class,teacher
 from manage_student.model import UserRole
 from manage_student import admin
 
-from manage_student.controller.teach import *
+from manage_student.api.teach import *
 
 @login.user_loader
 def user_load(user_id):
