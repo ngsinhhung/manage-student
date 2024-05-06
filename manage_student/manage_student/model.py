@@ -59,7 +59,6 @@ class Staff(db.Model):
 class Teacher(db.Model):
     id = Column(Integer, ForeignKey(User.id), primary_key=True, unique=True, nullable=False)
     title = Column(Enum(Title))
-
     class_teach = relationship("Class", backref="class_teach", lazy=True)
     user = relationship("User", backref="teacher", lazy=True)
 

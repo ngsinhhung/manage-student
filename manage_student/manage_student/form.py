@@ -30,8 +30,7 @@ class AdmisionStudent(FlaskForm):
 
 
 class CreateClass(FlaskForm):
-    teacher = StringField("Giáo viên chủ nhiệm", validators=[InputRequired()],
-                          render_kw={"placeholder": "Nhập tên giáo viên chủ nhiệm"})
+    teacher = SelectField("Giáo viên chủ nhiệm", validators=[InputRequired()])
     grade = SelectField("Khối học", choices=[("K10", "Khối 10"), ("K11", "Khối 11"), ("K12", "Khối 12")],
                         validators=[InputRequired()],
                         render_kw={"placeholder": "Chọn khối học"})

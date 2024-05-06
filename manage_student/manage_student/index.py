@@ -58,7 +58,7 @@ def teacher_assignment():
 @app.route('/class/create', methods=['GET', 'POST'])
 def create_class():
     form_create_class = CreateClass()
-    if form_create_class.validate_on_submit():
+    if form_create_class.submit():
         pass
     return render_template("create_class.html",form_create_class=form_create_class)
 
@@ -108,5 +108,4 @@ def view_grade():
 
 if __name__ == "__main__":
     with app.app_context():
-        from manage_student import admin
         app.run(debug=True)
