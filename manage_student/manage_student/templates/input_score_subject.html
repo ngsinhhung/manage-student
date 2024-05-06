@@ -3,19 +3,25 @@
 Quản lý học sinh
 {% endblock %}
 {% block content %}
+    <div class="alert alert-danger  align-items-center" id="alterMessage" role="alert" style="display: none">
+        <i class="fa-solid fa-circle-exclamation fs-5" style="color:yellow"></i>
+        <div id="message-error" style="margin-left: 10px;">
+        </div>
+    </div>
 <div class="px-2"
      style="font-size: 20px; gap: 10px; background-color: #cdd9e7; color: #2c5789; font-weight: bold;">
+
     <p>Nhập điểm từ hệ thống</p>
     <div class="ms-auto d-flex justify-content-between" style="gap: 10px;">
         <div class="d-flex align-items-center" style="gap:20px;color:#333;">
-            <p>Lớp: 12B1</p>
-            <p>Môn học: Sử</p>
-            <p>Kì học: 2</p>
+            <p>Lớp: {{ class_obj.grade.name[1:] }}A{{class_obj.count}}</p>
+            <p>Môn học: {{ subject.name }}</p>
+            <p>Kì học: {{ semester.semester_name }}</p>
         </div>
         <div class="action">
-            <button class="btn btn-success">Cập nhật điểm</button>
-            <button class="btn btn-danger">Xóa nội dung</button>
-            <button class="btn btn-primary">Xuất phiếu</button>
+            <button class="btn btn-success" id="updateButton" onclick="updateScores({{ teacher_planing.id }})">Lưu điểm
+            </button>
+            <button class="btn btn-primary" id="exportButton" disabled>Xuất file excel</button>
         </div>
     </div>
 </div>
@@ -28,61 +34,53 @@ Quản lý học sinh
         <th>Điểm 15p</th>
         <th>Điểm 1 Tiết</th>
         <th>Điểm Thi</th>
+        <th class="action_deleted"></th>
+
     </tr>
     </thead>
     <tbody>
-    <tr>
-        <td>1</td>
-        <td>Ngô Trịnh Minh Tâm</td>
-        <td>12/02/2002</td>
-        <td>
-            <input type="text" class="score" name="score_15p_1" data-validate="score_15p"   required min="0" max="10"
-                   style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
-            <input type="text" class="score" name="score_15p_2" data-validate="score_15p" required min="0" max="10"
-                   style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
-            <input type="text" class="score" name="score_15p_3" data-validate="score_15p" required min="0" max="10"
-                   style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
-            <input type="text" class="score" name="score_15p_4" data-validate="score_15p" required min="0" max="10"
-                   style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
-            <input type="text" class="score" name="score_15p_5" data-validate="score_15p" required min="0" max="10"
-                   style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
-            <span class="error-message" style="color: red; display: none;">Điểm không được âm</span>
-        </td>
-        <td>
-            <input type="text" class="score" name="score_1_tiet_1" data-validate="score_1_tiet" required min="0" max="10"
-                   style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
-            <input type="text" class="score" name="score_1_tiet_2" data-validate="score_1_tiet" required min="0" max="10"
-                   style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
-            <input type="text" class="score" name="score_1_tiet_3" data-validate="score_1_tiet" required min="0" max="10"
-                   style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
-            <span class="error-message" style="color: red; display: none;">Điểm không được âm</span>
-        </td>
+    {% for student in profile_students %}
+        <tr id="student_{{ student.id }}">
+            <td>{{ loop.index }}</td>
+            <td>{{ student.name }}</td>
+            <td>{% if student.dob %}{{ student.dob.strftime("%d/%m/%Y") }}{% endif %}</td>
+            <td>
+                {% for i in range(subject.number_of_15p) %}
+                    <input type="number" class="score_15p" name="score_15p_student_{{ student.id }}_{{ i + 1 }}" value=""
+                           required min="0" max="10"
+                           style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;"/>
+                {% endfor %}
+            </td>
+            <td>
+                {% for i in range(subject.number_of_45p) %}
+                    <input type="number" class="score_45p" name="score_45p_student_{{ student.id }}_{{ i + 1 }}" required
+                           min="0" max="10"
+                           style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;"/>
+                {% endfor %}
+            </td>
 
-        <td><input type="text" name=""
-                   style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
-        </td>
-    </tr>
+            <td>
+                <input type="text" id="score_thi_student_{{ student.id }}" class="score_final" name="score_thi_student_{{ student.id }}"
+                       style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;"/>
+            </td>
+            <td>
+                <button class="btn btn-danger" id="btn-action-edit_{{ student.id }}"
+                        onclick="editScore({{ student.id }})"
+                        style="display: none"></button>
+                <div class="action-edit-score d-flex gap-2">
+                    <button class="btn btn-success" id="btn-action-approved_{{ student.id }}"
+                        onclick="approvedEditStudent({{ student.id }})"
+                        style="display: none">Xác nhận</button>
+                    <button class="btn btn-danger" id="btn-action-cancel_{{ student.id }}"
+                            onclick="cancelUpdateScore({{ student.id }})"
+                            style="display: none">Hủy
+                    </button>
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
     </tbody>
 </table>
-<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="errorModalLabel">Cảnh báo</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p id="errorMessage">Điểm không được âm. Vui lòng nhập lại.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-            </div>
-        </div>
-    </div>
-</div>
-
+<script src="{{ url_for('static', filename='js/score.js') }}"></script>
 {% endblock %}
-
+{% include 'components/toast.html' %}
