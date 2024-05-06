@@ -21,9 +21,9 @@ class Title(enum.Enum):
 
 
 class GRADE(enum.Enum):
-    K10 = '10'
-    K11 = '11'
-    K12 = '12'
+    K10 = 10
+    K11 = 11
+    K12 = 12
 
 
 class TYPEEXAM(enum.Enum):
@@ -35,7 +35,7 @@ class Profile(db.Model):
     id = Column(Integer, autoincrement=True, primary_key=True)
     name = Column(String(50))
     email = Column(String(50), unique=True)
-    dob = Column(DateTime)
+    birthday = Column(DateTime)
     gender = Column(Boolean)
     address = Column(Text)
     phone = Column(String(10), unique=True)
@@ -60,8 +60,9 @@ class Teacher(db.Model):
     id = Column(Integer, ForeignKey(User.id), primary_key=True, unique=True, nullable=False)
     title = Column(Enum(Title))
 
-    class_teach = relationship("Class", backref="class_teach", lazy=True)
+    class_teach = relationship("Class", backref="teacher", lazy=True)
     user = relationship("User", backref="teacher", lazy=True)
+
 
 
 class Notification(db.Model):
@@ -245,3 +246,11 @@ if __name__ == '__main__':
         for s in semesters:
             db.session.add(s)
         db.session.commit()
+
+        for i in range(15):
+            profile = Profile(name="student " + str(i), email=str(i) + "@gmail.com", dob=datetime.now(),phone=str(1000000000+i),gender=0,address="chossh")
+            db.session.add(profile)
+            db.session.commit()
+            stu = Student(id=profile.id)
+            db.session.add(stu)
+            db.session.commit()

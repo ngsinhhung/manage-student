@@ -16,9 +16,10 @@
             <button class="btn btn-success col-sm-5 align-items-end" data-bs-toggle="modal" data-bs-target="#myModal">
                 Tạo lớp
             </button>
-            <ul>
-                <li>Lớp 1 (Giáo viên: ABC, Số học sinh: 25)</li>
-                <li>Lớp 2 (Giáo viên: XYZ, Số học sinh: 30)</li>
+            <ul class="h4" style="list-style: none">
+                {% for class in list_class%}
+                    <a style="text-decoration: none;color: black" href="/{{ class.grade.value }}/{{ class.count }}/info"><li>Lớp {{ class.grade.value }}A{{ class.count }} (Giáo viên: {{ class.teacher.user.profile.name }})</li></a>
+                {% endfor %}
             </ul>
         </div>
         <div class="px-5 student-list d-flex flex-column gap-2">
@@ -27,29 +28,22 @@
                 <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Handle</th>
+                    <th scope="col">Họ và tên</th>
+                    <th scope="col">Ngày sinh</th>
+                    <th scope="col">Giới tính</th>
+                    <th scope="col">Lớp</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td colspan="2">Larry the Bird</td>
-                    <td>@twitter</td>
-                </tr>
+                {% for s in student_no_class %}
+                    <tr id="{{ s.id }}">
+                        <th scope="row">{{ s.id }}</th>
+                        <td>{{ s.profile.name }}</td>
+                        <td>{{ s.profile.birthday.strftime("%d/%m/%Y") }}</td>
+                        <td>{{ s.profile.gender }}</td>
+                        <td>{{ s.grade.value }}</td>
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -66,7 +60,7 @@
 
             <!-- Modal body -->
             <div class="modal-body">
-                <form action="/" method="post">
+                <form action="/class/create" method="post">
                     {{ form_create_class.csrf_token }}
                     <div class="mb-3 mt-3">
                         {{ form_create_class.teacher.label(class="form-label") }}

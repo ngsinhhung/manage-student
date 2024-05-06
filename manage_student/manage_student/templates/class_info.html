@@ -3,9 +3,9 @@
     Thông tin lớp học
 {% endblock %}
 {% block content %}
-    <h1 style="text-align: center">Danh sách lớp {{ class_id }}</h1>
+    <h1 style="text-align: center">Danh sách lớp {{ class_info.grade.value }}A{{ class_info.count }}</h1>
     <div class="d-flex justify-content-between p-5">
-        <h2>GVCN: Nguyễn Văn A</h2>
+        <h2>GVCN: {{ class_info.teacher.user.profile.name }}</h2>
         <h2>Sĩ số: 40</h2>
     </div>
     <table class="table">
@@ -18,43 +18,35 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>Nguyễn Văn A</td>
-            <td>22/12/2003</td>
-            <td><a class="btn btn-danger" href="/">Xóa</a></td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>Nguyễn Văn A</td>
-            <td>22/12/2003</td>
-            <td><a class="btn btn-danger" href="/">Xóa</a></td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>Nguyễn Văn A</td>
-            <td>22/12/2003</td>
-            <td><a class="btn btn-danger" href="/">Xóa</a></td>
-        </tr>
+        {% for s in class_info.students %}
+            <tr>
+                <th scope="row">{{ s.student.profile.id }}</th>
+                <td>{{ s.student.profile.name }}</td>
+                <td>{{ s.student.profile.birthday.strftime("%d/%m/%Y") }}</td>
+                <td><a class="btn btn-danger" href="/">Xóa</a></td>
+            </tr>
+        {% endfor %}
+
         <tr id="add-label">
             <th scope="row"><label for="student"></label></th>
             <td>
                 <select class="form-select w-50" id="student" name="student">
-                    <option value="male">Nguyễn Văn A</option>
-                    <option value="female">Trần Thị B</option>
+                    {% for s in student_no_class %}
+                        <option value="male">{{ s.profile.name }}</option>
+                    {% endfor %}
                 </select>
             </td>
             <td></td>
-            <td><a class="btn btn-primary" href="/">Save</a></td>
+            <td><a class="btn btn-success" href="/">Thêm</a></td>
         </tr>
         </tbody>
     </table>
     <div class="d-flex justify-content-end">
-        <button onclick="add()" id="add-btn" class="btn btn-success">Thêm</button>
+        <button onclick="add()" id="add-btn" class="btn btn-primary">Lưu</button>
     </div>
     <script>
         function add() {
-            document.querySelector("#add-label").toggleAttribute("hidden")
+            
         }
     </script>
 {% endblock %}
