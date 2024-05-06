@@ -1,10 +1,10 @@
-from flask import render_template, redirect, url_for,request
+from flask import render_template, redirect, url_for, request, jsonify
 from flask_login import current_user, login_required, logout_user, login_user
 from manage_student import app, login
 from manage_student.dao.auth import auth_user, get_info_by_id
 from manage_student.dao.student import create_student
 from manage_student.form import *
-from dao import auth
+from dao import auth, assignments, teacher
 from manage_student.model import UserRole
 
 
@@ -50,9 +50,44 @@ def home():
     return render_template("index.html", profile=profile)
 
 
-@app.route('/teacher/assignment')
+@app.route('/teacher/assignment', methods=["GET", "POST"])
 def teacher_assignment():
-    return render_template("teacher_assignment.html")
+    classname = ''
+    if request.method.__eq__("POST"):
+        classname = request.form.get("class-list")
+        grade_value = request.form.get("grade-list")
+        return redirect('/teacher/assignment/' + grade_value + '/' + classname)
+    return render_template("teacher_assignment.html", classname=classname)
+
+@app.route('/teacher/assignment/<grade>/<string:classname>', methods=["GET", "POST"])
+def teacher_assignment_class(grade, classname):
+    subject_list = assignments.load_subject_of_class(grade='K' + grade)
+    teacher_list = teacher.load_all_teachers()
+    if request.method.__eq__("GET"):
+        pass
+    elif request.method.__eq__("POST"):
+        pass
+    return render_template("teacher_assignment.html", grade=grade, classname=classname, subjects=subject_list, teachers=teacher_list)
+
+
+
+
+
+@app.route('/api/class/', methods=['GET'])
+def get_class():
+    q = request.args.get('q')
+    res = {}
+    if q:
+        class_list = assignments.load_class_by_grade(q)
+        json_class_list = [
+            {
+                "grade": c.grade.value,
+                "count": c.count,
+            }
+            for c in class_list
+        ]
+        return jsonify({"class_list": json_class_list})
+    return jsonify({})
 
 
 @app.route('/class/create', methods=['GET', 'POST'])
