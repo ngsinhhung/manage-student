@@ -139,63 +139,117 @@ class Score(db.Model):
 
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()
-        # p1 = Profile(name="Trần An Tiến")
-        # p2 = Profile(name="Nguyễn Sinh Hùng")
-        # p3 = Profile(name="Ngô Trịnh Minh Tâm")
-        # db.session.add_all([p1, p2, p3])
-        # db.session.commit()
-        # acc1 = User(id=p1.id, username="supertien", password= str(hashlib.md5("123".encode("utf-8")).hexdigest()), user_role=UserRole.ADMIN)
-        # acc2 = User(id=p2.id, username="chosh", password= str(hashlib.md5("123".encode("utf-8")).hexdigest()), user_role=UserRole.STAFF)
-        # acc3 = User(id=p3.id, username="mintam", password= str(hashlib.md5("123".encode("utf-8")).hexdigest()), user_role=UserRole.TEACHER)
-        # db.session.add_all([acc1, acc2, acc3])
-        # db.session.commit()
-        # p4 = Profile(name="Võ Quốc Huy")
-        # db.session.add(p4)
-        # db.session.commit()
-        # acc4 = User(id=19, username="qh", password=str(hashlib.md5("123".encode("utf-8")).hexdigest()),
-        #             user_role=UserRole.TEACHER)
-        # db.session.add(acc4)
-        # db.session.commit()
+        # db.create_all()
+        p1 = Profile(name="Trần An Tiến")
+        p2 = Profile(name="Nguyễn Sinh Hùng")
+        p3 = Profile(name="Ngô Trịnh Minh Tâm")
+        db.session.add_all([p1, p2, p3])
+        db.session.commit()
+        acc1 = User(id=p1.id, username="supertien", password=str(hashlib.md5("123".encode("utf-8")).hexdigest()), user_role=UserRole.ADMIN)
+        acc2 = User(id=p2.id, username="chosh", password=str(hashlib.md5("123".encode("utf-8")).hexdigest()), user_role=UserRole.STAFF)
+        acc3 = User(id=p3.id, username="mintam", password=str(hashlib.md5("123".encode("utf-8")).hexdigest()), user_role=UserRole.TEACHER)
+        db.session.add_all([acc1, acc2, acc3])
+        db.session.commit()
 
-        # teacher = Teacher(id=19, title=Title.BACHELOR)
-        # # staff = Staff(id=acc2.id)
-        # db.session.add(teacher)
-        # db.session.commit()
+        staff = Staff(id=acc2.id)
+        teacher = Teacher(id=acc3.id, title=Title.BACHELOR)
+        db.session.add_all([staff, teacher])
+        db.session.commit()
 
-        # =====================================================
+        for i in range(15):
+            profile = Profile(name="student " + str(i), email=str(i) + "@gmail.com", birthday=datetime.now(),phone=str(1000000000+i),gender=0,address="chossh")
+            db.session.add(profile)
+            db.session.commit()
+            stu = Student(id=profile.id)
+            db.session.add(stu)
+            db.session.commit()
 
-        # grade1 = Class(grade = GRADE.K12,count = 2,amount = 40,teacher_id = 3)
-        # grade2 = Class(grade = GRADE.K12,count = 4,amount = 40,teacher_id = 19)
-        # grade3 = Class(grade = GRADE.K12,count = 3,amount = 40,teacher_id = 3)
-        # grade4 = Class(grade = GRADE.K12,count = 5,amount = 40,teacher_id = 19)
-        # db.session.add_all([grade1,grade2,grade3,grade4])
-        # db.session.commit()
+        cl101 = Class(grade=GRADE.K10, count=1, amount=10, teacher_id=teacher.id)
+        cl102 = Class(grade=GRADE.K10, count=2, amount=11, teacher_id=teacher.id)
+        cl103 = Class(grade=GRADE.K10, count=3, amount=12, teacher_id=teacher.id)
+        cl111 = Class(grade=GRADE.K11, count=1, amount=7, teacher_id=teacher.id)
+        cl112 = Class(grade=GRADE.K11, count=2, amount=8, teacher_id=teacher.id)
+        cl113 = Class(grade=GRADE.K11, count=3, amount=9, teacher_id=teacher.id)
+        cl121 = Class(grade=GRADE.K12, count=1, amount=1, teacher_id=teacher.id)
+        cl122 = Class(grade=GRADE.K12, count=2, amount=2, teacher_id=teacher.id)
+        cl123 = Class(grade=GRADE.K12, count=3, amount=3, teacher_id=teacher.id)
+        db.session.add_all([cl101, cl102, cl103, cl111, cl112, cl113, cl121, cl122, cl123])
+        db.session.commit()
 
+        subjects = [
+            Subject(name='Toán', grade=GRADE.K10, number_of_15p=3, number_of_45p=3),
+            Subject(name='Lý', grade=GRADE.K10, number_of_15p=3, number_of_45p=2),
+            Subject(name='Hóa', grade=GRADE.K10, number_of_15p=2, number_of_45p=2),
+            Subject(name='Sinh', grade=GRADE.K10, number_of_15p=2, number_of_45p=1),
+
+            Subject(name='Toán', grade=GRADE.K11, number_of_15p=3, number_of_45p=3),
+            Subject(name='Lý', grade=GRADE.K11, number_of_15p=3, number_of_45p=2),
+            Subject(name='Hóa', grade=GRADE.K11, number_of_15p=2, number_of_45p=2),
+            Subject(name='Sinh', grade=GRADE.K11, number_of_15p=2, number_of_45p=1),
+            Subject(name='Văn', grade=GRADE.K11, number_of_15p=2, number_of_45p=1),
+
+            Subject(name='Toán', grade=GRADE.K12, number_of_15p=3, number_of_45p=3),
+            Subject(name='Lý', grade=GRADE.K12, number_of_15p=3, number_of_45p=2),
+            Subject(name='Hóa', grade=GRADE.K12, number_of_15p=2, number_of_45p=2),
+            Subject(name='Sinh', grade=GRADE.K12, number_of_15p=2, number_of_45p=1),
+            Subject(name='Sử', grade=GRADE.K12, number_of_15p=2, number_of_45p=1),
+        ]
+        for subject in subjects:
+            db.session.add(subject)
+        db.session.commit()
+
+        p4 = Profile(name="Giáo Viên A")
+        p5 = Profile(name="Giáo Viên B")
+        p6 = Profile(name="Giáo Viên C")
+        p7 = Profile(name="Giáo Viên D")
+        p8 = Profile(name="Giáo Viên E")
+        p9 = Profile(name="Giáo Viên F")
+        db.session.add_all([p4, p5, p6, p7, p8, p9])
+        db.session.commit()
+
+        acc4 = User(id=p4.id, username="gv4", password=str(hashlib.md5("123".encode("utf-8")).hexdigest()),
+                    user_role=UserRole.TEACHER)
+        acc5 = User(id=p5.id, username="gv5", password=str(hashlib.md5("123".encode("utf-8")).hexdigest()),
+                    user_role=UserRole.TEACHER)
+        acc6 = User(id=p6.id, username="gv6", password=str(hashlib.md5("123".encode("utf-8")).hexdigest()),
+                    user_role=UserRole.TEACHER)
+        acc7 = User(id=p7.id, username="gv7", password=str(hashlib.md5("123".encode("utf-8")).hexdigest()),
+                    user_role=UserRole.TEACHER)
+        acc8 = User(id=p8.id, username="gv8", password=str(hashlib.md5("123".encode("utf-8")).hexdigest()),
+                    user_role=UserRole.TEACHER)
+        acc9 = User(id=p9.id, username="gv9", password=str(hashlib.md5("123".encode("utf-8")).hexdigest()),
+                    user_role=UserRole.TEACHER)
+        db.session.add_all([acc4, acc5, acc6, acc7, acc8, acc9])
+        db.session.commit()
+
+        teacher4 = Teacher(id=acc4.id, title=Title.BACHELOR)
+        teacher5 = Teacher(id=acc5.id, title=Title.BACHELOR)
+        teacher6 = Teacher(id=acc6.id, title=Title.BACHELOR)
+        teacher7 = Teacher(id=acc7.id, title=Title.BACHELOR)
+        teacher8 = Teacher(id=acc8.id, title=Title.BACHELOR)
+        teacher9 = Teacher(id=acc9.id, title=Title.BACHELOR)
+        db.session.add_all([teacher4, teacher5, teacher6, teacher7, teacher8, teacher9])
+        db.session.commit()
+
+        semesters = [
+            Semester(semester_name="Học kì 1"),
+            Semester(semester_name="Học kì 2"),
+            Semester(semester_name="Cả năm"),
+        ]
+        for s in semesters:
+            db.session.add(s)
+        db.session.commit()
         # semster = Semester(semester_name = "Ki 2")
         # db.session.add(semster)
         # db.session.commit()
 
-        # subjects = [
-        #     Subject(name='Toán', grade=GRADE.K12, number_of_15p=2, number_of_45p=1),
-        #     Subject(name='Văn', grade=GRADE.K10, number_of_15p=3, number_of_45p=2),
-        #     Subject(name='Anh', grade=GRADE.K11, number_of_15p=4, number_of_45p=3),
-        #     Subject(name='Lý', grade=GRADE.K12, number_of_15p=5, number_of_45p=3),
-        #     Subject(name='Hóa', grade=GRADE.K10, number_of_15p=3, number_of_45p=2),
-        #     Subject(name='Sinh', grade=GRADE.K11, number_of_15p=2, number_of_45p=1),
-        # ]
-        # for subject in subjects:
-        #     db.session.add(subject)
-        # db.session.commit()
-        # teaching_plan = Teaching_plan(
-        #     score_deadline=datetime.now(),
-        #     teacher_id=3,
-        #     class_id=4,
-        #     semester_id=1,
-        #     subject_id= 3
-        # )
-        # db.session.add(teaching_plan)
-        # db.session.commit()
+        for i in range(15):
+            profile = Profile(name="student " + str(i), email=str(i) + "@gmail.com", dob=datetime.now(),phone=str(1000000000+i),gender=0,address="chossh")
+            db.session.add(profile)
+            db.session.commit()
+            stu = Student(id=profile.id)
+            db.session.add(stu)
+            db.session.commit()
 
         # profiles_data = [
         #     {"id": 5, "name": "Trần Lưu Quốc Tuấn", "email": "john@example.com", "dob": "2003-01-15", "gender": True,
@@ -229,10 +283,5 @@ if __name__ == '__main__':
         # db.session.add_all([student_class,student_class1,student_class2,student_class3])
         # db.session.commit()
 
-    # for i in range(15):
-    #     profile = Profile(name="student " + str(i), email=str(i) + "@gmail.com", dob=datetime.now(),phone=str(1000000000+i),gender=0,address="minhtan")
-    #     db.session.add(profile)
-    #     db.session.commit()
-    #     stu = Student(id=profile.id)
-    #     db.session.add(stu)
-    #     db.session.commit()
+
+

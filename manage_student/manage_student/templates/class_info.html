@@ -8,7 +8,7 @@
         <h2>GVCN: {{ class_info.teacher.user.profile.name }}</h2>
         <h2>Sĩ số: 40</h2>
     </div>
-    <table class="table">
+    <table id="myTable" class="table">
         <thead>
         <tr>
             <th scope="col">id</th>
@@ -23,7 +23,9 @@
                 <th scope="row">{{ s.student.profile.id }}</th>
                 <td>{{ s.student.profile.name }}</td>
                 <td>{{ s.student.profile.birthday.strftime("%d/%m/%Y") }}</td>
-                <td><a class="btn btn-danger" href="/">Xóa</a></td>
+                <td>
+                    <button class="btn btn-danger" onclick="deleteRow(this)">Xóa</button>
+                </td>
             </tr>
         {% endfor %}
 
@@ -32,12 +34,14 @@
             <td>
                 <select class="form-select w-50" id="student" name="student">
                     {% for s in student_no_class %}
-                        <option value="male">{{ s.profile.name }}</option>
+                        <option value="{{ s.id }}">{{ s.profile.name }}</option>
                     {% endfor %}
                 </select>
             </td>
             <td></td>
-            <td><a class="btn btn-success" href="/">Thêm</a></td>
+            <td>
+                <button class="btn btn-success" onclick="addRow()">Thêm</button>
+            </td>
         </tr>
         </tbody>
     </table>
@@ -45,8 +49,40 @@
         <button onclick="add()" id="add-btn" class="btn btn-primary">Lưu</button>
     </div>
     <script>
-        function add() {
-            
+        add = []
+
+        function deleteRow(button) {
+            var result = confirm("Bạn có muốn xóa sinh viên này không?");
+            if (result) {
+                var row = button.parentNode.parentNode;
+                // Remove the row
+                row.parentNode.removeChild(row);
+            }
+        }
+
+        function addRow() {
+            var selectElement = document.getElementById("student");
+            if (add.indexOf(selectElement.value) != -1) {
+                confirm("Sinh viên đã có trong danh sách?");
+                return
+            }
+            var table = document.getElementById("myTable");
+            var lastRow = table.rows[table.rows.length - 1];
+            var newRow = table.insertRow(lastRow.rowIndex)
+            {% for s in student_no_class %}
+                var id = {{ s.id }}
+                console.log(selectElement.value)
+                console.log(id)
+                if (id == selectElement.value) {
+                    newRow.insertCell(0).innerHTML = selectElement.value;
+                    newRow.insertCell(1).innerHTML = "{{ s.profile.name }}";
+                    newRow.insertCell(2).innerHTML = "{{ s.profile.birthday.strftime("%d/%m/%Y") }}";
+                    newRow.insertCell(3).innerHTML = `<button class="btn btn-danger" onclick="deleteRow(this)">Xóa</button>`;
+                    add.push(selectElement.value)
+
+                }
+            {% endfor %}
+
         }
     </script>
 {% endblock %}

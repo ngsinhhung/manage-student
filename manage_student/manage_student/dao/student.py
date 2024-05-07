@@ -33,7 +33,14 @@ def get_list_student_no_class_by_grade(size,grade):
     return random.sample(non_class_students,size)
 
 
+def get_student_by_id(id):
+    return Student.query.get(id)
+
+
+def check_student_in_class(student_id, class_id):
+    return Students_Classes.query.filter(Students_Classes.student_id == student_id).filter(Students_Classes.class_id == class_id).first()
+
+
 if __name__ == '__main__':
     with app.app_context():
-        for student in student_no_class():
-            print(student.profile.name)
+        print(check_student_in_class(11,10))

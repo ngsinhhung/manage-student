@@ -29,6 +29,10 @@ def get_info_class_by_name(grade,count):
     return Class.query.filter_by(grade="K"+str(grade), count=count).first()
 
 
+def get_class_by_id(id):
+    return Class.query.get(id)
+
+
 if __name__ == '__main__':
     with app.app_context():
         for s in get_info_class_by_name(10,1).students:

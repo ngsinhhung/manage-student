@@ -1,10 +1,15 @@
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, request, jsonify
 from flask_login import current_user, login_required, logout_user, login_user
 from manage_student import app, login
 from manage_student.form import *
 from dao import auth, student, group_class,teacher,assignments
+from manage_student.api import *
+from manage_student.model import UserRole
+from manage_student import admin
 
 from manage_student.api.teach import *
+from manage_student.api.student_class import *
+
 
 @login.user_loader
 def user_load(user_id):
@@ -61,10 +66,15 @@ def teacher_assignment():
 def teacher_assignment_class(grade, classname):
     subject_list = assignments.load_subject_of_class(grade='K' + grade)
     teacher_list = teacher.load_all_teachers()
-    if request.method.__eq__("GET"):
-        pass
-    elif request.method.__eq__("POST"):
-        pass
+    if request.method.__eq__("POST"):
+        grade = grade
+        class_count = classname[-1]
+        print(request.form)
+        for s in subject_list:
+            print(request.form.get("teacher-assigned-{id}".format(id=s.id)))
+
+    elif request.method.__eq__("GET"):
+        print("get")
     return render_template("teacher_assignment.html", grade=grade, classname=classname, subjects=subject_list, teachers=teacher_list)
 
 
@@ -154,5 +164,4 @@ def view_grade():
 
 if __name__ == "__main__":
     with app.app_context():
-        from manage_student import admin
         app.run(debug=True)
