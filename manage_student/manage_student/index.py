@@ -67,10 +67,15 @@ def teacher_assignment():
 def teacher_assignment_class(grade, classname):
     subject_list = assignments.load_subject_of_class(grade='K' + grade)
     teacher_list = teacher.load_all_teachers()
-    if request.method.__eq__("GET"):
-        pass
-    elif request.method.__eq__("POST"):
-        pass
+    if request.method.__eq__("POST"):
+        grade = grade
+        class_count = classname[-1]
+        print(request.form)
+        for s in subject_list:
+            print(request.form.get("teacher-assigned-{id}".format(id=s.id)))
+
+    elif request.method.__eq__("GET"):
+        print("get")
     return render_template("teacher_assignment.html", grade=grade, classname=classname, subjects=subject_list, teachers=teacher_list)
 
 
