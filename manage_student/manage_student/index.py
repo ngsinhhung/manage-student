@@ -62,7 +62,6 @@ def teacher_assignment():
         return redirect('/teacher/assignment/' + grade_value + '/' + classname)
     return render_template("teacher_assignment.html", classname=classname)
 
-
 @app.route('/teacher/assignment/<grade>/<string:classname>', methods=["GET", "POST"])
 def teacher_assignment_class(grade, classname):
     subject_list = assignments.load_subject_of_class(grade='K' + grade)
@@ -143,7 +142,6 @@ def info(grade,count):
 @app.route("/regulations")
 def view_regulations():
     return render_template('view_regulations.html')
-
 
 @app.route("/grade")
 @login_required

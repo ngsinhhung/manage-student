@@ -16,7 +16,7 @@
     />
 </head>
 <body>
-<!-- {#header#} -->
+
 <header class="bg-dark">
     <div class="container-fluid pt-2 pb-2">
         <div class="d-flex justify-content-between">
@@ -42,17 +42,20 @@
 <div class="container shadow-md d-flex gap-3 mt-2">
     <div class="p-3 rounded-3 flex-grow-1" style="width:300px;background-color:#1668b3;">
         <p style="color:white">Tra cứu kết quả học tập</p>
-        <label for="basic-url" style="color:white" class="form-label fs-6">Nhập số điện thoại</label>
+        <form>
+            <label for="basic-url" style="color:white" class="form-label fs-6">Nhập số điện thoại</label>
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon3">+84</span>
-            <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+            <input type="text" class="form-control" name="student_phone_number" id="basic-url"
+                   aria-describedby="basic-addon3">
         </div>
         <label for="inputPassword5" style="color:white" class="form-label">Nhập OTP</label>
         <div class="mb-2">
             <input type="password" id="inputPassword5" class="form-control" aria-describedby="passwordHelpBlock">
             <span class="" style="color:white;">Gửi lại <span class="m" style="cursor:pointer;text-decorator:underline">OTP</span></span>
         </div>
-        <button class="btn btn-success" style="color:white">Xác nhận OTP</button>
+            <button class="btn btn-success" type="submit" style="color:white">Xác nhận OTP</button>
+        </form>
     </div>
     <div class="p-3 shadow-sm flex-grow-1" style="width:700px">
         <p>Để tra cứu điểm của học sinh <span style="font-weight:bold">Minh Tâm</span> vui lòng chọn kì học</p>
