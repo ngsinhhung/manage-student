@@ -3,10 +3,13 @@ from flask_login import current_user, login_required, logout_user, login_user
 from manage_student import app, login
 from manage_student.form import *
 from dao import auth, student, group_class,teacher,assignments
+from manage_student.api import *
 from manage_student.model import UserRole
 from manage_student import admin
 
 from manage_student.api.teach import *
+from manage_student.api.student_class import *
+
 
 @login.user_loader
 def user_load(user_id):
@@ -58,6 +61,7 @@ def teacher_assignment():
         grade_value = request.form.get("grade-list")
         return redirect('/teacher/assignment/' + grade_value + '/' + classname)
     return render_template("teacher_assignment.html", classname=classname)
+
 
 @app.route('/teacher/assignment/<grade>/<string:classname>', methods=["GET", "POST"])
 def teacher_assignment_class(grade, classname):

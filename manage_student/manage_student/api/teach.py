@@ -11,12 +11,15 @@ def extract_scores(exam):
         "score_final": exam.final_points
     }
 
+
 def update_scores(scores, values):
     for score, value in zip(scores, values):
         if value is not None:
             db.session.query(Score).filter(
                 Score.id == score.id
             ).update({"points": value})
+
+
 @app.route('/api/exam/<int:teaching_plan_id>/scores', methods=['POST'])
 def enter_scores(teaching_plan_id):
     try:
