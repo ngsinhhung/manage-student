@@ -1,10 +1,8 @@
-from flask import render_template, redirect, url_for, request, jsonify
+from flask import render_template, redirect, url_for
 from flask_login import current_user, login_required, logout_user, login_user
 from manage_student import app, login
 from manage_student.form import *
 from dao import auth, student, group_class,teacher,assignments
-from manage_student.model import UserRole
-from manage_student import admin
 
 from manage_student.api.teach import *
 

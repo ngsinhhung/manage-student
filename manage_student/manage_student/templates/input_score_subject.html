@@ -19,7 +19,7 @@ Quản lý học sinh
             <p>Kì học: {{ semester.semester_name }}</p>
         </div>
         <div class="action">
-            <button class="btn btn-success" id="updateButton" onclick="updateScores({{ teacher_planing.id }})">Lưu điểm
+            <button class="btn btn-success" id="updateButton" >Lưu điểm
             </button>
             <button class="btn btn-primary" id="exportButton" disabled>Xuất file excel</button>
         </div>
@@ -35,7 +35,6 @@ Quản lý học sinh
         <th>Điểm 1 Tiết</th>
         <th>Điểm Thi</th>
         <th class="action_deleted"></th>
-
     </tr>
     </thead>
     <tbody>
@@ -43,36 +42,40 @@ Quản lý học sinh
         <tr id="student_{{ student.id }}">
             <td>{{ loop.index }}</td>
             <td>{{ student.name }}</td>
-            <td>{% if student.dob %}{{ student.dob.strftime("%d/%m/%Y") }}{% endif %}</td>
-            <td>
+            <td>{% if student.birthday %}{{ student.birthday.strftime("%d/%m/%Y") }}{% endif %}</td>
+            <td id="{{ student.id_score_15p }}">
                 {% for i in range(subject.number_of_15p) %}
-                    <input type="number" class="score_15p" name="score_15p_student_{{ student.id }}_{{ i + 1 }}" value=""
+                    <input type="number" class="score_15p" name="score_15p_student_{{ student.id }}_{{ i + 1 }}"
+                           value="" data-column="score_15p"
                            required min="0" max="10"
                            style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;"/>
                 {% endfor %}
             </td>
-            <td>
+            <td id="{{ student.id_score_45p }}">
                 {% for i in range(subject.number_of_45p) %}
-                    <input type="number" class="score_45p" name="score_45p_student_{{ student.id }}_{{ i + 1 }}" required
+                    <input type="number" class="score_45p" name="score_45p_student_{{ student.id }}_{{ i + 1 }}"
+                           required data-column="score_45p"
                            min="0" max="10"
                            style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;"/>
                 {% endfor %}
             </td>
 
             <td>
-                <input type="text" id="score_thi_student_{{ student.id }}" class="score_final" name="score_thi_student_{{ student.id }}"
+                <input type="text" id="score_thi_student_{{ student.id }}" class="score_final"
+                       name="score_thi_student_{{ student.id }}"
+                       data-column="score_final"
                        style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;"/>
             </td>
             <td>
                 <button class="btn btn-danger" id="btn-action-edit_{{ student.id }}"
-                        onclick="editScore({{ student.id }})"
+                        onclick=""
                         style="display: none"></button>
                 <div class="action-edit-score d-flex gap-2">
                     <button class="btn btn-success" id="btn-action-approved_{{ student.id }}"
-                        onclick="approvedEditStudent({{ student.id }})"
+                        onclick=""
                         style="display: none">Xác nhận</button>
                     <button class="btn btn-danger" id="btn-action-cancel_{{ student.id }}"
-                            onclick="cancelUpdateScore({{ student.id }})"
+                            onclick=""
                             style="display: none">Hủy
                     </button>
                 </div>
