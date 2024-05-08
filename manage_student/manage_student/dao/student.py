@@ -1,8 +1,8 @@
-import datetime
-from manage_student import db
 import random
+
 from manage_student.model import *
 from manage_student.utils import *
+
 
 def create_student(form):
     profile = Profile(name=form.full_name.data,
@@ -41,6 +41,30 @@ def check_student_in_class(student_id, class_id):
     return Students_Classes.query.filter(Students_Classes.student_id == student_id).filter(Students_Classes.class_id == class_id).first()
 
 
+def view_score_student(student_id, semester_id):
+    return (db.session.query(Subject.name, Score.type, Score.points, Exam.final_points)
+            .join(Teaching_plan, Exam.teach_plan_id == Teaching_plan.id)
+            .join(Score, Exam.id == Score.Exam_id)
+            .join(Subject, Teaching_plan.subject_id == Subject.id)
+            .filter(Exam.student_id == student_id)
+            .filter(Teaching_plan.semester_id == semester_id)
+            .all()
+            )
+
+
+def preprocess_scores(scores):
+    subject_scores = {}
+    for subject, exam_type, point, final_points in scores:
+        if subject not in subject_scores:
+            subject_scores[subject] = {'15_minute': [], '45_minute': [],'final_points' : ''}
+        if exam_type == TYPEEXAM.EXAM_15P:
+            subject_scores[subject]['15_minute'].append(point)
+        elif exam_type == TYPEEXAM.EXAM_45P:
+            subject_scores[subject]['45_minute'].append(point)
+        subject_scores[subject]['final_points'] = final_points
+    return subject_scores
+
+
 if __name__ == '__main__':
     with app.app_context():
-        print(check_student_in_class(11,10))
+        print(view_score_student(4, 1))

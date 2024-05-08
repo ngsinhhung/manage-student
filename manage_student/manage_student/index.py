@@ -1,14 +1,12 @@
-from flask import render_template, redirect, url_for, request, jsonify
+from flask import render_template, redirect, url_for
 from flask_login import current_user, login_required, logout_user, login_user
-from manage_student import app, login
-from manage_student.form import *
-from dao import auth, student, group_class,teacher,assignments
-from manage_student.api import *
-from manage_student.model import UserRole
-from manage_student import admin
 
-from manage_student.api.teach import *
+from dao import auth, teacher, assignments
+from manage_student import login
 from manage_student.api.student_class import *
+from manage_student.dao.student import *
+from manage_student.form import *
+from manage_student.model import UserRole
 
 
 @login.user_loader
@@ -158,8 +156,13 @@ def input_grade_subject(class_id):
 
 
 @app.route("/view_score")
-def view_grade():
-    return render_template("view_score.html")
+def view_score():
+    semester = Semester.query.all()
+    semester_id = request.args.get('semester_id')
+    selected_semester = Semester.query.get(semester_id)
+    score = view_score_student(4, semester_id)
+    processed_scores  = preprocess_scores(score)
+    return render_template("view_score.html", processed_scores=processed_scores, semester=semester,selected_semester=selected_semester)
 
 
 if __name__ == "__main__":

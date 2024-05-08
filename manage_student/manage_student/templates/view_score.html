@@ -60,40 +60,50 @@
     <div class="p-3 shadow-sm flex-grow-1" style="width:700px">
         <p>Để tra cứu điểm của học sinh <span style="font-weight:bold">Minh Tâm</span> vui lòng chọn kì học</p>
         <label for="termSelect" style="color:#1668b3" class="form-label">Chọn kì học:</label>
-        <select class="form-select" id="termSelect">
-            <option value="term1">Kì 1</option>
-            <option value="term2">Kì 2</option>
-            <option value="wholeYear">Cả năm</option>
-        </select>
-        <button class="btn btn-info mt-2" style="color:white">Xác nhận</button>
+        <form method="GET" action="/view_score">
+            <select class="form-select" name="semester_id">
+                {% for s in semester %}
+                    <option value="{{ s.id }}">{{ s.semester_name }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-info mt-2" style="color:white">Xác nhận</button>
+        </form>
         <div>
             <div class="container mt-3">
-                <p class="text-center">Kết quả học tập của Minh Tâm học kì 1</p>
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th scope="col">Môn học</th>
-                        <th scope="col">Điểm 15p</th>
-                        <th scope="col">Điểm 1 Tiết</th>
-                        <th scope="col">Điểm Thi</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Toán</td>
-                        <td>8.5</td>
-                        <td>8.0</td>
-                        <td>7.5</td>
-                    </tr>
-                    <tr>
-                        <td>Văn</td>
-                        <td>9.0</td>
-                        <td>8.5</td>
-                        <td>7.0</td>
-                    </tr>
+                {% if processed_scores %}
+                    <p class="text-center">Kết quả học tập của Minh Tâm học {{ selected_semester.semester_name }}</p>
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th scope="col">Môn học</th>
+                            <th scope="col">Điểm 15p</th>
+                            <th scope="col">Điểm 1 Tiết</th>
+                            <th scope="col">Điểm Thi</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for subject, scores in processed_scores.items() %}
+                            <tr>
+                                <td rowspan="">{{ subject }}</td>
+                                <td>
+                                    {% for item in scores['15_minute'] %}
+                                        {{ item }}
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {% for item in scores['45_minute'] %}
+                                        {{ item }}
+                                    {% endfor %}
+                                </td>
+                                <td>{{ scores.final_points }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <h1 class="text-center">Học kì chưa cập nhật điểm.</h1>
+                {% endif %}
 
-                    </tbody>
-                </table>
             </div>
 
         </div>
