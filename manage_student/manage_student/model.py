@@ -121,6 +121,7 @@ class Teaching_plan(db.Model):
     semester_id = Column(Integer, ForeignKey(Semester.id), nullable=False)
     subject_id = Column(Integer, ForeignKey(Subject.id), nullable=False)
 
+    subject = relationship(Subject, backref="subject", lazy=True)
 
 class Exam(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -156,13 +157,13 @@ if __name__ == '__main__':
         db.session.add_all([staff, teacher])
         db.session.commit()
 
-        for i in range(15):
-            profile = Profile(name="student " + str(i), email=str(i) + "@gmail.com", birthday=datetime.now(),phone=str(1000000000+i),gender=0,address="chossh")
-            db.session.add(profile)
-            db.session.commit()
-            stu = Student(id=profile.id)
-            db.session.add(stu)
-            db.session.commit()
+        # for i in range(15):
+        #     profile = Profile(name="student " + str(i), email=str(i) + "@gmail.com", birthday=datetime.now(),phone=str(1000000000+i),gender=0,address="chossh")
+        #     db.session.add(profile)
+        #     db.session.commit()
+        #     stu = Student(id=profile.id)
+        #     db.session.add(stu)
+        #     db.session.commit()
 
         cl101 = Class(grade=GRADE.K10, count=1, amount=10, teacher_id=teacher.id)
         cl102 = Class(grade=GRADE.K10, count=2, amount=11, teacher_id=teacher.id)
@@ -198,12 +199,12 @@ if __name__ == '__main__':
             db.session.add(subject)
         db.session.commit()
 
-        p4 = Profile(name="Giáo Viên A")
-        p5 = Profile(name="Giáo Viên B")
-        p6 = Profile(name="Giáo Viên C")
-        p7 = Profile(name="Giáo Viên D")
-        p8 = Profile(name="Giáo Viên E")
-        p9 = Profile(name="Giáo Viên F")
+        p4 = Profile(name="Giáo Viên toán 10 11 12 A")
+        p5 = Profile(name="Giáo Viên lý 10 11 12 B")
+        p6 = Profile(name="Giáo Viên hóa 10 11 12C")
+        p7 = Profile(name="Giáo Viên sinh 10 11 12 D")
+        p8 = Profile(name="Giáo Viên văn 11 E")
+        p9 = Profile(name="Giáo Viên sử 12 F")
         db.session.add_all([p4, p5, p6, p7, p8, p9])
         db.session.commit()
 
@@ -231,25 +232,48 @@ if __name__ == '__main__':
         db.session.add_all([teacher4, teacher5, teacher6, teacher7, teacher8, teacher9])
         db.session.commit()
 
+        teacher_subject = [
+            Teachers_Subject(teacher_id=teacher4.id, subject_id=subjects[0].id),
+            Teachers_Subject(teacher_id=teacher4.id, subject_id=subjects[4].id),
+            Teachers_Subject(teacher_id=teacher4.id, subject_id=subjects[9].id),
+
+            Teachers_Subject(teacher_id=teacher5.id, subject_id=subjects[1].id),
+            Teachers_Subject(teacher_id=teacher5.id, subject_id=subjects[5].id),
+            Teachers_Subject(teacher_id=teacher5.id, subject_id=subjects[10].id),
+
+            Teachers_Subject(teacher_id=teacher6.id, subject_id=subjects[2].id),
+            Teachers_Subject(teacher_id=teacher6.id, subject_id=subjects[6].id),
+            Teachers_Subject(teacher_id=teacher6.id, subject_id=subjects[11].id),
+
+            Teachers_Subject(teacher_id=teacher7.id, subject_id=subjects[3].id),
+            Teachers_Subject(teacher_id=teacher7.id, subject_id=subjects[7].id),
+            Teachers_Subject(teacher_id=teacher7.id, subject_id=subjects[12].id),
+
+            Teachers_Subject(teacher_id=teacher8.id, subject_id=subjects[9].id),
+            Teachers_Subject(teacher_id=teacher9.id, subject_id=subjects[13].id),
+        ]
+
+        for ts in teacher_subject:
+            db.session.add(ts)
+        db.session.commit()
+
         semesters = [
             Semester(semester_name="Học kì 1"),
             Semester(semester_name="Học kì 2"),
-            Semester(semester_name="Cả năm"),
         ]
         for s in semesters:
             db.session.add(s)
         db.session.commit()
-        # semster = Semester(semester_name = "Ki 2")
-        # db.session.add(semster)
-        # db.session.commit()
 
-        for i in range(15):
-            profile = Profile(name="student " + str(i), email=str(i) + "@gmail.com", dob=datetime.now(),phone=str(1000000000+i),gender=0,address="chossh")
-            db.session.add(profile)
-            db.session.commit()
-            stu = Student(id=profile.id)
-            db.session.add(stu)
-            db.session.commit()
+
+
+        # for i in range(15):
+        #     profile = Profile(name="student " + str(i), email=str(i) + "@gmail.com", dob=datetime.now(),phone=str(1000000000+i),gender=0,address="chossh")
+        #     db.session.add(profile)
+        #     db.session.commit()
+        #     stu = Student(id=profile.id)
+        #     db.session.add(stu)
+        #     db.session.commit()
 
         # profiles_data = [
         #     {"id": 5, "name": "Trần Lưu Quốc Tuấn", "email": "john@example.com", "dob": "2003-01-15", "gender": True,
@@ -282,6 +306,3 @@ if __name__ == '__main__':
         # student_class3 = Students_Classes(class_id = 4,student_id = 11)
         # db.session.add_all([student_class,student_class1,student_class2,student_class3])
         # db.session.commit()
-
-
-

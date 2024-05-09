@@ -11,8 +11,13 @@ def load_all_teachers():
     return Teacher.query.all()
     # return db.session.query(Profile).join(Teacher, Profile.id == Teacher.id).all()
 
+def load_teachers_with_subject():
+    return db.session.query(Teacher).join(Teachers_Subject, Teachers_Subject.teacher_id == Teacher.teacher_id)
 def get_teacher_by_id(teacher_id):
     return db.session.get(Teacher, teacher_id)
+
+def get_teachers_by_subject(subject_id):
+    return Teachers_Subject.query.filter_by(subject_id=subject_id)
 
 def get_class_of_teacher(teacher_id):
     query = db.session.query(Subject, Class.id, Class.grade, Class.count, Teacher). \

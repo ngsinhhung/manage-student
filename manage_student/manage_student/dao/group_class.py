@@ -25,7 +25,7 @@ def create_class(form):
         db.session.commit()
 
 
-def get_info_class_by_name(grade,count):
+def get_info_class_by_name(grade, count):
     return Class.query.filter_by(grade="K"+str(grade), count=count).first()
 
 

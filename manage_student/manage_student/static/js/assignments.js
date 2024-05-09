@@ -14,28 +14,40 @@ function get_class_by_grade() {
     })
 }
 
-function check_semeter(id) {
-    var total_seme = document.getElementById(`total_year-${id}`)
+function check_semeter(id, type) {
+    var total_seme = document.getElementById(`total-seme-${id}`)
     var seme1 = document.getElementById(`seme1-${id}`)
     var seme2 = document.getElementById(`seme2-${id}`)
+    total_seme.value = "False"
+    seme1.value = "False"
+    seme2.value = "False"
 
-    total_seme.value="False"
-    seme1.value="False"
-    seme2.value="False"
-
-    if(total_seme.checked){
-        total_seme.value = "True"
-        seme1.checked = true
-        seme2.checked = true
-    }
-    else if(seme1.checked){
-        seme1.value = "True"
-        total_seme.checked = false
-        seme2.checked = false
-    }
-    else if(seme2.checked){
-        seme2.value = "True"
-        total_seme.checked = false
-        seme1.checked = false
+    if (type === 'total') {
+        if (!total_seme.checked) {
+            seme1.checked = false
+            seme2.checked = false
+        } else if (total_seme.checked) {
+            total_seme.value = "True"
+            seme1.checked = true
+            seme2.checked = true
+            seme1.value = "True"
+            seme2.value = "True"
+        }
+    } else if (type === 'part') {
+        if (seme1.checked && seme2.checked) {
+            total_seme.checked = true
+            total_seme.value = "True"
+            seme1.value = "True"
+            seme2.value = "True"
+        } else if (seme1.checked) {
+            total_seme.checked = false
+            seme1.value = "True"
+        } else if (seme2.checked) {
+            total_seme.checked = false
+            seme2.value = "True"
+        } else {
+            total_seme.checked = false
+        }
     }
 }
+
