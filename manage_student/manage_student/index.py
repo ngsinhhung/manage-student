@@ -66,7 +66,7 @@ def teacher_assignment():
 @app.route('/teacher/assignment/<grade>/<string:classname>', methods=["GET", "POST", "DELETE"])
 def teacher_assignment_class(grade, classname):
     subject_list = assignments.load_subject_of_class(grade='K' + grade)
-    teacher_list = teacher.load_teachers_with_subject()
+    teacher_list = teacher.load_all_teachers()
     class_id = group_class.get_info_class_by_name(grade=grade, count=classname[-1]).id
     if request.method.__eq__("POST") and request.form.get("type").__eq__("save"):
         for s in subject_list:

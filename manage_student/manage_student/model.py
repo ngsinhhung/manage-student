@@ -121,8 +121,6 @@ class Teaching_plan(db.Model):
     semester_id = Column(Integer, ForeignKey(Semester.id), nullable=False)
     subject_id = Column(Integer, ForeignKey(Subject.id), nullable=False)
 
-    subject = relationship(Subject, backref="subject", lazy=True)
-
 class Exam(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     final_points = Column(Float)
