@@ -25,7 +25,7 @@ function getDataFromInputs() {
         const rowData = [];
         const score15pInputs = row.querySelectorAll('.score_15p');
         const score45pInputs = row.querySelectorAll('.score_45p');
-        const scoreThiInput = row.querySelector('input[id^="score_thi_student"]');
+        const scoreThiInput = row.querySelector('input[id^="EXAM_final_1"]');
 
         const stt = row.querySelector('td:nth-child(1)').innerText;
         rowData.push(stt);

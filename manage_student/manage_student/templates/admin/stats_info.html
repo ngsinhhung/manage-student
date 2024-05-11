@@ -1,0 +1,36 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4 text-info">Thống kê môn học {{ subject_info.name }} khối {{ subject_info.grade.value }} </h1>
+        <div>
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        list_name_class = []
+        {% for class_id in list_class_id %}
+            list_name_class.push("{{ def_get_class(class_id).grade.value }}A{{ def_get_class(class_id).count }}")
+        {% endfor %}
+        const ctx = document.getElementById('myChart');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: list_name_class,
+                datasets: [{
+                    label: 'điểm trung bình theo lớp',
+                    data: {{ list_dtb }},
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

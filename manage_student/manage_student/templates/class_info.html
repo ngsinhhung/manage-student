@@ -6,7 +6,7 @@
     <h1 style="text-align: center">Danh sách lớp {{ class_info.grade.value }}A{{ class_info.count }}</h1>
     <div class="d-flex justify-content-between p-5">
         <h2>GVCN: {{ class_info.teacher.user.profile.name }}</h2>
-        <h2>Sĩ số: 40</h2>
+        <h2 id="amount">Sĩ số: {{ amount }}</h2>
     </div>
     <table id="myTable" class="table">
         <thead>
@@ -20,11 +20,11 @@
         <tbody>
         {% for s in class_info.students %}
             <tr>
-                <th scope="row">{{ s.student.profile.id }}</th>
+                <th scope="row">{{ s.student.id }}</th>
                 <td>{{ s.student.profile.name }}</td>
                 <td>{{ s.student.profile.birthday.strftime("%d/%m/%Y") }}</td>
                 <td>
-                    <button class="btn btn-danger" onclick="deleteRow(this)">Xóa</button>
+                    <button id="{{ s.student.id }}" class="btn btn-danger" onclick="deleteRow(this)">Xóa</button>
                 </td>
             </tr>
         {% endfor %}
@@ -46,17 +46,19 @@
         </tbody>
     </table>
     <div class="d-flex justify-content-end">
-        <button onclick="add()" id="add-btn" class="btn btn-primary">Lưu</button>
+        <button onclick="save()" id="add-btn" class="btn btn-primary">Lưu</button>
     </div>
     <script>
         add = []
+        del = []
 
         function deleteRow(button) {
             var result = confirm("Bạn có muốn xóa sinh viên này không?");
             if (result) {
+                del.push(button.id)
                 var row = button.parentNode.parentNode;
-                // Remove the row
                 row.parentNode.removeChild(row);
+                document.getElementById("amount").innerHTML = "Sĩ số: " + ({{ amount }} + add.length - del.length).toString()
             }
         }
 
@@ -71,18 +73,42 @@
             var newRow = table.insertRow(lastRow.rowIndex)
             {% for s in student_no_class %}
                 var id = {{ s.id }}
-                console.log(selectElement.value)
-                console.log(id)
                 if (id == selectElement.value) {
                     newRow.insertCell(0).innerHTML = selectElement.value;
                     newRow.insertCell(1).innerHTML = "{{ s.profile.name }}";
                     newRow.insertCell(2).innerHTML = "{{ s.profile.birthday.strftime("%d/%m/%Y") }}";
                     newRow.insertCell(3).innerHTML = `<button class="btn btn-danger" onclick="deleteRow(this)">Xóa</button>`;
                     add.push(selectElement.value)
-
+                    document.getElementById("amount").innerHTML = "Sĩ số: " + ({{ amount }} + add.length - del.length).toString()
                 }
             {% endfor %}
+        }
 
+        function save() {
+            fetch("/api/add_student/{{ class_info.id }}", {
+                method: "post",
+                body: JSON.stringify({
+                    "list_student": add
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(res => res.json()).then(data_add => {
+                fetch("/api/delete_student/{{ class_info.id }}", {
+                    method: "delete",
+                    body: JSON.stringify({
+                        "list_student": del
+                    }),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }).then(res => res.json()).then(data => {
+                    if (data.status === 404 && data_add.status === 200) {
+                        confirm("Lưu thành công!");
+                        window.location.href = "/home";
+                    }
+                })
+            })
         }
     </script>
 {% endblock %}

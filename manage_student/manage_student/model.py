@@ -29,6 +29,7 @@ class GRADE(enum.Enum):
 class TYPEEXAM(enum.Enum):
     EXAM_15P = 1
     EXAM_45P = 2
+    EXAM_final = 3
 
 
 class Profile(db.Model):
@@ -121,25 +122,33 @@ class Teaching_plan(db.Model):
     semester_id = Column(Integer, ForeignKey(Semester.id), nullable=False)
     subject_id = Column(Integer, ForeignKey(Subject.id), nullable=False)
 
+    teacher = relationship("Teacher", backref="teacher", lazy=True)
+    semester = relationship("Semester", backref="semester", lazy=True)
+    class_teach = relationship("Class", backref="teach", lazy=True)
+    subject = relationship("Subject", backref="subject", lazy=True)
+
 
 class Exam(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
-    final_points = Column(Float)
     student_id = Column(Integer, ForeignKey(Student.id), nullable=False)
     teach_plan_id = Column(Integer, ForeignKey(Teaching_plan.id), nullable=False)
     scores = relationship("Score", backref="exam", lazy=True)
 
+    student = relationship("Student", backref="exam", lazy=True)
+    teach_plan = relationship("Teaching_plan", backref="exam", lazy=True)
+
 
 class Score(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
-    points = Column(Float)
+    score = Column(Float)
     type = Column(Enum(TYPEEXAM))
+    count = Column(Integer)
     Exam_id = Column(Integer, ForeignKey(Exam.id), nullable=False)
 
 
 if __name__ == '__main__':
     with app.app_context():
-        # db.create_all()
+        db.create_all()
         p1 = Profile(name="Trần An Tiến")
         p2 = Profile(name="Nguyễn Sinh Hùng")
         p3 = Profile(name="Ngô Trịnh Minh Tâm")
@@ -243,13 +252,6 @@ if __name__ == '__main__':
         # db.session.add(semster)
         # db.session.commit()
 
-        for i in range(15):
-            profile = Profile(name="student " + str(i), email=str(i) + "@gmail.com", dob=datetime.now(),phone=str(1000000000+i),gender=0,address="chossh")
-            db.session.add(profile)
-            db.session.commit()
-            stu = Student(id=profile.id)
-            db.session.add(stu)
-            db.session.commit()
 
         # profiles_data = [
         #     {"id": 5, "name": "Trần Lưu Quốc Tuấn", "email": "john@example.com", "dob": "2003-01-15", "gender": True,
