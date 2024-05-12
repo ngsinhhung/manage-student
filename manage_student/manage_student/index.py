@@ -1,19 +1,12 @@
-from flask import render_template, redirect, url_for, request, jsonify
+from flask import render_template, redirect, url_for
 from flask_login import current_user, login_required, logout_user, login_user
-
-from dao import auth, teacher, assignments
+from dao import auth, group_class, teacher, assignments
 from manage_student import login
 from manage_student.api.student_class import *
 from manage_student.dao.student import *
 from manage_student.form import *
-from dao import auth, student, group_class,teacher,assignments
-from manage_student.api import *
 from manage_student.model import UserRole
-from manage_student import admin
-
-from manage_student.api.teach import *
-from manage_student.api.student_class import *
-
+from manage_student.api.student_score import *
 
 @login.user_loader
 def user_load(user_id):
@@ -159,29 +152,25 @@ def input_grade_subject(teach_plan_id):
     return render_template("input_score_subject.html", can_edit=teacher.can_edit_exam, get_score=teacher.get_score_by_student_id,teach_plan=teach_plan)
 
 
+
+
 @app.route("/view_score", methods=['GET', 'POST'])
 def view_score():
     semester = get_all_semester()
     message = ''
     selected_semester = None
-    processed_scores = None
     profile_student_view_score = None
-    if request.method == 'POST':
-        phone_number = request.form['student_phone_number']
-        profile_student_view_score = verify_student_phone_number(phone_number)
-        if profile_student_view_score:
-            print("cc")
-            print(profile_student_view_score[0])
-            semester_id = request.args.get('semester_id')
-            score = view_score_student(profile_student_view_score[0], semester_id)
-            processed_scores = preprocess_scores(score)
-            print(score)
-        else:
-            message = 'Không tìm thấy học sinh'
 
-    return render_template("view_score.html", processed_scores=processed_scores, semester=semester,
+    if request.method == "POST":
+        phone_number = request.form['student_phone_number']
+        print(phone_number)
+        profile_student_view_score = verify_student_phone_number(phone_number)
+    else:
+        message = 'Không tìm thấy học sinh'
+    return render_template("view_score.html", semester=semester,
                            selected_semester=selected_semester, profile_student_view_score=profile_student_view_score,
                            message=message)
+
 
 if __name__ == "__main__":
     with app.app_context():

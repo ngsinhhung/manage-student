@@ -49,7 +49,7 @@ def verify_student_phone_number(phone_number):
 
 
 def view_score_student(student_id, semester_id):
-    return (db.session.query(Subject.name, Score.type, Score.points, Exam.final_points)
+    return (db.session.query(Exam, Subject.name, Score.type, Score.score,Score.count)
             .join(Teaching_plan, Exam.teach_plan_id == Teaching_plan.id)
             .join(Score, Exam.id == Score.Exam_id)
             .join(Subject, Teaching_plan.subject_id == Subject.id)
@@ -61,14 +61,17 @@ def view_score_student(student_id, semester_id):
 
 def preprocess_scores(scores):
     subject_scores = {}
-    for subject, exam_type, point, final_points in scores:
-        if subject not in subject_scores:
-            subject_scores[subject] = {'15_minute': [], '45_minute': [],'final_points' : ''}
-        if exam_type == TYPEEXAM.EXAM_15P:
-            subject_scores[subject]['15_minute'].append(point)
-        elif exam_type == TYPEEXAM.EXAM_45P:
-            subject_scores[subject]['45_minute'].append(point)
-        subject_scores[subject]['final_points'] = final_points
+    for exam, name, type, score, count in scores:
+        if name not in subject_scores:
+            subject_scores[name] = {'15_minute': {'scores': [], 'count': 0}, '45_minute': {'scores': [], 'count': 0},
+                                    'final_points': {'scores': [], 'count': 0}}
+
+        if type == TYPEEXAM.EXAM_15P:
+            subject_scores[name]['15_minute']['scores'].append(score)
+        elif type == TYPEEXAM.EXAM_45P:
+            subject_scores[name]['45_minute']['scores'].append(score)
+        elif type == TYPEEXAM.EXAM_final:
+            subject_scores[name]['final_points']['scores'].append(score)
     return subject_scores
 
 

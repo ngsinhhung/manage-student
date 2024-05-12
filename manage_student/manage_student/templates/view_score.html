@@ -35,43 +35,44 @@
 <div class="container shadow-md d-flex gap-3 mt-2">
     <div class="p-3 rounded-3 flex-grow-1" style="width:300px;background-color:#1668b3;">
         <p style="color:white">Tra cứu kết quả học tập</p>
-        <form action="/view_score" method="post">
-            <label for="basic-url" style="color:white" class="form-label fs-6">Nhập số điện thoại</label>
+        <form action="/view_score" method="post" id="formCheckPhone">
+            <label style="color:white" class="form-label fs-6">Nhập số điện thoại</label>
             <div class="input-group mb-3 ">
             <span class="input-group-text" id="basic-addon3">+84</span>
                 <input type="text" class="form-control" name="student_phone_number" id="check-student"
                    aria-describedby="basic-addon3">
         </div>
-
-            <button class="btn btn-success" id="btnCheckPhoneNumber" style="color:white">Xác nhận</button>
-            <div id="form-valid-OTP">
-                <label for="validOTP" style="color:white" class="form-label">Nhập OTP</label>
-                <div class="mb-2">
-                    <input type="number" id="validOTP" class="form-control" aria-describedby="passwordHelpBlock">
-                    <span class="" style="color:white;">Gửi lại <span class="m"
-                                                                      style="cursor:pointer;text-decorator:underline">OTP</span></span>
-                </div>
-            <button class="btn btn-success" type="submit" id = "btnSubmitOTP" style="color:white">Xác nhận OTP</button>
-            </div>
+            <button class="btn btn-success" id="btnCheckPhoneNumber" onclick="submitForm()" style="color:white">Xác
+                nhận
+            </button>
         </form>
 
     </div>
     <div class="p-3 shadow-sm flex-grow-1" style="width:700px">
-        <p>Để tra cứu điểm của học sinh <span style="font-weight:bold">Minh Tâm</span> vui lòng chọn kì học</p>
-        <label for="termSelect" style="color:#1668b3" class="form-label">Chọn kì học:</label>
-        <form method="GET" action="/view_score">
+        {% if profile_student_view_score %}
+            <p>Để tra cứu điểm của học sinh <span style="font-weight:bold">{{ profile_student_view_score[1] }}</span>
+                vui lòng chọn kì học</p>
+            <form id="viewScoreFrom"
+                  method="GET">
+                <label style="color:#1668b3" class="form-label">Chọn kì học:</label>
             <select class="form-select" name="semester_id">
                 {% for s in semester %}
                     <option value="{{ s.id }}">{{ s.semester_name }}</option>
                 {% endfor %}
             </select>
-            <button class="btn btn-info mt-2" id="btnSemester" style="color:white">Xác nhận</button>
-        </form>
-        <div>
+                <button class="btn btn-info mt-2" id="btnSemester" style="color:white">
+                    Xem điểm
+                </button>
+            </form>
+            <div>
             <div class="container mt-3">
-                {% if processed_scores %}
-                    <p class="text-center">Kết quả học tập của Minh Tâm học {{ selected_semester.semester_name }}</p>
-                    <table class="table table-bordered">
+                {% if selected_semester %}
+                    <p class="text-center">Kết quả học tập của {{ profile_student_view_score[1] }}
+                    học
+                    {{ selected_semester.semester_name }}
+                {% endif %}
+                </p>
+                <table class="table table-bordered d-lg-none" id="tableScore">
                         <thead>
                         <tr>
                             <th scope="col">Môn học</th>
@@ -80,32 +81,17 @@
                             <th scope="col">Điểm Thi</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        {% for subject, scores in processed_scores.items() %}
-                            <tr>
-                                <td rowspan="">{{ subject }}</td>
-                                <td>
-                                    {% for item in scores['15_minute'] %}
-                                        {{ item }}
-                                    {% endfor %}
-                                </td>
-                                <td>
-                                    {% for item in scores['45_minute'] %}
-                                        {{ item }}
-                                    {% endfor %}
-                                </td>
-                                <td>{{ scores.final_points }}</td>
-                            </tr>
-                        {% endfor %}
+                    <tbody id="scoresTable">
                         </tbody>
                     </table>
-                {% else %}
-                    <h1 class="text-center">Học kì chưa cập nhật điểm.</h1>
-                {% endif %}
 
             </div>
-
-        </div>
+            </div>
+        {% else %}
+            <div>
+                <span class="text-info fs-3">Vui Lòng nhập số điện thoại để xem điểm</span>
+            </div>
+        {% endif %}
     </div>
 </div>
 <script
@@ -115,41 +101,62 @@
 ></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const btnSemester = document.getElementById("btnSemester")
-        const phoneNumberInput = document.getElementById("check-student");
-        const otpForm = document.getElementById("otpForm");
-        const btnCheckPhoneNumber = document.getElementById("btnCheckPhoneNumber");
-        const btnSubmitOTP = document.getElementById("btnSubmitOTP")
-        const validOtp = document.getElementById("validOTP")
-        const formValidOTP = document.getElementById("form-valid-OTP")
-        formValidOTP.style.display = "none"
-        let randomOTP = 0;
+    function submitForm() {
+        var form = document.getElementById("formCheckPhone")
+        const phoneNumber = document.getElementById("check-student").value
+        console.log(phoneNumber)
+        localStorage.setItem("phone", phoneNumber)
+        form.submit()
 
-        btnCheckPhoneNumber.addEventListener("click", function (e) {
-            e.preventDefault();
-            if (phoneNumberInput.value !== "") {
-                btnCheckPhoneNumber.style.display = "none"
-                randomOTP = Math.floor(Math.random() * 1000);
-                formValidOTP.style.display = "block";
-                console.log(randomOTP);
-            }
-        });
+    }
 
-        btnSubmitOTP.addEventListener("click", function (e) {
-            e.preventDefault();
-            if (validOtp.value.trim() === randomOTP.toString()) {
-                window.stop()
-            } else {
-                console.log("OTP không chính xác");
-            }
-        });
-    });
-    btnSemester.addEventListener("click", function (e) {
+    function displayScores(scores) {
+        document.getElementById("tableScore").classList.remove("d-lg-none")
+        var tableBody = document.getElementById('scoresTable');
+        console.log(tableBody)
+        // Clear existing table rows
+        tableBody.innerHTML = '';
+
+        // Loop through scores and create table rows
+        for (var subject in scores) {
+            var row = tableBody.insertRow();
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+
+            cell1.textContent = subject;
+
+            cell2.textContent = scores[subject]['15_minute']['scores'].length > 0 ? scores[subject]['15_minute']['scores'].join(' ') : '-';
+
+            cell3.textContent = scores[subject]['45_minute']['scores'].length > 0 ? scores[subject]['45_minute']['scores'].join(' ') : '-';
+
+            cell4.textContent = scores[subject]['final_points']['scores'].length > 0 ? scores[subject]['final_points']['scores'].join(' ') : '-';
+        }
+    }
+
+    document.getElementById("btnSemester").addEventListener("click", function (e) {
         e.preventDefault()
+        var studentId = {{ profile_student_view_score[0] }}
+        var selectedSemesterId = document.querySelector('select[name="semester_id"]').value;
+        console.log(studentId)
+        console.log(selectedSemesterId)
+        fetch(`/api/view_score/${studentId}?semester_id=${selectedSemesterId}`, {
+            method: "GET"
+        }).then(res => {
+            if (!res.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return res.json();
+        }).then(res => {
+            displayScores(res)
+        }).catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        })
+
     })
+
+
 </script>
-
-
 </body>
 </html>
