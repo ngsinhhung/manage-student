@@ -1,13 +1,15 @@
 from flask import render_template, redirect, url_for
 from flask_login import current_user, login_required, logout_user, login_user
+
 from dao import auth, group_class, teacher, assignments
 from manage_student import login
 from manage_student.api.student_class import *
+from manage_student.api.student_score import *
 from manage_student.dao.student import *
 from manage_student.form import *
 from manage_student.model import UserRole
-from manage_student.api.student_score import *
-
+import datetime
+from manage_student.api.teach import *
 @login.user_loader
 def user_load(user_id):
     return auth.load_user(user_id)
@@ -147,20 +149,15 @@ def input_grade():
 @app.route("/grade/input/<teach_plan_id>/score")
 @login_required
 def input_grade_subject(teach_plan_id):
-
     teach_plan = teacher.get_teaching_plan_by_id(teach_plan_id)
     return render_template("input_score_subject.html", can_edit=teacher.can_edit_exam, get_score=teacher.get_score_by_student_id,teach_plan=teach_plan)
-
-
 
 
 @app.route("/view_score", methods=['GET', 'POST'])
 def view_score():
     semester = get_all_semester()
     message = ''
-    selected_semester = None
     profile_student_view_score = None
-
     if request.method == "POST":
         phone_number = request.form['student_phone_number']
         print(phone_number)
@@ -168,10 +165,8 @@ def view_score():
     else:
         message = 'Không tìm thấy học sinh'
     return render_template("view_score.html", semester=semester,
-                           selected_semester=selected_semester, profile_student_view_score=profile_student_view_score,
+                           profile_student_view_score=profile_student_view_score,
                            message=message)
-
-
 if __name__ == "__main__":
     with app.app_context():
         app.run(debug=True)

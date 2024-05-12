@@ -6,7 +6,6 @@ function createExcel(data, columns, fileName) {
 
     const wscols = [
         {wpx: 80},
-        {wpx: 200},
         {wpx: 120},
         {wpx: 100},
         {wpx: 100},
@@ -23,9 +22,6 @@ function getDataFromInputs() {
 
     rows.forEach(row => {
         const rowData = [];
-        const score15pInputs = row.querySelectorAll('.score_15p');
-        const score45pInputs = row.querySelectorAll('.score_45p');
-        const scoreThiInput = row.querySelector('input[id^="EXAM_final_1"]');
 
         const stt = row.querySelector('td:nth-child(1)').innerText;
         rowData.push(stt);
@@ -33,16 +29,18 @@ function getDataFromInputs() {
         const studentName = row.querySelector('td:nth-child(2)').innerText;
         rowData.push(studentName);
 
-        const dob = row.querySelector('td:nth-child(3)').innerText;
-        rowData.push(dob);
-
+        const score15pInputs = row.querySelectorAll('[class^="EXAM_15P_"]');
         const score15pValues = Array.from(score15pInputs).map(input => input.value);
-        rowData.push(score15pValues.join(' '));
+        const score15p = score15pValues.join(' ').trim() || null;
+        rowData.push(score15p);
 
+        const score45pInputs = row.querySelectorAll('[class^="EXAM_45P_"]');
         const score45pValues = Array.from(score45pInputs).map(input => input.value);
-        rowData.push(score45pValues.join(' '));
+        const score45p = score45pValues.join(' ').trim() || null;
+        rowData.push(score45p);
 
-        const scoreThiValue = scoreThiInput.value;
+        const scoreThiInput = row.querySelector('.EXAM_final_1');
+        const scoreThiValue = scoreThiInput.value.trim() || null;
         rowData.push(scoreThiValue);
 
         data.push(rowData);
@@ -52,11 +50,18 @@ function getDataFromInputs() {
 }
 
 
+
 document.getElementById('exportButton').addEventListener('click', function () {
     const data = getDataFromInputs();
-    const columns = ['STT', 'Tên Học Sinh', 'Ngày Sinh', 'Điểm 15 phút', 'Điểm 45 phút', 'Điểm Thi'];
-    createExcel(data, columns, 'student_scores.xlsx');
+    console.log(data);
+
+    // Thay thế giá trị null bằng chuỗi rỗng
+    const cleanedData = data.map(row => row.map(cell => cell === null ? 'None' : cell));
+
+    const columns = ['STT', 'Tên Học Sinh', 'Điểm 15 phút', 'Điểm 45 phút', 'Điểm Thi'];
+    createExcel(cleanedData, columns, 'student_scores.xlsx');
 });
+
 
 
 
