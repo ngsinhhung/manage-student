@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, request, jsonify
 from flask_login import current_user, login_required, logout_user, login_user
 
 from dao import auth, teacher, assignments
@@ -6,7 +6,13 @@ from manage_student import login
 from manage_student.api.student_class import *
 from manage_student.dao.student import *
 from manage_student.form import *
+from dao import auth, student, group_class,teacher,assignments
+from manage_student.api import *
 from manage_student.model import UserRole
+from manage_student import admin
+
+from manage_student.api.teach import *
+from manage_student.api.student_class import *
 
 
 @login.user_loader
@@ -76,9 +82,6 @@ def teacher_assignment_class(grade, classname):
     return render_template("teacher_assignment.html", grade=grade, classname=classname, subjects=subject_list, teachers=teacher_list)
 
 
-
-
-
 @app.route('/api/class/', methods=['GET'])
 def get_class():
     q = request.args.get('q')
@@ -145,14 +148,15 @@ def view_regulations():
 @login_required
 def input_grade():
     profile = auth.get_info_by_id(current_user.id)
-    return render_template("input_score.html",teacher_class = teacher.get_class_of_teacher(profile.id), check_deadline_score =teacher.check_deadline_score)
+    return render_template("input_score.html", teaching_plan=teacher.get_teaching_of_teacher(profile.id),date=datetime.datetime.now())
 
-@app.route("/grade/input/<class_id>/score")
+
+@app.route("/grade/input/<teach_plan_id>/score")
 @login_required
-def input_grade_subject(class_id):
-    class_params = int(class_id.split('=')[-1])
-    class_obj,semester,subject,profile_students,teacher_planing = teacher.get_teaching_plan_details(class_params)
-    return render_template("input_score_subject.html",class_obj=class_obj,semester=semester,subject=subject,profile_students=profile_students,teacher_planing=teacher_planing)
+def input_grade_subject(teach_plan_id):
+
+    teach_plan = teacher.get_teaching_plan_by_id(teach_plan_id)
+    return render_template("input_score_subject.html", can_edit=teacher.can_edit_exam, get_score=teacher.get_score_by_student_id,teach_plan=teach_plan)
 
 
 @app.route("/view_score", methods=['GET', 'POST'])

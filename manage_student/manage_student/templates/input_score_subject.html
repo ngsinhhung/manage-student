@@ -1,6 +1,6 @@
 {% extends 'layout/base.html' %}
 {% block title %}
-Quản lý học sinh
+    Quản lý học sinh
 {% endblock %}
 {% block content %}
     <div class="alert alert-danger  align-items-center" id="alterMessage" role="alert" style="display: none">
@@ -8,82 +8,168 @@ Quản lý học sinh
         <div id="message-error" style="margin-left: 10px;">
         </div>
     </div>
-<div class="px-2"
-     style="font-size: 20px; gap: 10px; background-color: #cdd9e7; color: #2c5789; font-weight: bold;">
+    <div class="px-2"
+         style="font-size: 20px; gap: 10px; background-color: #cdd9e7; color: #2c5789; font-weight: bold;">
 
-    <p>Nhập điểm từ hệ thống</p>
-    <div class="ms-auto d-flex justify-content-between" style="gap: 10px;">
-        <div class="d-flex align-items-center" style="gap:20px;color:#333;">
-            <p>Lớp: {{ class_obj.grade.name[1:] }}A{{class_obj.count}}</p>
-            <p>Môn học: {{ subject.name }}</p>
-            <p>Kì học: {{ semester.semester_name }}</p>
-        </div>
-        <div class="action">
-            <button class="btn btn-success" id="updateButton" >Lưu điểm
-            </button>
-            <button class="btn btn-primary" id="exportButton" disabled>Xuất file excel</button>
+        <p>Nhập điểm từ hệ thống</p>
+        <div class="ms-auto d-flex justify-content-between" style="gap: 10px;">
+            <div class="d-flex align-items-center" style="gap:20px;color:#333;">
+                <p>Lớp: {{ teach_plan.class_teach.grade.value }}A{{ teach_plan.class_teach.count }}</p>
+                <p>Môn học: {{ teach_plan.subject.name }}</p>
+                <p>Kì học: {{ teach_plan.semester.semester_name }}</p>
+            </div>
+            <div class="action">
+                <button onclick="save()" class="btn btn-success" id="updateButton">Lưu điểm
+                </button>
+                <button class="btn btn-primary" id="exportButton" >Xuất file excel</button>
+            </div>
         </div>
     </div>
-</div>
-<table class="table">
-    <thead>
-    <tr>
-        <th>STT</th>
-        <th>Tên Học Sinh</th>
-        <th>Ngày Sinh</th>
-        <th>Điểm 15p</th>
-        <th>Điểm 1 Tiết</th>
-        <th>Điểm Thi</th>
-        <th class="action_deleted"></th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for student in profile_students %}
-        <tr id="student_{{ student.id }}">
-            <td>{{ loop.index }}</td>
-            <td>{{ student.name }}</td>
-            <td>{% if student.birthday %}{{ student.birthday.strftime("%d/%m/%Y") }}{% endif %}</td>
-            <td id="{{ student.id_score_15p }}">
-                {% for i in range(subject.number_of_15p) %}
-                    <input type="number" class="score_15p" name="score_15p_student_{{ student.id }}_{{ i + 1 }}"
-                           value="" data-column="score_15p"
-                           required min="0" max="10"
-                           style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;"/>
-                {% endfor %}
-            </td>
-            <td id="{{ student.id_score_45p }}">
-                {% for i in range(subject.number_of_45p) %}
-                    <input type="number" class="score_45p" name="score_45p_student_{{ student.id }}_{{ i + 1 }}"
-                           required data-column="score_45p"
-                           min="0" max="10"
-                           style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;"/>
-                {% endfor %}
-            </td>
-
-            <td>
-                <input type="text" id="score_thi_student_{{ student.id }}" class="score_final"
-                       name="score_thi_student_{{ student.id }}"
-                       data-column="score_final"
-                       style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;"/>
-            </td>
-            <td>
-                <button class="btn btn-danger" id="btn-action-edit_{{ student.id }}"
-                        onclick=""
-                        style="display: none"></button>
-                <div class="action-edit-score d-flex gap-2">
-                    <button class="btn btn-success" id="btn-action-approved_{{ student.id }}"
-                        onclick=""
-                        style="display: none">Xác nhận</button>
-                    <button class="btn btn-danger" id="btn-action-cancel_{{ student.id }}"
-                            onclick=""
-                            style="display: none">Hủy
-                    </button>
-                </div>
-            </td>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>STT</th>
+            <th>Tên Học Sinh</th>
+            <th>Điểm 15p</th>
+            <th>Điểm 1 Tiết</th>
+            <th>Điểm Thi</th>
+            <th class="action_deleted"></th>
         </tr>
-    {% endfor %}
-    </tbody>
-</table>
-<script src="{{ url_for('static', filename='js/score.js') }}"></script>
+        </thead>
+        <tbody>
+        {% for s in teach_plan.class_teach.students %}
+            <tr id="student_{{ s.student.id }}">
+                <td>{{ loop.index }}</td>
+                <td>{{ s.student.profile.name }}</td>
+                <td>
+                    {% for i in range(teach_plan.subject.number_of_15p) %}
+                        <input id="{{ s.student.id }}" type="number" class="EXAM_15P_{{ loop.index }}"
+                               name="score_15p_student"
+                               data-column="score_15p"
+                               value="{{ get_score(teach_plan.id,s.student.id,"EXAM_15P",loop.index).score }}"
+                               required min="0" max="10"
+                               style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;"/>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for i in range(teach_plan.subject.number_of_45p) %}
+                        <input id="{{ s.student.id }}" type="number" class="EXAM_45P_{{ loop.index }}"
+                               name="score_45p_student"
+                               required data-column="score_45p"
+                               value="{{ get_score(teach_plan.id,s.student.id,"EXAM_45P",loop.index).score }}"
+                               min="0" max="10"
+                               style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;"/>
+                    {% endfor %}
+                </td>
+
+                <td>
+                    <input id="{{ s.student.id }}" type="text" class="EXAM_final_1"
+                           name="score_thi_student"
+                           data-column="score_final"
+                           value="{{ get_score(teach_plan.id,s.student.id,"EXAM_final",1).score }}"
+                           style="width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;"/>
+                </td>
+                <td class="col-md-2">
+                    {% if can_edit(s.student.id,teach_plan.id) %}
+
+                        <button class="btn btn-info" id="btn-save-{{ s.student.id }}" onclick="save_edit(this)"
+                                hidden="hidden">Xác nhận
+                        </button>
+                        <button class="btn btn-danger" id="btn-edit-{{ s.student.id }}" onclick="edit(this)">Sửa
+                        </button>
+                    {% else %}
+
+                        <button class="btn btn-danger" id="btn-edit-{{ s.student.id }}" disabled>Sửa</button>
+
+                    {% endif %}
+                </td>
+
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <script src="{{ url_for('static', filename='js/score.js') }}"></script>
+    <script>
+        input = document.getElementsByTagName("input")
+        for (const i of input) {
+            if (i.value !== "") {
+                i.disabled = true;
+            }
+        }
+
+        function save() {
+            score = []
+            input = document.getElementsByTagName("input")
+            for (const i of input) {
+                if (i.value !== "" && i.disabled === false) {
+                    score.push({
+                        "id": i.id,
+                        "type": i.className.slice(0, -2),
+                        "points": i.value,
+                        "count": i.className.slice(-1)
+                    })
+                }
+            }
+            fetch("/api/{{ teach_plan.id }}/score", {
+                method: "post",
+                body: JSON.stringify({
+                    "list_score": score
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(res => res.json()).then(data => {
+                if (data.status === 200) {
+                    confirm("Lưu thành công!");
+                    window.location.href = "/home";
+                }
+            })
+        }
+
+        function edit(button) {
+            input = document.getElementsByTagName("input")
+            for (const i of input) {
+                if (i.id === button.id.slice(9)) {
+                    i.disabled = !i.disabled
+                }
+            }
+            if (button.innerHTML === "Hủy") {
+                button.innerHTML = "Sửa"
+                document.querySelector(`#btn-save-${button.id.slice(9)}`).setAttribute("hidden", "hidden");
+            } else {
+                button.innerHTML = "Hủy"
+                document.querySelector(`#btn-save-${button.id.slice(9)}`).removeAttribute("hidden")
+            }
+        }
+        function save_edit(button){
+            update = []
+            input = document.getElementsByTagName("input")
+            for (const i of input) {
+                if (i.id === button.id.slice(9) && i.disabled === false) {
+                    update.push({
+                        "id": i.id,
+                        "type": i.className.slice(0, -2),
+                        "points": i.value,
+                        "count": i.className.slice(-1)
+                    })
+
+                }
+            }
+            fetch("/api/{{ teach_plan.id }}/score", {
+                method: "put",
+                body: JSON.stringify({
+                    "list_score": update
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(res => res.json()).then(data => {
+                if (data.status === 200) {
+                    confirm("Lưu thành công!");
+                    window.location.reload()
+                }
+            })
+        }
+    </script>
 {% endblock %}
-{% include 'components/toast.html' %}
