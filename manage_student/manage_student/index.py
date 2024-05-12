@@ -155,15 +155,29 @@ def input_grade_subject(class_id):
     return render_template("input_score_subject.html",class_obj=class_obj,semester=semester,subject=subject,profile_students=profile_students,teacher_planing=teacher_planing)
 
 
-@app.route("/view_score")
+@app.route("/view_score", methods=['GET', 'POST'])
 def view_score():
-    semester = Semester.query.all()
-    semester_id = request.args.get('semester_id')
-    selected_semester = Semester.query.get(semester_id)
-    score = view_score_student(4, semester_id)
-    processed_scores  = preprocess_scores(score)
-    return render_template("view_score.html", processed_scores=processed_scores, semester=semester,selected_semester=selected_semester)
+    semester = get_all_semester()
+    message = ''
+    selected_semester = None
+    processed_scores = None
+    profile_student_view_score = None
+    if request.method == 'POST':
+        phone_number = request.form['student_phone_number']
+        profile_student_view_score = verify_student_phone_number(phone_number)
+        if profile_student_view_score:
+            print("cc")
+            print(profile_student_view_score[0])
+            semester_id = request.args.get('semester_id')
+            score = view_score_student(profile_student_view_score[0], semester_id)
+            processed_scores = preprocess_scores(score)
+            print(score)
+        else:
+            message = 'Không tìm thấy học sinh'
 
+    return render_template("view_score.html", processed_scores=processed_scores, semester=semester,
+                           selected_semester=selected_semester, profile_student_view_score=profile_student_view_score,
+                           message=message)
 
 if __name__ == "__main__":
     with app.app_context():

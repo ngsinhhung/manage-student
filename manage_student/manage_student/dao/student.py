@@ -41,6 +41,13 @@ def check_student_in_class(student_id, class_id):
     return Students_Classes.query.filter(Students_Classes.student_id == student_id).filter(Students_Classes.class_id == class_id).first()
 
 
+def get_all_semester():
+    return Semester.query.all()
+def verify_student_phone_number(phone_number):
+    return db.session.query(Student.id, Profile.name).join(Profile).filter(Profile.phone == phone_number).first()
+
+
+
 def view_score_student(student_id, semester_id):
     return (db.session.query(Subject.name, Score.type, Score.points, Exam.final_points)
             .join(Teaching_plan, Exam.teach_plan_id == Teaching_plan.id)
@@ -67,4 +74,5 @@ def preprocess_scores(scores):
 
 if __name__ == '__main__':
     with app.app_context():
+        # print(verify_student_phone_number(1000000000))
         print(view_score_student(4, 1))

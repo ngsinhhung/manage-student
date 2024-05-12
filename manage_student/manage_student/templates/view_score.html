@@ -23,18 +23,11 @@
             <a class="navbar-brand text-white" href="#"></a>
             <div class="d-flex" style="margin-right: 30px">
                 <div>
-                    <img
-                            src="https://github.com/mdo.png"
-                            alt="hugenerd"
-                            class="rounded-circle"
-                            style="margin-right: 5px; width:40px; height:40px"
-                    />
-                    <span class="text-white">Username </span>
+                    {% if profile_student_view_score %}
+                        <span class="text-white fs-5">Chào học sinh {{ profile_student_view_score[1] }}</span>
+                    {% endif %}
                 </div>
-                <div>
-                    <i class="fa fa-sign-out text-white icon-header"
-                       style="padding: 10px; margin-left: 10px; font-size: 18px;" aria-hidden="true"></i>
-                </div>
+
             </div>
         </div>
     </div>
@@ -42,20 +35,26 @@
 <div class="container shadow-md d-flex gap-3 mt-2">
     <div class="p-3 rounded-3 flex-grow-1" style="width:300px;background-color:#1668b3;">
         <p style="color:white">Tra cứu kết quả học tập</p>
-        <form>
+        <form action="/view_score" method="post">
             <label for="basic-url" style="color:white" class="form-label fs-6">Nhập số điện thoại</label>
-        <div class="input-group mb-3">
+            <div class="input-group mb-3 ">
             <span class="input-group-text" id="basic-addon3">+84</span>
-            <input type="text" class="form-control" name="student_phone_number" id="basic-url"
+                <input type="text" class="form-control" name="student_phone_number" id="check-student"
                    aria-describedby="basic-addon3">
         </div>
-        <label for="inputPassword5" style="color:white" class="form-label">Nhập OTP</label>
-        <div class="mb-2">
-            <input type="password" id="inputPassword5" class="form-control" aria-describedby="passwordHelpBlock">
-            <span class="" style="color:white;">Gửi lại <span class="m" style="cursor:pointer;text-decorator:underline">OTP</span></span>
-        </div>
-            <button class="btn btn-success" type="submit" style="color:white">Xác nhận OTP</button>
+
+            <button class="btn btn-success" id="btnCheckPhoneNumber" style="color:white">Xác nhận</button>
+            <div id="form-valid-OTP">
+                <label for="validOTP" style="color:white" class="form-label">Nhập OTP</label>
+                <div class="mb-2">
+                    <input type="number" id="validOTP" class="form-control" aria-describedby="passwordHelpBlock">
+                    <span class="" style="color:white;">Gửi lại <span class="m"
+                                                                      style="cursor:pointer;text-decorator:underline">OTP</span></span>
+                </div>
+            <button class="btn btn-success" type="submit" id = "btnSubmitOTP" style="color:white">Xác nhận OTP</button>
+            </div>
         </form>
+
     </div>
     <div class="p-3 shadow-sm flex-grow-1" style="width:700px">
         <p>Để tra cứu điểm của học sinh <span style="font-weight:bold">Minh Tâm</span> vui lòng chọn kì học</p>
@@ -66,7 +65,7 @@
                     <option value="{{ s.id }}">{{ s.semester_name }}</option>
                 {% endfor %}
             </select>
-            <button class="btn btn-info mt-2" style="color:white">Xác nhận</button>
+            <button class="btn btn-info mt-2" id="btnSemester" style="color:white">Xác nhận</button>
         </form>
         <div>
             <div class="container mt-3">
@@ -115,6 +114,41 @@
         crossorigin="anonymous"
 ></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const btnSemester = document.getElementById("btnSemester")
+        const phoneNumberInput = document.getElementById("check-student");
+        const otpForm = document.getElementById("otpForm");
+        const btnCheckPhoneNumber = document.getElementById("btnCheckPhoneNumber");
+        const btnSubmitOTP = document.getElementById("btnSubmitOTP")
+        const validOtp = document.getElementById("validOTP")
+        const formValidOTP = document.getElementById("form-valid-OTP")
+        formValidOTP.style.display = "none"
+        let randomOTP = 0;
+
+        btnCheckPhoneNumber.addEventListener("click", function (e) {
+            e.preventDefault();
+            if (phoneNumberInput.value !== "") {
+                btnCheckPhoneNumber.style.display = "none"
+                randomOTP = Math.floor(Math.random() * 1000);
+                formValidOTP.style.display = "block";
+                console.log(randomOTP);
+            }
+        });
+
+        btnSubmitOTP.addEventListener("click", function (e) {
+            e.preventDefault();
+            if (validOtp.value.trim() === randomOTP.toString()) {
+                window.stop()
+            } else {
+                console.log("OTP không chính xác");
+            }
+        });
+    });
+    btnSemester.addEventListener("click", function (e) {
+        e.preventDefault()
+    })
+</script>
 
 
 </body>
