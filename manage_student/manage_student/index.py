@@ -156,17 +156,7 @@ def input_grade_subject(teach_plan_id):
 @app.route("/view_score", methods=['GET', 'POST'])
 def view_score():
     semester = get_all_semester()
-    message = ''
-    profile_student_view_score = None
-    if request.method == "POST":
-        phone_number = request.form['student_phone_number']
-        print(phone_number)
-        profile_student_view_score = verify_student_phone_number(phone_number)
-        if not profile_student_view_score :
-            message = 'Không tìm thấy học sinh'
-    return render_template("view_score.html", semester=semester,
-                           profile_student_view_score=profile_student_view_score,
-                           message=message)
+    return render_template("view_score.html", semester=semester)
 if __name__ == "__main__":
     with app.app_context():
         app.run(debug=True)

@@ -23,9 +23,9 @@
             <a class="navbar-brand text-white" href="#"></a>
             <div class="d-flex" style="margin-right: 30px">
                 <div>
-                    {% if profile_student_view_score %}
-                        <span class="text-white fs-5">Chào học sinh {{ profile_student_view_score[1] }}</span>
-                    {% endif %}
+                    {#                    {% if profile_student_view_score %}#}
+                    {#                        <span class="text-white fs-5">Chào học sinh {{ profile_student_view_score[1] }}</span>#}
+                    {#                    {% endif %}#}
                 </div>
 
             </div>
@@ -35,26 +35,22 @@
 <div class="container shadow-md d-flex gap-3 mt-2">
     <div class="p-3 rounded-3 flex-grow-1" style="width:300px;background-color:#1668b3;">
         <p style="color:white">Tra cứu kết quả học tập</p>
-        <form action="/view_score" method="post" id="formCheckPhone">
+        <div id="formCheckPhone">
             <label style="color:white" class="form-label fs-6">Nhập số điện thoại</label>
             <div class="input-group mb-3 ">
-            <span class="input-group-text" id="basic-addon3">+84</span>
                 <input type="text" class="form-control" name="student_phone_number" id="check-student"
                    aria-describedby="basic-addon3">
         </div>
+            <div id="recaptcha-container" class="mt-2"></div>
             <button class="btn btn-success" id="btnCheckPhoneNumber" type="submit" style="color:white">Xác
                 nhận
             </button>
-            {% if not profile_student_view_score %}
-                <p class="text-danger fs-5">{{ message }}</p>
-            {% endif %}
-        </form>
 
+        </div>
 
     </div>
     <div class="p-3 shadow-sm flex-grow-1" style="width:700px">
-        {% if profile_student_view_score %}
-            <p>Để tra cứu điểm của học sinh <span style="font-weight:bold">{{ profile_student_view_score[1] }}</span>
+        <p>Để tra cứu điểm của học sinh <span style="font-weight:bold"></span>
                 vui lòng chọn kì học</p>
             <p class="text-black-50 fs-5" id="year-student"></p>
             <form id="viewScoreFrom"
@@ -89,11 +85,7 @@
 
             </div>
             </div>
-        {% else %}
-            <div>
-                <span class="text-info fs-3">Vui Lòng nhập số điện thoại để xem điểm</span>
-            </div>
-        {% endif %}
+
     </div>
 </div>
 <script
@@ -102,15 +94,80 @@
         crossorigin="anonymous"
 ></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
+<script src="https://www.gstatic.com/firebasejs/9.12.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.12.1/firebase-auth-compat.js"></script>
+<script type="module">
+    var coderesult = ""
+    const firebaseConfig = {
 
+        apiKey: "AIzaSyB0N-lLI2z7-pSChYSNzsm2fqdZEzjtVLc",
+
+        authDomain: "mobile-auth-9f6c3.firebaseapp.com",
+
+        projectId: "mobile-auth-9f6c3",
+
+        storageBucket: "mobile-auth-9f6c3.appspot.com",
+
+        messagingSenderId: "444414383977",
+
+        appId: "1:444414383977:web:62a1e777a1ab8a6cc10ff8",
+
+        measurementId: "G-WMZ0FSBT5Q"
+
+    };
+    firebase.initializeApp(firebaseConfig);
+    render();
+    function render() {
+
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
+
+        recaptchaVerifier.render();
+
+    }
     const year = (new Date().getFullYear() - 1).toString()
     console.log(year)
     document.getElementById("year-student").innerHTML = "Năm Học : " + year
+    document.getElementById("btnCheckPhoneNumber").addEventListener("click", function (e) {
+        e.preventDefault()
+        const phoneNumber = document.getElementById("check-student").value
+        const data = {
+            "phone_number": phoneNumber
+        }
+        fetch('/api/view_score/verify_number', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Network response was not ok.');
+            }
+        })
+            .then(data => {
+                if (data) {
+                    firebase.auth().signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier).then(function (confirmationResult) {
+                        window.confirmationResult = confirmationResult;
+                        coderesult = confirmationResult;
+                        console.log('OTP Sent');
+
+                    }).catch(function (error) {
+                        alert(error.message);
+                    });
+                } else {
+                    console.log("loi")
+                }
+            })
+            .catch(error => {
+                console.error('There was a problem with your fetch operation:', error);
+            });
+    })
+
     function displayScores(scores) {
         document.getElementById("tableScore").classList.remove("d-lg-none")
         var selectedSemesterId = document.querySelector('select[name="semester_id"]').value;
-        var studentName = "{{ profile_student_view_score[1] }}"; // Sử dụng biến mẫu mà Jinja sẽ thay thế
         document.getElementById("par-view-score").innerHTML = "Kết quả học tập của " + studentName + " học " + selectedSemesterId;
         var tableBody = document.getElementById('scoresTable');
         console.log(tableBody)
@@ -136,7 +193,6 @@
 
     document.getElementById("btnSemester").addEventListener("click", function (e) {
         e.preventDefault()
-        var studentId = {{ profile_student_view_score[0] }}
         var selectedSemesterId = document.querySelector('select[name="semester_id"]').value;
         console.log(studentId)
         console.log(selectedSemesterId)

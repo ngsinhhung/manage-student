@@ -1,3 +1,4 @@
+import json
 import random
 
 from sqlalchemy import extract
@@ -47,7 +48,12 @@ def get_all_semester():
     return Semester.query.all()
 
 def verify_student_phone_number(phone_number):
-    return db.session.query(Student.id, Profile.name).join(Profile).filter(Profile.phone == phone_number).first()
+    student_info = db.session.query(Student.id, Profile.name).join(Profile).filter(Profile.phone == phone_number).first()
+    if student_info:
+        student_info_dict = {'id': student_info[0], 'name': student_info[1]}
+        return json.dumps(student_info_dict,ensure_ascii=False)
+    else:
+        return None
 
 
 
@@ -80,5 +86,5 @@ def preprocess_scores(scores):
 
 if __name__ == '__main__':
     with app.app_context():
-        # print(verify_student_phone_number(1000000000))
-        print(view_score_student(4, 1))
+        print(verify_student_phone_number("+84902748617"))
+        # print(view_score_student(4, 1))
