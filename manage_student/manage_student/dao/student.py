@@ -1,8 +1,10 @@
 import random
 
+from sqlalchemy import extract
+
 from manage_student.model import *
 from manage_student.utils import *
-
+from manage_student.utils import get_current_year
 
 def create_student(form):
     profile = Profile(name=form.full_name.data,
@@ -43,25 +45,26 @@ def check_student_in_class(student_id, class_id):
 
 def get_all_semester():
     return Semester.query.all()
+
 def verify_student_phone_number(phone_number):
     return db.session.query(Student.id, Profile.name).join(Profile).filter(Profile.phone == phone_number).first()
 
 
 
 def view_score_student(student_id, semester_id):
-    return (db.session.query(Exam, Subject.name, Score.type, Score.score,Score.count)
+    return (db.session.query(Exam, Subject.name, Score.type, Score.score,Score.count,extract('YEAR', Teaching_plan.score_deadline))
             .join(Teaching_plan, Exam.teach_plan_id == Teaching_plan.id)
             .join(Score, Exam.id == Score.Exam_id)
             .join(Subject, Teaching_plan.subject_id == Subject.id)
             .filter(Exam.student_id == student_id)
-            .filter(Teaching_plan.semester_id == semester_id)
+            .filter(Teaching_plan.semester_id == semester_id).filter(extract('YEAR', Teaching_plan.score_deadline) == get_current_year())
             .all()
             )
 
 
 def preprocess_scores(scores):
     subject_scores = {}
-    for exam, name, type, score, count in scores:
+    for exam, name, type, score, count,_ in scores:
         if name not in subject_scores:
             subject_scores[name] = {'15_minute': {'scores': [], 'count': 0}, '45_minute': {'scores': [], 'count': 0},
                                     'final_points': {'scores': [], 'count': 0}}

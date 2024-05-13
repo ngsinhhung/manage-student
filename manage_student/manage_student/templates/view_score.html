@@ -42,16 +42,21 @@
                 <input type="text" class="form-control" name="student_phone_number" id="check-student"
                    aria-describedby="basic-addon3">
         </div>
-            <button class="btn btn-success" id="btnCheckPhoneNumber" onclick="submitForm()" style="color:white">Xác
+            <button class="btn btn-success" id="btnCheckPhoneNumber" type="submit" style="color:white">Xác
                 nhận
             </button>
+            {% if not profile_student_view_score %}
+                <p class="text-danger fs-5">{{ message }}</p>
+            {% endif %}
         </form>
+
 
     </div>
     <div class="p-3 shadow-sm flex-grow-1" style="width:700px">
         {% if profile_student_view_score %}
             <p>Để tra cứu điểm của học sinh <span style="font-weight:bold">{{ profile_student_view_score[1] }}</span>
                 vui lòng chọn kì học</p>
+            <p class="text-black-50 fs-5" id="year-student"></p>
             <form id="viewScoreFrom"
                   method="GET">
                 <label style="color:#1668b3" class="form-label">Chọn kì học:</label>
@@ -66,11 +71,7 @@
             </form>
             <div>
             <div class="container mt-3">
-                {% if selected_semester %}
-                    <p class="text-center">Kết quả học tập của {{ profile_student_view_score[1] }}
-                    học
-                    {{ selected_semester.semester_name }}
-                {% endif %}
+                <p class="text-center" id="par-view-score">
                 </p>
                 <table class="table table-bordered d-lg-none" id="tableScore">
                         <thead>
@@ -84,6 +85,7 @@
                     <tbody id="scoresTable">
                         </tbody>
                     </table>
+                <p class="text-danger text-center fs-2" id="messgae"></p>
 
             </div>
             </div>
@@ -101,20 +103,17 @@
 ></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-    function submitForm() {
-        var form = document.getElementById("formCheckPhone")
-        const phoneNumber = document.getElementById("check-student").value
-        console.log(phoneNumber)
-        localStorage.setItem("phone", phoneNumber)
-        form.submit()
 
-    }
-
+    const year = (new Date().getFullYear() - 1).toString()
+    console.log(year)
+    document.getElementById("year-student").innerHTML = "Năm Học : " + year
     function displayScores(scores) {
         document.getElementById("tableScore").classList.remove("d-lg-none")
+        var selectedSemesterId = document.querySelector('select[name="semester_id"]').value;
+        var studentName = "{{ profile_student_view_score[1] }}"; // Sử dụng biến mẫu mà Jinja sẽ thay thế
+        document.getElementById("par-view-score").innerHTML = "Kết quả học tập của " + studentName + " học " + selectedSemesterId;
         var tableBody = document.getElementById('scoresTable');
         console.log(tableBody)
-        // Clear existing table rows
         tableBody.innerHTML = '';
 
         // Loop through scores and create table rows
@@ -149,7 +148,11 @@
             }
             return res.json();
         }).then(res => {
-            displayScores(res)
+            if (Object.keys(res).length !== 0) {
+                displayScores(res)
+            } else {
+                document.getElementById("messgae").innerHTML = "Chưa có danh sách điểm"
+            }
         }).catch(error => {
             console.error('There was a problem with the fetch operation:', error);
         })

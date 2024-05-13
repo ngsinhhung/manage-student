@@ -162,8 +162,8 @@ def view_score():
         phone_number = request.form['student_phone_number']
         print(phone_number)
         profile_student_view_score = verify_student_phone_number(phone_number)
-    else:
-        message = 'Không tìm thấy học sinh'
+        if not profile_student_view_score :
+            message = 'Không tìm thấy học sinh'
     return render_template("view_score.html", semester=semester,
                            profile_student_view_score=profile_student_view_score,
                            message=message)
