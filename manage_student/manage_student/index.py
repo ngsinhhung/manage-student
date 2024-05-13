@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, request, jsonify
 from flask_login import current_user, login_required, logout_user, login_user
 from manage_student import app, login
-from manage_student.dao import regulation
+from manage_student.dao import regulation, notification
 from manage_student.decorators import role_only
 from manage_student.form import *
 from dao import auth, student, group_class, teacher, assignments
@@ -50,14 +50,16 @@ def logout():
 
 @app.route('/home')
 @login_required
+@role_only([UserRole.STAFF, UserRole.TEACHER])
 def home():
     profile = auth.get_info_by_id(current_user.id)
-    return render_template("index.html", profile=profile)
+    notifications = notification.load_all_notifications()
+    return render_template("index.html", profile=profile, notifications=notifications)
 
 
 @app.route('/teacher/assignment', methods=["GET", "POST"])
 @login_required
-@role_only(UserRole.STAFF)
+@role_only([UserRole.STAFF])
 def teacher_assignment():
     classname = ''
     if request.method.__eq__("POST"):
@@ -68,7 +70,8 @@ def teacher_assignment():
 
 
 @app.route('/teacher/assignment/<grade>/<string:classname>', methods=["GET", "POST", "DELETE"])
-@role_only(UserRole.STAFF)
+@login_required
+@role_only([UserRole.STAFF])
 def teacher_assignment_class(grade, classname):
     subject_list = assignments.load_subject_of_class(grade='K' + grade)
     # teacher_list = assignments.load_all_teacher_subject()
@@ -105,6 +108,7 @@ def teacher_assignment_class(grade, classname):
                            get_teachers=assignments.load_all_teacher_subject)
 
 @app.route('/api/class/', methods=['GET'])
+@role_only([UserRole.STAFF])
 def get_class():
     q = request.args.get('q')
     res = {}

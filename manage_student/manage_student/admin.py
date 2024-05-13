@@ -30,7 +30,14 @@ class RegulationsView(AuthenticatedView):
         'max': 'Giá trị tối đa',
     }
 
+class NotificationView(AuthenticatedView):
+    column_labels = {
+        'subject': 'Tiêu đề',
+        'content': 'Nội dung thông báo',
+    }
+
 admin = Admin(app, name='Quản lý học sinh', template_mode='bootstrap4')
 admin.add_view(AuthenticatedView(Subject, db.session, name="Danh sách môn học"))
 admin.add_view(RegulationsView(Regulation, db.session, name="Chỉnh sửa quy định"))
+admin.add_view(NotificationView(Notification, db.session, name="Thêm thông báo"))
 admin.add_view(LogoutView(name='Đăng xuất'))
