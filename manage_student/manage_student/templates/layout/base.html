@@ -22,7 +22,7 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     />
-     <link rel="stylesheet" href="{{url_for('static', filename = 'css/toast.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/toast.css') }}">
     <style>
         .form-control.is-invalid {
             border-color: #dc3545;
@@ -129,6 +129,12 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://unpkg.com/jspdf-invoice-template@1.4.0/dist/index.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.0/xlsx.full.min.js"></script>
-
+<script>
+    window.onload = function () {
+        {% for msg in get_flashed_messages(category_filter=["forbidden"]) %}
+            alert("{{msg}}")
+        {% endfor %}
+    }
+</script>
 </body>
 </html>
