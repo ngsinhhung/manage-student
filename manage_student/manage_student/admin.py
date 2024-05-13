@@ -22,6 +22,15 @@ class LogoutView(BaseView):
         return current_user.is_authenticated
 
 
+class RegulationsView(AuthenticatedView):
+    column_labels = {
+        'type': 'Loại quy định',
+        'regulation_name': 'Tên quy định',
+        'min': 'Giá trị tối thiểu',
+        'max': 'Giá trị tối đa',
+    }
+
 admin = Admin(app, name='Quản lý học sinh', template_mode='bootstrap4')
-admin.add_view(AuthenticatedView(Subject, db.session))
+admin.add_view(AuthenticatedView(Subject, db.session, name="Danh sách môn học"))
+admin.add_view(RegulationsView(Regulation, db.session, name="Chỉnh sửa quy định"))
 admin.add_view(LogoutView(name='Đăng xuất'))
