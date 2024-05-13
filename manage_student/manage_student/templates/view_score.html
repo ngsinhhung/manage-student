@@ -150,10 +150,11 @@
         }).then(res => {
             if (Object.keys(res).length !== 0) {
                 displayScores(res)
-                document.getElementById("par-view-score").style.display = "none"
+                document.getElementById("messgae").style.display = "none"
             } else {
                  document.getElementById("tableScore").classList.add("d-lg-none")
                 document.getElementById("par-view-score").style.display = "none"
+                document.getElementById("messgae").style.display = "block"
                 document.getElementById("messgae").innerHTML = "Chưa có danh sách điểm"
             }
         }).catch(error => {
