@@ -151,6 +151,7 @@
             if (Object.keys(res).length !== 0) {
                 displayScores(res)
             } else {
+                 document.getElementById("tableScore").classList.add("d-lg-none")
                 document.getElementById("messgae").innerHTML = "Chưa có danh sách điểm"
             }
         }).catch(error => {
