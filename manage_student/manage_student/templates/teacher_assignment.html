@@ -94,7 +94,7 @@
                                 <select class="form-select p-1 rounded-3 fs-6 w-100 h-auto " id="teacher"
                                         name="teacher-assigned-{{ subject.id }}">
                                     <option selected disabled hidden="true">Chọn giáo viên</option>
-                                    {% for teacher in teachers %}
+                                    {% for teacher in get_teachers(subject.id) %}
                                         <option id="teacher-{{ teacher.user.profile.id }}"
                                                 value="{{ teacher.user.profile.id }}">ID: {{ teacher.user.profile.id }}
                                             | {{ teacher.user.profile.name }}</option>

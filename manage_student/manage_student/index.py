@@ -1,6 +1,8 @@
 from flask import render_template, redirect, url_for, request, jsonify
 from flask_login import current_user, login_required, logout_user, login_user
 from manage_student import app, login
+from manage_student.dao import regulation
+from manage_student.decorators import role_only
 from manage_student.form import *
 from dao import auth, student, group_class, teacher, assignments
 from manage_student.api import *
@@ -54,6 +56,8 @@ def home():
 
 
 @app.route('/teacher/assignment', methods=["GET", "POST"])
+@login_required
+@role_only(UserRole.STAFF)
 def teacher_assignment():
     classname = ''
     if request.method.__eq__("POST"):
@@ -64,11 +68,16 @@ def teacher_assignment():
 
 
 @app.route('/teacher/assignment/<grade>/<string:classname>', methods=["GET", "POST", "DELETE"])
+@role_only(UserRole.STAFF)
 def teacher_assignment_class(grade, classname):
     subject_list = assignments.load_subject_of_class(grade='K' + grade)
-    teacher_list = teacher.load_all_teachers()
+    # teacher_list = assignments.load_all_teacher_subject()
     class_id = group_class.get_info_class_by_name(grade=grade, count=classname[-1]).id
-    if request.method.__eq__("POST") and request.form.get("type").__eq__("save"):
+    if request.method.__eq__("GET"):
+        plan = assignments.load_assignments_of_class(class_id=class_id)
+        return render_template("teacher_assignment.html", grade=grade, classname=classname, subjects=subject_list,
+                               get_teachers=assignments.load_all_teacher_subject, plan=plan)
+    elif request.method.__eq__("POST") and request.form.get("type").__eq__("save"):
         for s in subject_list:
             teacher_id = request.form.get("teacher-assigned-{id}".format(id=s.id))
             total_seme = request.form.get("total-seme-{id}".format(id=s.id))
@@ -78,9 +87,9 @@ def teacher_assignment_class(grade, classname):
             if total_seme:
                 semester_id = [1, 2]
             elif seme1:
-                semester_id = [1]
+                semester_id = 1
             elif seme2:
-                semester_id = [2]
+                semester_id = 2
             assignments.save_subject_assignment(
                 teacher_id=teacher_id,
                 class_id=class_id,
@@ -88,17 +97,12 @@ def teacher_assignment_class(grade, classname):
                 subject_id=s.id
             )
         return redirect("/teacher/assignment/{grade}/{classname}".format(grade=str(grade), classname=classname))
-    elif request.method.__eq__("GET"):
-        plan = assignments.load_assignments_of_class(class_id=class_id)
-        return render_template("teacher_assignment.html", grade=grade, classname=classname, subjects=subject_list,
-                               teachers=teacher_list, plan=plan)
     elif request.method.__eq__("POST") and request.form.get("type").__eq__("delete"):
         assignments.delete_assignments(class_id)
         return render_template("teacher_assignment.html", grade=grade, classname=classname, subjects=subject_list,
-                               teachers=teacher_list)
+                               get_teachers=assignments.load_all_teacher_subject)
     return render_template("teacher_assignment.html", grade=grade, classname=classname, subjects=subject_list,
-                           teachers=teacher_list)
-
+                           get_teachers=assignments.load_all_teacher_subject)
 
 @app.route('/api/class/', methods=['GET'])
 def get_class():
@@ -162,7 +166,8 @@ def info(grade, count):
 
 @app.route("/regulations")
 def view_regulations():
-    return render_template('view_regulations.html')
+    regulations = regulation.get_regulations()
+    return render_template('view_regulations.html', regulations=regulations)
 
 
 @app.route("/grade")
