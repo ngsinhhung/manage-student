@@ -50,7 +50,7 @@ def get_all_semester():
 def verify_student_phone_number(phone_number):
     student_info = db.session.query(Student.id, Profile.name).join(Profile).filter(Profile.phone == phone_number).first()
     if student_info:
-        student_info_dict = {'id': student_info[0], 'name': student_info[1]}
+        student_info_dict = {'id': student_info[0], 'studentName': student_info[1]}
         return json.dumps(student_info_dict,ensure_ascii=False)
     else:
         return None

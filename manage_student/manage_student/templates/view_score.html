@@ -14,6 +14,7 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/otp.css') }}"/>
 </head>
 <body>
 
@@ -23,17 +24,16 @@
             <a class="navbar-brand text-white" href="#"></a>
             <div class="d-flex" style="margin-right: 30px">
                 <div>
-                    {#                    {% if profile_student_view_score %}#}
-                    {#                        <span class="text-white fs-5">Chào học sinh {{ profile_student_view_score[1] }}</span>#}
-                    {#                    {% endif %}#}
+                    <p class="text-white fs-1" id="name-header"></p>
                 </div>
 
             </div>
         </div>
     </div>
 </header>
-<div class="container shadow-md d-flex gap-3 mt-2">
-    <div class="p-3 rounded-3 flex-grow-1" style="width:300px;background-color:#1668b3;">
+<div class="container shadow-md mt-2">
+    <div class="d-flex gap-3 ">
+        <div class="p-3 rounded-3 flex-grow-1" style="width:400px;background-color:#1668b3;">
         <p style="color:white">Tra cứu kết quả học tập</p>
         <div id="formCheckPhone">
             <label style="color:white" class="form-label fs-6">Nhập số điện thoại</label>
@@ -48,9 +48,24 @@
 
         </div>
 
+            <div class="digit-group " id="digit-group" style="display: none">
+                <label style="color:white" class="form-label fs-6">Vui Lòng nhập OTP</label>
+                <div class="mb-2 digit-group">
+                    <input type="text" id="digit-1" name="digit-1" data-next="digit-2"/>
+                    <input type="text" id="digit-2" name="digit-2" data-next="digit-3" data-previous="digit-1"/>
+                    <input type="text" id="digit-3" name="digit-3" data-next="digit-4" data-previous="digit-2"/>
+                    <input type="text" id="digit-4" name="digit-4" data-next="digit-5" data-previous="digit-3"/>
+                    <input type="text" id="digit-5" name="digit-5" data-next="digit-6" data-previous="digit-4"/>
+                    <input type="text" id="digit-6" name="digit-6" data-previous="digit-5"/>
+                </div>
+                <button class="btn-success btn" id="checkOtp">Xác nhận OTP</button>
+            </div>
     </div>
-    <div class="p-3 shadow-sm flex-grow-1" style="width:700px">
-        <p>Để tra cứu điểm của học sinh <span style="font-weight:bold"></span>
+        <div>
+            <div class="p-3 shadow-sm flex-grow-1" style="width:700px">
+                <h1 class="text-info" id="text-need-verify">Vui Lòng nhập số điện thoại để xem điểm</h1>
+                <div class="d-lg-none" id="view-score">
+                    <p>Để tra cứu điểm của học sinh <span style="font-weight:bold" id="name-student-view-score"></span>
                 vui lòng chọn kì học</p>
             <p class="text-black-50 fs-5" id="year-student"></p>
             <form id="viewScoreFrom"
@@ -85,7 +100,10 @@
 
             </div>
             </div>
+            </div>
 
+            </div>
+        </div>
     </div>
 </div>
 <script
@@ -96,23 +114,18 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.12.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.12.1/firebase-auth-compat.js"></script>
+<script src="{{ url_for('static', filename='js/otp.js') }}"></script>
+
 <script type="module">
     var coderesult = ""
+    var dataStudent = null
     const firebaseConfig = {
-
-        apiKey: "AIzaSyB0N-lLI2z7-pSChYSNzsm2fqdZEzjtVLc",
-
-        authDomain: "mobile-auth-9f6c3.firebaseapp.com",
-
-        projectId: "mobile-auth-9f6c3",
-
-        storageBucket: "mobile-auth-9f6c3.appspot.com",
-
-        messagingSenderId: "444414383977",
-
-        appId: "1:444414383977:web:62a1e777a1ab8a6cc10ff8",
-
-        measurementId: "G-WMZ0FSBT5Q"
+        apiKey: "AIzaSyDBB_P8wh6tlYcyQwbFcgr3RgHQkVx8420",
+        authDomain: "verifyphone-b9daa.firebaseapp.com",
+        projectId: "verifyphone-b9daa",
+        storageBucket: "verifyphone-b9daa.appspot.com",
+        messagingSenderId: "1057973800390",
+        appId: "1:1057973800390:web:88da81198379ee2be5f6c7"
 
     };
     firebase.initializeApp(firebaseConfig);
@@ -127,6 +140,34 @@
     const year = (new Date().getFullYear() - 1).toString()
     console.log(year)
     document.getElementById("year-student").innerHTML = "Năm Học : " + year
+
+    function convertPhoneNumber(phoneNumber) {
+        if (typeof phoneNumber !== 'string' || phoneNumber.length === 0) {
+            throw new Error('Invalid phone number');
+        }
+
+        if (phoneNumber.startsWith('0')) {
+            return '+84' + phoneNumber.slice(1);
+        } else {
+            return phoneNumber;
+        }
+    }
+
+    function getStudentData() {
+        var studentData = localStorage.getItem("studentData");
+        if (studentData) {
+            try {
+                return JSON.parse(studentData);
+            } catch (e) {
+                console.error("Error parsing JSON:", e);
+                return null;
+            }
+        } else {
+            console.log("No student data found in localStorage.");
+            return null;
+        }
+    }
+
     document.getElementById("btnCheckPhoneNumber").addEventListener("click", function (e) {
         e.preventDefault()
         const phoneNumber = document.getElementById("check-student").value
@@ -147,15 +188,44 @@
             }
         })
             .then(data => {
+                localStorage.setItem("studentData", data)
                 if (data) {
-                    firebase.auth().signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier).then(function (confirmationResult) {
+                    document.getElementById("digit-group").style.display = "block"
+
+                    firebase.auth().signInWithPhoneNumber(convertPhoneNumber(phoneNumber), window.recaptchaVerifier).then(function (confirmationResult) {
                         window.confirmationResult = confirmationResult;
                         coderesult = confirmationResult;
                         console.log('OTP Sent');
+                        document.getElementById("btnCheckPhoneNumber").style.display = "none"
+                        document.getElementById("recaptcha-container").style.display = "none"
 
                     }).catch(function (error) {
                         alert(error.message);
                     });
+                    document.getElementById("checkOtp").addEventListener("click", function () {
+                        const inputs = document.querySelectorAll('.digit-group input')
+                        let opt = ''
+                        inputs.forEach((input) => {
+                            opt += input.value;
+                        });
+                        coderesult.confirm(opt).then(function () {
+                            var studentData = getStudentData()
+
+                            if (studentData) {
+                                var studentNameInfor = studentData.studentName;
+                                document.getElementById("name-header").innerHTML = studentNameInfor
+                                document.getElementById("digit-group").style.display = "none"
+                                document.getElementById("text-need-verify").style.display = "none"
+                                document.getElementById("view-score").classList.remove("d-lg-none")
+                                document.getElementById("btnCheckPhoneNumber").style.display = "block"
+                                document.getElementById("recaptcha-container").style.display = "block"
+                            } else {
+                                console.log("No student data found in localStorage.");
+                            }
+                        }).catch(function () {
+                            alert("Wrong OTP check again")
+                        })
+                    })
                 } else {
                     console.log("loi")
                 }
@@ -166,9 +236,11 @@
     })
 
     function displayScores(scores) {
+        var studentData = getStudentData()
         document.getElementById("tableScore").classList.remove("d-lg-none")
+
         var selectedSemesterId = document.querySelector('select[name="semester_id"]').value;
-        document.getElementById("par-view-score").innerHTML = "Kết quả học tập của " + studentName + " học " + selectedSemesterId;
+        document.getElementById("par-view-score").innerHTML = "Kết quả học tập của " + studentData.studentName + " học " + selectedSemesterId;
         var tableBody = document.getElementById('scoresTable');
         console.log(tableBody)
         tableBody.innerHTML = '';
@@ -193,10 +265,12 @@
 
     document.getElementById("btnSemester").addEventListener("click", function (e) {
         e.preventDefault()
+        var studentData = getStudentData()
+        document.getElementById("name-student-view-score").innerHTML = studentData.studentName
         var selectedSemesterId = document.querySelector('select[name="semester_id"]').value;
         console.log(studentId)
         console.log(selectedSemesterId)
-        fetch(`/api/view_score/${studentId}?semester_id=${selectedSemesterId}`, {
+        fetch(`/api/view_score/${studentData.id}?semester_id=${selectedSemesterId}`, {
             method: "GET"
         }).then(res => {
             if (!res.ok) {
