@@ -3,7 +3,6 @@ from urllib.parse import quote
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_mail import Mail
-from twilio.rest import Client
 
 app = Flask(__name__)
 app.secret_key = '^%^&%^(*^^^&&*^(*^^&$%&*&*%^&$&^'
