@@ -1,11 +1,10 @@
 from flask import redirect, request
-from flask_admin import Admin, expose, AdminIndexView
+from flask_admin import Admin, expose
 from flask_admin import BaseView
 from flask_admin.contrib.sqla import ModelView
 from flask_login import logout_user, current_user
-from manage_student.dao import subject,semester,group_class
 
-from manage_student import app
+from manage_student.dao import subject, semester, group_class
 from manage_student.model import *
 
 
@@ -27,7 +26,8 @@ class LogoutView(BaseView):
 class StatView(BaseView):
     @expose('/')
     def index(self):
-        return self.render('admin/stats.html',list_subject=subject.get_all_subjects(),list_semester=semester.get_all_semester())
+        return self.render('admin/stats.html', list_subject=subject.get_all_subjects(),
+                           list_semester=semester.get_all_semester())
 
     def is_accessible(self):
         return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
@@ -40,11 +40,17 @@ class StatView(BaseView):
 class StatInfoView(BaseView):
     @expose('/')
     def index(self):
-
-        res = subject.get_avg_score_by_class(request.args.get("semester"),request.args.get("subject"))
+        res = subject.get_avg_score_by_class(request.args.get("semester"), request.args.get("subject"))
+        classification = [int(item) for item in
+                          subject.num_of_classification(request.args.get("semester"), request.args.get("subject"))[0]]
         list_class_id = [t[0] for t in res]
         list_dtb = [t[1] for t in res]
-        return self.render('admin/stats_info.html',subject_info=subject.get_subject_by_id(request.args.get("subject")),list_class_id=list_class_id,list_dtb=list_dtb,def_get_class=group_class.get_class_by_id)
+        return self.render('admin/stats_info.html', subject_info=subject.get_subject_by_id(request.args.get("subject")),
+                           list_class_id=list_class_id,
+                           list_dtb=list_dtb,
+                           def_get_class=group_class.get_class_by_id,
+                           num_of_classification=classification,
+                           top_5_student=subject.top_5_highest_score_by_subject(request.args.get("semester"), request.args.get("subject")))
 
     def is_visible(self):
         return False

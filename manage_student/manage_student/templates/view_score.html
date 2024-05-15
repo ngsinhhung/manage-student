@@ -38,15 +38,16 @@
         <form action="/view_score" method="post" id="formCheckPhone">
             <label style="color:white" class="form-label fs-6">Nhập số điện thoại</label>
             <div class="input-group mb-3 ">
-            <span class="input-group-text" id="basic-addon3">+84</span>
+                <span class="input-group-text" id="basic-addon3">+84</span>
                 <input type="text" class="form-control" name="student_phone_number" id="check-student"
-                   aria-describedby="basic-addon3">
-        </div>
-            <button class="btn btn-success" id="btnCheckPhoneNumber" onclick="submitForm()" style="color:white">Xác
+                       aria-describedby="basic-addon3">
+            </div>
+
+{#            <div id="recaptcha-container"></div>#}
+            <button class="btn btn-success m-2" id="btnCheckPhoneNumber" onclick="phoneAuth()" style="color:white">Xác
                 nhận
             </button>
         </form>
-
     </div>
     <div class="p-3 shadow-sm flex-grow-1" style="width:700px">
         {% if profile_student_view_score %}
@@ -55,24 +56,24 @@
             <form id="viewScoreFrom"
                   method="GET">
                 <label style="color:#1668b3" class="form-label">Chọn kì học:</label>
-            <select class="form-select" name="semester_id">
-                {% for s in semester %}
-                    <option value="{{ s.id }}">{{ s.semester_name }}</option>
-                {% endfor %}
-            </select>
+                <select class="form-select" name="semester_id">
+                    {% for s in semester %}
+                        <option value="{{ s.id }}">{{ s.semester_name }}</option>
+                    {% endfor %}
+                </select>
                 <button class="btn btn-info mt-2" id="btnSemester" style="color:white">
                     Xem điểm
                 </button>
             </form>
             <div>
-            <div class="container mt-3">
-                {% if selected_semester %}
-                    <p class="text-center">Kết quả học tập của {{ profile_student_view_score[1] }}
-                    học
-                    {{ selected_semester.semester_name }}
-                {% endif %}
-                </p>
-                <table class="table table-bordered d-lg-none" id="tableScore">
+                <div class="container mt-3">
+                    {% if selected_semester %}
+                        <p class="text-center">Kết quả học tập của {{ profile_student_view_score[1] }}
+                        học
+                        {{ selected_semester.semester_name }}
+                    {% endif %}
+                    </p>
+                    <table class="table table-bordered d-lg-none" id="tableScore">
                         <thead>
                         <tr>
                             <th scope="col">Môn học</th>
@@ -81,11 +82,11 @@
                             <th scope="col">Điểm Thi</th>
                         </tr>
                         </thead>
-                    <tbody id="scoresTable">
+                        <tbody id="scoresTable">
                         </tbody>
                     </table>
 
-            </div>
+                </div>
             </div>
         {% else %}
             <div>
@@ -155,8 +156,7 @@
         })
 
     })
-
-
 </script>
+
 </body>
 </html>

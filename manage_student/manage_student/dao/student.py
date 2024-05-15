@@ -43,9 +43,10 @@ def check_student_in_class(student_id, class_id):
 
 def get_all_semester():
     return Semester.query.all()
+
+
 def verify_student_phone_number(phone_number):
     return db.session.query(Student.id, Profile.name).join(Profile).filter(Profile.phone == phone_number).first()
-
 
 
 def view_score_student(student_id, semester_id):

@@ -10,6 +10,9 @@ from manage_student.form import *
 from manage_student.model import UserRole
 import datetime
 from manage_student.api.teach import *
+from manage_student.admin import *
+
+
 @login.user_loader
 def user_load(user_id):
     return auth.load_user(user_id)
@@ -143,7 +146,7 @@ def view_regulations():
 @login_required
 def input_grade():
     profile = auth.get_info_by_id(current_user.id)
-    return render_template("input_score.html", teaching_plan=teacher.get_teaching_of_teacher(profile.id),date=datetime.datetime.now())
+    return render_template("input_score.html", teaching_plan=teacher.get_teaching_of_teacher(profile.id),date=datetime.now())
 
 
 @app.route("/grade/input/<teach_plan_id>/score")
@@ -152,6 +155,9 @@ def input_grade_subject(teach_plan_id):
     teach_plan = teacher.get_teaching_plan_by_id(teach_plan_id)
     return render_template("input_score_subject.html", can_edit=teacher.can_edit_exam, get_score=teacher.get_score_by_student_id,teach_plan=teach_plan)
 
+@app.route("/cc")
+def test():
+    return render_template("test.html")
 
 @app.route("/view_score", methods=['GET', 'POST'])
 def view_score():
