@@ -1,5 +1,10 @@
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, request, jsonify
 from flask_login import current_user, login_required, logout_user, login_user
+from flask_mail import Message
+
+from manage_student import app, login, mail
+from manage_student.dao import regulation, notification
+from manage_student.decorators import role_only
 
 from dao import auth, group_class, teacher, assignments
 from manage_student import login
@@ -7,6 +12,8 @@ from manage_student.api.student_class import *
 from manage_student.api.student_score import *
 from manage_student.dao.student import *
 from manage_student.form import *
+from dao import auth, student, group_class, teacher, assignments
+from manage_student.api import *
 from manage_student.model import UserRole
 import datetime
 from manage_student.api.teach import *
@@ -39,7 +46,7 @@ def login():
             login_user(user)
             return redirect(url_for("index"))
         mse = "Tài khoản hoặc mật khẩu không đúng"
-    return render_template('login.html', form=form,mse=mse)
+    return render_template('login.html', form=form, mse=mse)
 
 
 @app.route("/log_out")
@@ -50,12 +57,16 @@ def logout():
 
 @app.route('/home')
 @login_required
+@role_only([UserRole.STAFF, UserRole.TEACHER])
 def home():
     profile = auth.get_info_by_id(current_user.id)
-    return render_template("index.html", profile=profile)
+    notifications = notification.load_all_notifications()
+    return render_template("index.html", profile=profile, notifications=notifications)
 
 
 @app.route('/teacher/assignment', methods=["GET", "POST"])
+@login_required
+@role_only([UserRole.STAFF])
 def teacher_assignment():
     classname = ''
     if request.method.__eq__("POST"):
@@ -64,23 +75,46 @@ def teacher_assignment():
         return redirect('/teacher/assignment/' + grade_value + '/' + classname)
     return render_template("teacher_assignment.html", classname=classname)
 
-@app.route('/teacher/assignment/<grade>/<string:classname>', methods=["GET", "POST"])
+
+@app.route('/teacher/assignment/<grade>/<string:classname>', methods=["GET", "POST", "DELETE"])
+@login_required
+@role_only([UserRole.STAFF])
 def teacher_assignment_class(grade, classname):
     subject_list = assignments.load_subject_of_class(grade='K' + grade)
-    teacher_list = teacher.load_all_teachers()
-    if request.method.__eq__("POST"):
-        grade = grade
-        class_count = classname[-1]
-        print(request.form)
+    class_id = group_class.get_info_class_by_name(grade=grade, count=classname[3:]).id
+    if request.method.__eq__("GET"):
+        plan = assignments.load_assignments_of_class(class_id=class_id)
+        return render_template("teacher_assignment.html", grade=grade, classname=classname, subjects=subject_list,
+                               get_teachers=assignments.load_all_teacher_subject, plan=plan)
+    elif request.method.__eq__("POST") and request.form.get("type").__eq__("save"):
         for s in subject_list:
-            print(request.form.get("teacher-assigned-{id}".format(id=s.id)))
-
-    elif request.method.__eq__("GET"):
-        print("get")
-    return render_template("teacher_assignment.html", grade=grade, classname=classname, subjects=subject_list, teachers=teacher_list)
-
+            teacher_id = request.form.get("teacher-assigned-{id}".format(id=s.id))
+            total_seme = request.form.get("total-seme-{id}".format(id=s.id))
+            seme1 = request.form.get("seme1-{id}".format(id=s.id))
+            seme2 = request.form.get("seme2-{id}".format(id=s.id))
+            semester_id = None
+            if total_seme:
+                semester_id = [1, 2]
+            elif seme1:
+                semester_id = 1
+            elif seme2:
+                semester_id = 2
+            assignments.save_subject_assignment(
+                teacher_id=teacher_id,
+                class_id=class_id,
+                semester_id=semester_id,
+                subject_id=s.id
+            )
+        return redirect("/teacher/assignment/{grade}/{classname}".format(grade=str(grade), classname=classname))
+    elif request.method.__eq__("POST") and request.form.get("type").__eq__("delete"):
+        assignments.delete_assignments(class_id)
+        return render_template("teacher_assignment.html", grade=grade, classname=classname, subjects=subject_list,
+                               get_teachers=assignments.load_all_teacher_subject)
+    return render_template("teacher_assignment.html", grade=grade, classname=classname, subjects=subject_list,
+                           get_teachers=assignments.load_all_teacher_subject)
 
 @app.route('/api/class/', methods=['GET'])
+@role_only([UserRole.STAFF])
 def get_class():
     q = request.args.get('q')
     res = {}
@@ -96,18 +130,26 @@ def get_class():
         return jsonify({"class_list": json_class_list})
     return jsonify({})
 
+def send_mail(subject, recipients, student_name, classname):
+    msg = Message(subject=subject, sender=app.config['MAIL_USERNAME'],
+                  recipients=recipients)
+    msg.html = render_template("/email/email.html", student_name=student_name, classname=classname)
+    mail.send(msg)
+    return "Message sent!"
 
 @app.route('/class/create', methods=['GET', 'POST'])
 def create_class():
     form_create_class = CreateClass()
-    form_create_class.teacher.choices = [(temp_teacher.id,temp_teacher.user.profile.name)for temp_teacher in teacher.get_teacher_not_presidential()]
+    form_create_class.teacher.choices = [(temp_teacher.id, temp_teacher.user.profile.name) for temp_teacher in
+                                         teacher.get_teacher_not_presidential()]
     if request.method == "POST" and form_create_class.validate_on_submit():
         try:
             temp_class = group_class.create_class(form_create_class)
         except Exception as e:
             redirect("/home")
         redirect(url_for("index"))
-    return render_template("create_class.html", form_create_class=form_create_class, list_class=group_class.get_class(),student_no_class=student.student_no_class())
+    return render_template("create_class.html", form_create_class=form_create_class, list_class=group_class.get_class(),
+                           student_no_class=student.student_no_class())
 
 
 @app.route('/class/edit')
@@ -125,22 +167,24 @@ def register():
             s = student.create_student(form_student)
         except Exception as e:
             print(e)
-            return render_template("register_student.html",form_student=form_student)
+            return render_template("register_student.html", form_student=form_student)
         if s:
             return redirect(url_for("index"))
-    return render_template("register_student.html",form_student=form_student)
+    return render_template("register_student.html", form_student=form_student)
 
 
 @app.route('/<int:grade>/<int:count>/info')
-def info(grade,count):
-    class_info = group_class.get_info_class_by_name(grade,count)
-    student_no_class = student.student_no_class("K"+str(grade))
-    return render_template("class_info.html",class_info=class_info,student_no_class=student_no_class)
+def info(grade, count):
+    class_info = group_class.get_info_class_by_name(grade, count)
+    student_no_class = student.student_no_class("K" + str(grade))
+    return render_template("class_info.html", class_info=class_info, student_no_class=student_no_class)
 
 
 @app.route("/regulations")
 def view_regulations():
-    return render_template('view_regulations.html')
+    regulations = regulation.get_regulations()
+    return render_template('view_regulations.html', regulations=regulations)
+
 
 @app.route("/grade")
 @login_required
@@ -162,17 +206,7 @@ def test():
 @app.route("/view_score", methods=['GET', 'POST'])
 def view_score():
     semester = get_all_semester()
-    message = ''
-    profile_student_view_score = None
-    if request.method == "POST":
-        phone_number = request.form['student_phone_number']
-        print(phone_number)
-        profile_student_view_score = verify_student_phone_number(phone_number)
-    else:
-        message = 'Không tìm thấy học sinh'
-    return render_template("view_score.html", semester=semester,
-                           profile_student_view_score=profile_student_view_score,
-                           message=message)
+    return render_template("view_score.html", semester=semester)
 if __name__ == "__main__":
     with app.app_context():
         app.run(debug=True)

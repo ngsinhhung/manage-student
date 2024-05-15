@@ -8,15 +8,6 @@ def get_teacher_not_presidential():
     return teachers_not_presidential
 
 
-def load_all_teachers():
-    return Teacher.query.all()
-    # return db.session.query(Profile).join(Teacher, Profile.id == Teacher.id).all()
-
-
-def get_teacher_by_id(teacher_id):
-    return db.session.get(Teacher, teacher_id)
-
-
 def get_teaching_of_teacher(teacher_id):
     query = db.session.query(Teaching_plan).filter(Teaching_plan.teacher_id == teacher_id).all()
     return query

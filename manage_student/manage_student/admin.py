@@ -1,11 +1,13 @@
 from flask import redirect, request
-from flask_admin import Admin, expose
+from flask_admin import Admin, expose, AdminIndexView
 from flask_admin import BaseView
 from flask_admin.contrib.sqla import ModelView
 from flask_login import logout_user, current_user
 
 from manage_student.dao import subject, semester, group_class
 from manage_student.model import *
+from manage_student import app
+from flask_login import logout_user, current_user
 
 
 class AuthenticatedView(ModelView):
@@ -59,8 +61,24 @@ class StatInfoView(BaseView):
         return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
 
 
+class RegulationsView(AuthenticatedView):
+    column_labels = {
+        'type': 'Loại quy định',
+        'regulation_name': 'Tên quy định',
+        'min': 'Giá trị tối thiểu',
+        'max': 'Giá trị tối đa',
+    }
+
+class NotificationView(AuthenticatedView):
+    column_labels = {
+        'subject': 'Tiêu đề',
+        'content': 'Nội dung thông báo',
+    }
+
 admin = Admin(app, name='Quản lý học sinh', template_mode='bootstrap4')
-admin.add_view(AuthenticatedView(Subject, db.session))
+admin.add_view(AuthenticatedView(Subject, db.session, name="Danh sách môn học"))
+admin.add_view(RegulationsView(Regulation, db.session, name="Chỉnh sửa quy định"))
+admin.add_view(NotificationView(Notification, db.session, name="Thêm thông báo"))
 admin.add_view(StatView(name='Thống kê'))
 admin.add_view(StatInfoView(name="Thống kê chi tiết"))
 admin.add_view(LogoutView(name='Đăng xuất'))

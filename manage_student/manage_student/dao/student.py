@@ -1,8 +1,11 @@
+import json
 import random
+
+from sqlalchemy import extract
 
 from manage_student.model import *
 from manage_student.utils import *
-
+from manage_student.utils import get_current_year
 
 def create_student(form):
     profile = Profile(name=form.full_name.data,
@@ -44,9 +47,13 @@ def check_student_in_class(student_id, class_id):
 def get_all_semester():
     return Semester.query.all()
 
-
 def verify_student_phone_number(phone_number):
-    return db.session.query(Student.id, Profile.name).join(Profile).filter(Profile.phone == phone_number).first()
+    student_info = db.session.query(Student.id, Profile.name).join(Profile).filter(Profile.phone == phone_number).first()
+    if student_info:
+        student_info_dict = {'id': student_info[0], 'studentName': student_info[1]}
+        return json.dumps(student_info_dict,ensure_ascii=False)
+    else:
+        return None
 
 
 def view_score_student(student_id, semester_id):
@@ -55,7 +62,7 @@ def view_score_student(student_id, semester_id):
             .join(Score, Exam.id == Score.Exam_id)
             .join(Subject, Teaching_plan.subject_id == Subject.id)
             .filter(Exam.student_id == student_id)
-            .filter(Teaching_plan.semester_id == semester_id)
+            .filter(Teaching_plan.semester_id == semester_id).filter(Class.year == get_current_year())
             .all()
             )
 
@@ -78,5 +85,5 @@ def preprocess_scores(scores):
 
 if __name__ == '__main__':
     with app.app_context():
-        # print(verify_student_phone_number(1000000000))
-        print(view_score_student(4, 1))
+        # print(verify_student_phone_number(""))
+        print(view_score_student(19, 1))

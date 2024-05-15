@@ -50,7 +50,7 @@
                     </div>
                 </div>
                 <div class="d-flex p-2">
-                    <button type="submit" onsubmit="" class="btn btn-success rounded-3 px-2 mx-auto" name="form-search-submit">
+                    <button type="submit" class="btn btn-success rounded-3 px-2 mx-auto" name="form-search-submit">
                         <i class="fa fa-search mr-1" aria-hidden="true"></i>
                         Tìm kiếm
                     </button>
@@ -67,11 +67,11 @@
                         </h4>
                     </div>
                     <div class="mb-2 fs-5">
-                        <button type="submit" class="btn btn-danger  px-3 mx-2">
+                        <button type="submit" class="btn btn-danger px-3 mx-2" name="type" value="delete">
                             <i class="fa fa-trash" aria-hidden="true"></i>
                             Xóa phân công
                         </button>
-                        <button type="submit" class="btn btn-info px-3">
+                        <button type="submit" class="btn btn-info px-3" name="type" value="save">
                             <i class="fas fa-save"></i>
                             Lưu
                         </button>
@@ -87,30 +87,34 @@
                         <div class="col col-sm-1 p-2 bg-info border "><strong>Học kỳ 2</strong></div>
                     </div>
                     {% for subject in subjects %}
-                        <div class="row">
-                            <div class="col col-sm-1 border py-2 ">{{ subject.id }}</div>
-                            <div class="col col-md-2 border py-2" name="subject" value="{{ subject.grade }}">{{ subject.name }}</div>
+                        <div class="row" id="{{ subject.id }}">
+                            <div class="col col-sm-1 border py-2">{{ subject.id }}</div>
+                            <div class="col col-md-2 border py-2">{{ subject.name }}</div>
                             <div class="col col-md-5 border py-2 text-center">
                                 <select class="form-select p-1 rounded-3 fs-6 w-100 h-auto " id="teacher"
                                         name="teacher-assigned-{{ subject.id }}">
                                     <option selected disabled hidden="true">Chọn giáo viên</option>
-                                    {% for teacher in teachers %}
-                                        <option value="{{ teacher.user.profile.id }}">ID: {{ teacher.user.profile.id }}
+                                    {% for teacher in get_teachers(subject.id) %}
+                                        <option id="teacher-{{ teacher.user.profile.id }}"
+                                                value="{{ teacher.user.profile.id }}">ID: {{ teacher.user.profile.id }}
                                             | {{ teacher.user.profile.name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                             <div class="col col-sm-2 border d-flex py-2 justify-content-center align-items-center">
-                                <input class="form-check-input" type="checkbox" name="total-seme-{{ subject.id }}" value="False" id="total_year-{{ subject.id }}"
-                                       onchange="check_semeter({{ subject.id }})">
+                                <input class="form-check-input" type="checkbox" name="total-seme-{{ subject.id }}"
+                                       id="total-seme-{{ subject.id }}"
+                                       onchange="check_semeter({{ subject.id }}, 'total')">
                             </div>
                             <div class="col col-sm-1 border d-flex py-2 justify-content-center align-items-center">
-                                <input class="form-check-input" type="checkbox" name="seme1-{{ subject.id }}" value="False" id="seme1-{{ subject.id }}"
-                                       onchange="check_semeter({{ subject.id }})">
+                                <input class="form-check-input" type="checkbox" name="seme1-{{ subject.id }}"
+                                       id="seme1-{{ subject.id }}"
+                                       onchange="check_semeter({{ subject.id }}, 'part')">
                             </div>
                             <div class="col col-sm-1 border d-flex py-2 justify-content-center align-items-center">
-                                <input class="form-check-input" type="checkbox" name="seme2-{{ subject.id }}" value="False" id="seme2-{{ subject.id }}"
-                                       onchange="check_semeter({{ subject.id }})">
+                                <input class="form-check-input" type="checkbox" name="seme2-{{ subject.id }}"
+                                       id="seme2-{{ subject.id }}"
+                                       onchange="check_semeter({{ subject.id }}, 'part')">
                             </div>
                         </div>
                     {% endfor %}
@@ -119,4 +123,24 @@
         </form>
     </div>
     <script src="{{ url_for('static', filename='/js/assignments.js') }}"></script>
+    <script>
+        function load_assignment() {
+            {% for p in plan %}
+                var row_subject = document.getElementById("{{ p.subject_id }}")
+                var teacher = row_subject.querySelector("#teacher-{{ p.teacher_id }}")
+                var seme1 = row_subject.querySelector("#seme1-{{ p.subject_id }}")
+                var seme2 = row_subject.querySelector("#seme2-{{ p.subject_id }}")
+                teacher.selected = true
+                if ({{ p.semester_id }} === 1) {
+                    seme1.checked = true
+                    check_semeter({{ p.subject_id }}, 'part')
+                } else {
+                    seme2.checked = true
+                    check_semeter({{ p.subject_id }}, 'part')
+                }
+            {% endfor %}
+        }
+
+        load_assignment()
+    </script>
 {% endblock %}
