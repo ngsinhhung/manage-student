@@ -1,6 +1,8 @@
 from flask import render_template, redirect, url_for, request, jsonify
 from flask_login import current_user, login_required, logout_user, login_user
-from manage_student import app, login
+from flask_mail import Message
+
+from manage_student import app, login, mail
 from manage_student.dao import regulation, notification
 from manage_student.decorators import role_only
 from manage_student.form import *
@@ -61,6 +63,7 @@ def home():
 @login_required
 @role_only([UserRole.STAFF])
 def teacher_assignment():
+    send_mail(subject="Thông báo nhập học", recipients=['2151013030hung@ou.edu.vn'])
     classname = ''
     if request.method.__eq__("POST"):
         classname = request.form.get("class-list")
@@ -124,6 +127,12 @@ def get_class():
         return jsonify({"class_list": json_class_list})
     return jsonify({})
 
+def send_mail(subject, recipients, student_name, classname):
+    msg = Message(subject=subject, sender=app.config['MAIL_USERNAME'],
+                  recipients=recipients)
+    msg.html = render_template("/email/email.html", student_name=student_name, classname=classname)
+    mail.send(msg)
+    return "Message sent!"
 
 @app.route('/class/create', methods=['GET', 'POST'])
 def create_class():
