@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Xem Điểm</title>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+            crossorigin="anonymous"
+    />
+
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+</head>
+<body>
+<input id="check-student">
+<div id="recaptcha-container"></div>
+<button id="btn">Ok</button>
+<input id="verificationcode">
+<button id="btn_code">Ok</button>
+<script src="https://www.gstatic.com/firebasejs/9.12.1/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/9.12.1/firebase-auth-compat.js"></script>
+<script type="module">
+    var coderesult =""
+    const firebaseConfig = {
+
+        apiKey: "AIzaSyB0N-lLI2z7-pSChYSNzsm2fqdZEzjtVLc",
+
+        authDomain: "mobile-auth-9f6c3.firebaseapp.com",
+
+        projectId: "mobile-auth-9f6c3",
+
+        storageBucket: "mobile-auth-9f6c3.appspot.com",
+
+        messagingSenderId: "444414383977",
+
+        appId: "1:444414383977:web:62a1e777a1ab8a6cc10ff8",
+
+        measurementId: "G-WMZ0FSBT5Q"
+
+    };
+
+
+    firebase.initializeApp(firebaseConfig);
+
+    render();
+
+    function render() {
+
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
+
+        recaptchaVerifier.render();
+
+    }
+    document.getElementById("btn").onclick = () => {
+        var number = document.getElementById('check-student').value;
+        firebase.auth().signInWithPhoneNumber(number, window.recaptchaVerifier).then(function (confirmationResult) {
+            window.confirmationResult = confirmationResult;
+            coderesult = confirmationResult;
+            console.log('OTP Sent');
+
+        }).catch(function (error) {
+            alert(error.message);
+        });
+    }
+
+    document.getElementById("btn_code").onclick = () =>  {
+        var code = document.getElementById('verificationcode').value;
+        coderesult.confirm(code).then(function (res) {
+            console.log(res)
+            console.log('OTP Verified');
+        }).catch(function () {
+            console.log('OTP Not correct');
+        })
+    }
+
+</script>
+</body>
+</html>

@@ -5,16 +5,18 @@ from flask_mail import Message
 from manage_student import app, login, mail
 from manage_student.dao import regulation, notification
 from manage_student.decorators import role_only
+
+from dao import auth, group_class, teacher, assignments
+from manage_student import login
+from manage_student.api.student_class import *
+from manage_student.api.student_score import *
+from manage_student.dao.student import *
 from manage_student.form import *
 from dao import auth, student, group_class, teacher, assignments
 from manage_student.api import *
 from manage_student.model import UserRole
-from manage_student import admin
-
+import datetime
 from manage_student.api.teach import *
-from manage_student.api.student_class import *
-
-
 @login.user_loader
 def user_load(user_id):
     return auth.load_user(user_id)
@@ -63,7 +65,6 @@ def home():
 @login_required
 @role_only([UserRole.STAFF])
 def teacher_assignment():
-    send_mail(subject="Thông báo nhập học", recipients=['2151013030hung@ou.edu.vn'])
     classname = ''
     if request.method.__eq__("POST"):
         classname = request.form.get("class-list")
@@ -77,8 +78,7 @@ def teacher_assignment():
 @role_only([UserRole.STAFF])
 def teacher_assignment_class(grade, classname):
     subject_list = assignments.load_subject_of_class(grade='K' + grade)
-    # teacher_list = assignments.load_all_teacher_subject()
-    class_id = group_class.get_info_class_by_name(grade=grade, count=classname[-1]).id
+    class_id = group_class.get_info_class_by_name(grade=grade, count=classname[3:]).id
     if request.method.__eq__("GET"):
         plan = assignments.load_assignments_of_class(class_id=class_id)
         return render_template("teacher_assignment.html", grade=grade, classname=classname, subjects=subject_list,
@@ -187,24 +187,20 @@ def view_regulations():
 @login_required
 def input_grade():
     profile = auth.get_info_by_id(current_user.id)
-    return render_template("input_score.html", teacher_class=teacher.get_class_of_teacher(profile.id),
-                           check_deadline_score=teacher.check_deadline_score)
+    return render_template("input_score.html", teaching_plan=teacher.get_teaching_of_teacher(profile.id),date=datetime.datetime.now())
 
 
-@app.route("/grade/input/<class_id>/score")
+@app.route("/grade/input/<teach_plan_id>/score")
 @login_required
-def input_grade_subject(class_id):
-    class_params = int(class_id.split('=')[-1])
-    class_obj, semester, subject, profile_students, teacher_planing = teacher.get_teaching_plan_details(class_params)
-    return render_template("input_score_subject.html", class_obj=class_obj, semester=semester, subject=subject,
-                           profile_students=profile_students, teacher_planing=teacher_planing)
+def input_grade_subject(teach_plan_id):
+    teach_plan = teacher.get_teaching_plan_by_id(teach_plan_id)
+    return render_template("input_score_subject.html", can_edit=teacher.can_edit_exam, get_score=teacher.get_score_by_student_id,teach_plan=teach_plan)
 
 
-@app.route("/view_score")
-def view_grade():
-    return render_template("view_score.html")
-
-
+@app.route("/view_score", methods=['GET', 'POST'])
+def view_score():
+    semester = get_all_semester()
+    return render_template("view_score.html", semester=semester)
 if __name__ == "__main__":
     with app.app_context():
         app.run(debug=True)

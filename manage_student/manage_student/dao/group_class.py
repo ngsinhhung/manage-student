@@ -26,11 +26,15 @@ def create_class(form):
 
 
 def get_info_class_by_name(grade, count):
-    return Class.query.filter_by(grade="K"+str(grade), count=count).first()
+    return Class.query.filter_by(grade="K"+str(grade), count=count,year=utils.get_current_year()).first()
 
 
 def get_class_by_id(id):
     return Class.query.get(id)
+
+
+def count_student_in_class(class_id):
+    return Students_Classes.query.filter_by(class_id=class_id).count()
 
 
 if __name__ == '__main__':

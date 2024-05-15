@@ -1,8 +1,8 @@
 from flask import request, jsonify
 
 from manage_student import app,db
-from manage_student.model import Student, Students_Classes
-from manage_student.dao import student,group_class
+from manage_student.model import Students_Classes
+from manage_student.dao import student
 
 
 @app.route('/api/add_student/<int:class_id>', methods=['post'])

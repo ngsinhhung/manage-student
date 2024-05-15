@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 
 app = Flask(__name__)
 app.secret_key = '^%^&%^(*^^^&&*^(*^^&$%&*&*%^&$&^'
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:%s@localhost/manage_student?charset=utf8mb4" % quote("Sinhhung1212@")
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:%s@localhost/manage_student?charset=utf8mb4" % quote('Sinhhung1212@')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 
 #mail

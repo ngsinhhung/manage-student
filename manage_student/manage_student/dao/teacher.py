@@ -7,54 +7,30 @@ def get_teacher_not_presidential():
     teachers_not_presidential = db.session.query(Teacher).filter(Teacher.id.not_in(teachers_is_president)).all()
     return teachers_not_presidential
 
-def load_all_teachers():
-    return Teacher.query.all()
-    # return db.session.query(Profile).join(Teacher, Profile.id == Teacher.id).all()
 
-def load_teachers_with_subject():
-    return db.session.query(Teacher).join(Teachers_Subject, Teachers_Subject.teacher_id == Teacher.teacher_id)
-def get_teacher_by_id(teacher_id):
-    return db.session.get(Teacher, teacher_id)
-
-def get_teachers_by_subject(subject_id):
-    return Teachers_Subject.query.filter_by(subject_id=subject_id)
-
-def get_class_of_teacher(teacher_id):
-    query = db.session.query(Subject, Class.id, Class.grade, Class.count, Teacher). \
-        join(Teaching_plan, Teaching_plan.subject_id == Subject.id). \
-        join(Class, Class.id == Teaching_plan.class_id). \
-        join(Teacher, Teacher.id == Teaching_plan.teacher_id).filter(Teaching_plan.teacher_id == teacher_id).all()
+def get_teaching_of_teacher(teacher_id):
+    query = db.session.query(Teaching_plan).filter(Teaching_plan.teacher_id == teacher_id).all()
     return query
 
 
-def check_deadline_score(subject_id):
-    teaching_plan = Teaching_plan.query.filter_by(subject_id=subject_id).first()
-    if not teaching_plan:
-        return False
-    score_deadline = teaching_plan.score_deadline
-    current_time = datetime.now()
-    if current_time <= score_deadline:
+def get_teaching_plan_by_id(teach_plan_id):
+    return Teaching_plan.query.get(teach_plan_id)
+
+
+def get_score_by_student_id(teach_plan_id,student_id, type,count):
+    return db.session.query(Score).join(Exam).filter(Exam.teach_plan_id == teach_plan_id)\
+                                                .filter(Exam.student_id == student_id)\
+                                                .filter(Score.type == type)\
+                                                .filter(Score.count == count).first()
+
+
+def can_edit_exam(student_id, teach_plan_id):
+    e = db.session.query(Exam).filter(Exam.student_id == student_id).filter(teach_plan_id == teach_plan_id).first()
+    if e:
         return True
+    return False
 
-
-def get_teaching_plan_details(class_id):
-    teaching_plan = Teaching_plan.query.filter_by(class_id=class_id).first()
-    class_obj = Class.query.get(class_id)
-    semester = Semester.query.get(teaching_plan.semester_id)
-    subject = Subject.query.get(teaching_plan.subject_id)
-    subquery = db.session.query(Students_Classes.student_id).filter_by(class_id=class_id).subquery()
-    profile_students = db.session.query(Profile).filter(Profile.id.in_(subquery)).all()
-
-    return class_obj, semester, subject, profile_students, teaching_plan
-
-
-def get_exam_for_edition_query(student_id, teaching_plan_id, exam_type):
-    return db.session.query(Score.id, Score.type).join(Exam).filter(
-        Exam.student_id == student_id,
-        Exam.teach_plan_id == teaching_plan_id,
-        Score.type == exam_type
-    ).all()
 
 if __name__ == '__main__':
     with app.app_context():
-        print(get_teacher_by_id(21))
+        print(get_score_by_student_id(1,7,"EXAM_15p",3))
