@@ -139,6 +139,8 @@ def send_mail(subject, recipients, student_name, classname):
     return "Message sent!"
 
 @app.route('/class/create', methods=['GET', 'POST'])
+@login_required
+@role_only([UserRole.STAFF])
 def create_class():
     form_create_class = CreateClass()
     form_create_class.teacher.choices = [(temp_teacher.id, temp_teacher.user.profile.name) for temp_teacher in
@@ -157,12 +159,16 @@ def create_class():
 
 
 @app.route('/class/edit')
+@login_required
+@role_only([UserRole.STAFF])
 def class_edit():
     classes = group_class.get_class()
     return render_template("list_class.html", classes=classes)
 
 
 @app.route('/student/register', methods=['GET', 'POST'])
+@login_required
+@role_only([UserRole.STAFF])
 def register():
     form_student = AdmisionStudent()
 
@@ -181,6 +187,8 @@ def register():
 
 
 @app.route('/<int:grade>/<int:count>/info')
+@login_required
+@role_only([UserRole.STAFF])
 def info(grade, count):
     class_info = group_class.get_info_class_by_name(grade, count)
     student_no_class = student.student_no_class("K" + str(grade))
@@ -188,6 +196,7 @@ def info(grade, count):
 
 
 @app.route("/regulations")
+@login_required
 def view_regulations():
     regulations = regulation.get_regulations()
     return render_template('view_regulations.html', regulations=regulations)
@@ -195,6 +204,7 @@ def view_regulations():
 
 @app.route("/grade")
 @login_required
+@role_only([UserRole.TEACHER])
 def input_grade():
     profile = auth.get_info_by_id(current_user.id)
     return render_template("input_score.html", teaching_plan=teacher.get_teaching_of_teacher(profile.id),date=datetime.now())
@@ -202,6 +212,7 @@ def input_grade():
 
 @app.route("/grade/input/<teach_plan_id>/score")
 @login_required
+@role_only([UserRole.TEACHER])
 def input_grade_subject(teach_plan_id):
     teach_plan = teacher.get_teaching_plan_by_id(teach_plan_id)
     return render_template("input_score_subject.html", can_edit=teacher.can_edit_exam, get_score=teacher.get_score_by_student_id,teach_plan=teach_plan)
