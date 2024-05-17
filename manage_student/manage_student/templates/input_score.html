@@ -15,7 +15,7 @@ Quản lý học sinh
         {% for tp in teaching_plan %}
         <div class="list-group-item list-group-item-action">
             <div class="d-flex align-items-center justify-content-between">
-                <p class="mb-1">Lớp: {{ tp.class_teach.grade.value }}A{{ tp.class_teach.count }} - Môn: {{ tp.subject.name }}</p>
+                <p class="mb-1">Lớp: {{ tp.class_teach.grade.value }}A{{ tp.class_teach.count }} - Môn: {{ tp.subject.name }} - {{ tp.semester.semester_name }}</p>
                 {% if tp.score_deadline > date %}
                 <a href="/grade/input/{{ tp.id }}/score" class="btn btn-info"
                    style="text-decoration:none;color:white">Nhập điểm</a>

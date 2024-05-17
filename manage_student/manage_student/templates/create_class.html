@@ -89,4 +89,8 @@
         else
             document.querySelector("#year").innerHTML = `${year.getFullYear() - 1} - ${year.getFullYear()}`
     </script>
+    <script>
+        if("{{ mse }}" !== "")
+            alert("{{ mse }}")
+    </script>
 {% endblock %}

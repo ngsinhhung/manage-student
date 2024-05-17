@@ -43,8 +43,7 @@ class StatInfoView(BaseView):
     @expose('/')
     def index(self):
         res = subject.get_avg_score_by_class(request.args.get("semester"), request.args.get("subject"))
-        classification = [int(item) for item in
-                          subject.num_of_classification(request.args.get("semester"), request.args.get("subject"))[0]]
+        classification = [int(item) if item is not None else 0 for item in subject.num_of_classification(request.args.get("semester"), request.args.get("subject"))[0]]
         list_class_id = [t[0] for t in res]
         list_dtb = [t[1] for t in res]
         return self.render('admin/stats_info.html', subject_info=subject.get_subject_by_id(request.args.get("subject")),

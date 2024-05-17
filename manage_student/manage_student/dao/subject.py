@@ -57,4 +57,4 @@ def num_of_classification(semester_id,s_id):
 
 if __name__ == '__main__':
     with app.app_context():
-        print(top_5_highest_score_by_subject(2,1)[1][0])
+        print([int(item) if item is not None else 0 for item in num_of_classification(1,15)[0]])

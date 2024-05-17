@@ -7,14 +7,14 @@ def get_class():
     return db.session.query(Class).join(Teacher).filter(Class.year == utils.get_current_year()).all()
 
 
-def count_class():
-    return Class.query.filter(Class.year == utils.get_current_year()).count()
+def count_class(grade):
+    return Class.query.filter(Class.year == utils.get_current_year()).filter(Class.grade == grade).count()
 
 
 def create_class(form):
     new_class = Class(grade=form.grade.data,
                       year=utils.get_current_year(),
-                      count=count_class()+1,
+                      count=count_class(form.grade.data)+1,
                       teacher_id=form.teacher.data)
     db.session.add(new_class)
     db.session.commit()

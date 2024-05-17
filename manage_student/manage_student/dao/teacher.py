@@ -9,7 +9,7 @@ def get_teacher_not_presidential():
 
 
 def get_teaching_of_teacher(teacher_id):
-    query = db.session.query(Teaching_plan).filter(Teaching_plan.teacher_id == teacher_id).all()
+    query = db.session.query(Teaching_plan).join(Class).filter(Teaching_plan.teacher_id == teacher_id).filter(Class.year == get_current_year()).all()
     return query
 
 

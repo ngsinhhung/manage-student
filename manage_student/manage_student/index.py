@@ -8,8 +8,6 @@ from manage_student.decorators import role_only
 
 from dao import auth, group_class, teacher, assignments
 from manage_student import login
-from manage_student.api.student_class import *
-from manage_student.api.student_score import *
 from manage_student.dao.student import *
 from manage_student.form import *
 from dao import auth, student, group_class, teacher, assignments
@@ -130,6 +128,7 @@ def get_class():
         return jsonify({"class_list": json_class_list})
     return jsonify({})
 
+
 def send_mail(subject, recipients, student_name, classname):
     msg = Message(subject=subject, sender=app.config['MAIL_USERNAME'],
                   recipients=recipients)
@@ -144,6 +143,9 @@ def create_class():
                                          teacher.get_teacher_not_presidential()]
     if request.method == "POST" and form_create_class.validate_on_submit():
         try:
+            if form_create_class.class_size.data > regulation.get_regulation_by_name("Sĩ số tối đa").max:
+                return render_template("create_class.html", form_create_class=form_create_class, list_class=group_class.get_class(),
+                           student_no_class=student.student_no_class(),mse="Sĩ số lớp không phù hợp")
             temp_class = group_class.create_class(form_create_class)
         except Exception as e:
             redirect("/home")
@@ -164,6 +166,9 @@ def register():
 
     if request.method == "POST" and form_student.submit():
         try:
+            min = regulation.get_regulation_by_name("Tiếp nhận học sinh").min
+            if (datetime.now().year - form_student.birth_date.data.year) < min:
+                return render_template("register_student.html", form_student=form_student,mse="Tuổi không phù hợp")
             s = student.create_student(form_student)
         except Exception as e:
             print(e)
@@ -177,7 +182,7 @@ def register():
 def info(grade, count):
     class_info = group_class.get_info_class_by_name(grade, count)
     student_no_class = student.student_no_class("K" + str(grade))
-    return render_template("class_info.html", class_info=class_info, student_no_class=student_no_class)
+    return render_template("class_info.html", class_info=class_info, student_no_class=student_no_class,amount=group_class.count_student_in_class(class_info.id))
 
 
 @app.route("/regulations")
@@ -199,14 +204,13 @@ def input_grade_subject(teach_plan_id):
     teach_plan = teacher.get_teaching_plan_by_id(teach_plan_id)
     return render_template("input_score_subject.html", can_edit=teacher.can_edit_exam, get_score=teacher.get_score_by_student_id,teach_plan=teach_plan)
 
-@app.route("/cc")
-def test():
-    return render_template("test.html")
 
 @app.route("/view_score", methods=['GET', 'POST'])
 def view_score():
     semester = get_all_semester()
     return render_template("view_score.html", semester=semester)
+
+
 if __name__ == "__main__":
     with app.app_context():
         app.run(debug=True)

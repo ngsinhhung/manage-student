@@ -3,7 +3,7 @@ import hashlib
 from datetime import datetime
 
 from flask_login import UserMixin
-from sqlalchemy import Column, String, Float, Integer, ForeignKey, Boolean, DateTime, Enum, Text
+from sqlalchemy import Column, String, Float, Integer, ForeignKey, Boolean, DateTime, Enum, Text, CheckConstraint
 from sqlalchemy.orm import relationship
 
 from manage_student import db, app
@@ -140,14 +140,17 @@ class Exam(db.Model):
     teach_plan = relationship("Teaching_plan", backref="exam", lazy=True)
 
 
-
-
 class Score(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     score = Column(Float)
     type = Column(Enum(TYPEEXAM))
     count = Column(Integer)
     Exam_id = Column(Integer, ForeignKey(Exam.id), nullable=False)
+
+    __table_args__ = (
+        CheckConstraint('score >= 0', name='check_age_min'),
+        CheckConstraint('score <= 10', name='check_age_max'),
+    )
 
 
 class Regulation(db.Model):
@@ -160,8 +163,17 @@ class Regulation(db.Model):
 
 if __name__ == '__main__':
     with app.app_context():
-        # db.create_all()
-
+        db.create_all()
+        # p1 = Profile(name="Trần An Tiến")
+        # p2 = Profile(name="Nguyễn Sinh Hùng")
+        # p3 = Profile(name="Ngô Trịnh Minh Tâm")
+        # db.session.add_all([p1, p2, p3])
+        # db.session.commit()
+        # acc1 = User(id=p1.id, username="supertien", password=str(hashlib.md5("123".encode("utf-8")).hexdigest()), user_role=UserRole.ADMIN)
+        # acc2 = User(id=p2.id, username="chosh", password=str(hashlib.md5("123".encode("utf-8")).hexdigest()), user_role=UserRole.STAFF)
+        # acc3 = User(id=p3.id, username="mintam", password=str(hashlib.md5("123".encode("utf-8")).hexdigest()), user_role=UserRole.TEACHER)
+        # db.session.add_all([acc1, acc2, acc3])
+        # db.session.commit()
         # cl101 = Class(grade=GRADE.K10, count=1, amount=10, teacher_id=teacher.id)
         # cl102 = Class(grade=GRADE.K10, count=2, amount=11, teacher_id=teacher.id)
         # cl103 = Class(grade=GRADE.K10, count=3, amount=12, teacher_id=teacher.id)
@@ -228,7 +240,7 @@ if __name__ == '__main__':
         # teacher9 = Teacher(id=acc9.id, title=Title.BACHELOR)
         # db.session.add_all([teacher4, teacher5, teacher6, teacher7, teacher8, teacher9])
         # db.session.commit()
-        #
+        # #
         # teacher_subject = [
         #     Teachers_Subject(teacher_id=teacher4.id, subject_id=subjects[0].id),
         #     Teachers_Subject(teacher_id=teacher4.id, subject_id=subjects[4].id),
@@ -271,13 +283,13 @@ if __name__ == '__main__':
         #     db.session.add(r)
         # db.session.commit()
 
-        for i in range(15):
-            profile = Profile(name="student " + str(i), email=str(i) + "@gmail.com", birthday=datetime.now(),phone=str(1000000000+i),gender=0,address="chossh")
-            db.session.add(profile)
-            db.session.commit()
-            stu = Student(id=profile.id)
-            db.session.add(stu)
-            db.session.commit()
+        # for i in range(15):
+        #     profile = Profile(name="student " + str(i), email=str(i) + "@gmail.com", birthday=datetime.now(),phone=str(1000000000+i),gender=0,address="chossh")
+        #     db.session.add(profile)
+        #     db.session.commit()
+        #     stu = Student(id=profile.id)
+        #     db.session.add(stu)
+        #     db.session.commit()
 
         # profiles_data = [
         #     {"id": 5, "name": "Trần Lưu Quốc Tuấn", "email": "john@example.com", "dob": "2003-01-15", "gender": True,
