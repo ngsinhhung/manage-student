@@ -1,9 +1,10 @@
 from sqlalchemy import func, case
 
 from manage_student import db,app
-from manage_student.model import Subject,Exam,Teaching_plan,Score,Student, Students_Classes,Profile,Teachers_Subject
+from manage_student.model import Subject, Exam, Teaching_plan, Score, Student, Students_Classes, Profile, \
+    Teachers_Subject, TYPEEXAM, Class
 from sqlalchemy.sql import text
-
+from manage_student.utils import *
 def get_all_subjects():
     return Subject.query.all()
 
@@ -70,7 +71,36 @@ def num_of_classification(semester_id,s_id):
                                     func.sum(case((student_dtb.c.diem_trung_binh.between(5, 6.444444), 1))),
                                     func.sum(case((student_dtb.c.diem_trung_binh < 5, 1)))).all()
     return query_result
+def avg_score_student(semester_id, class_id, subject_id):
+    avg_scores = db.session.query(
+        Student.id,
+        Profile.name,
+        func.sum(case(
+            (Score.type == TYPEEXAM.EXAM_15P, Score.score * 1),
+            (Score.type == TYPEEXAM.EXAM_45P, Score.score * 2),
+            (Score.type == TYPEEXAM.EXAM_final, Score.score * 3),
+        )) / func.sum(case(
+            (Score.type == TYPEEXAM.EXAM_15P, 1),
+            (Score.type == TYPEEXAM.EXAM_45P, 2),
+            (Score.type == TYPEEXAM.EXAM_final, 3),
+        )).label('avg_score')
+    ).join(Exam, Score.Exam_id == Exam.id
+    ).join(Teaching_plan, Exam.teach_plan_id == Teaching_plan.id
+    ).join(Students_Classes, Exam.student_id == Students_Classes.student_id
+    ).join(Student, Students_Classes.student_id == Student.id
+    ).join(Profile, Student.id == Profile.id
+    ).filter(
+        Students_Classes.class_id == class_id,
+        Teaching_plan.teacher_subject.has(subject_id=subject_id),
+        Teaching_plan.semester_id == semester_id,
+        Class.year == get_current_year()
+    ).group_by(Student.id, Profile.name).all()
+
+    return avg_scores
+
 
 if __name__ == '__main__':
     with app.app_context():
-        print([int(item) if item is not None else 0 for item in num_of_classification(1,15)[0]])
+        # print([int(item) if item is not None else 0 for item in num_of_classification(1,15)[0]])
+        # print(top_5_highest_score_by_subject(1,4))
+        print(avg_score_student(1,3,2))

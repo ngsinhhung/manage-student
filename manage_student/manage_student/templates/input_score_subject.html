@@ -14,7 +14,8 @@
         <p>Nhập điểm từ hệ thống</p>
         <div class="ms-auto d-flex justify-content-between" style="gap: 10px;">
             <div class="d-flex align-items-center" style="gap:20px;color:#333;">
-                <p>Lớp: {{ teach_plan.class_teach.grade.value }}A{{ teach_plan.class_teach.count }}</p>
+                <p class="name_class">
+                    Lớp: {{ teach_plan.class_teach.grade.value }}A{{ teach_plan.class_teach.count }}</p>
                 <p>Môn học: {{ teach_plan.teacher_subject.subject.name }}</p>
                 <p>Kì học: {{ teach_plan.semester.semester_name }}</p>
             </div>
@@ -22,6 +23,7 @@
                 <button onclick="save()" class="btn btn-success" id="updateButton">Lưu điểm
                 </button>
                 <button class="btn btn-primary" id="exportButton" >Xuất file excel</button>
+                <button class="btn btn-primary" id="exportAvgScore">Xuất điểm trung bình</button>
             </div>
         </div>
     </div>
@@ -171,5 +173,65 @@
                 }
             })
         }
+
+        function extractClassName() {
+            const classNameElement = document.querySelector('.name_class');
+            if (classNameElement) {
+                return classNameElement.textContent.trim();
+            } else {
+                return 'Unknown';
+            }
+        }
+
+        function convertObjectToArray(data) {
+            return data.map(item => [item.student_id, item.student_name, item.avg_score]);
+        }
+
+        function exportToExcel(data, header, fileName) {
+            const ws = XLSX.utils.aoa_to_sheet([...header, ...data]); // Concatenate header with data
+
+            const titleCellStyle = {font: {bold: true, sz: 20}, alignment: {horizontal: 'center'}};
+            const titleCellRef = XLSX.utils.encode_cell({c: 0, r: 0});
+            if (!ws[titleCellRef]) ws[titleCellRef] = {};
+            ws[titleCellRef].v = header[0][0];
+            ws[titleCellRef].s = titleCellStyle;
+
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+            const wscols = header[header.length - 1].map((_, index) => ({wpx: 100}));
+            ws['!cols'] = wscols;
+
+            XLSX.writeFile(wb, fileName);
+        }
+
+        const year = (new Date().getFullYear() - 1).toString()
+        console.log(year)
+        document.getElementById("exportAvgScore").addEventListener("click", function () {
+            const semesterId = "{{ teach_plan.semester_id }}";
+            const classId = "{{ teach_plan.class_id }}";
+            const subjectId = "{{ teach_plan.teacher_subject_id }}";
+
+            fetch(`/api/${semesterId}/${classId}/${subjectId}/avg_score`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    const className = extractClassName()
+                    const dataArray = convertObjectToArray(data);
+                    const header = [
+                        ["BẢNG ĐIỂM TRUNG BÌNH MÔN HỌC"], // Title row
+                        [`Năm Học = ${year} `],
+                        ["Lớp Học : " +  className],
+                        ["STT", "Họ và Tên", `Điểm TB học kì ${semesterId}`] // Data header row
+                    ];
+                    exportToExcel(dataArray, header, 'average_scores.xlsx');
+                })
+                .catch(error => console.error('Error fetching the average score:', error));
+        });
+
+
+
+
+
     </script>
 {% endblock %}

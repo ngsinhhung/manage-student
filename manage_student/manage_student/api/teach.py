@@ -1,6 +1,7 @@
 from flask import request, jsonify
 
-from manage_student import app,db
+from manage_student import app, db
+from manage_student.dao.subject import avg_score_student
 from manage_student.model import Exam, Score
 
 
@@ -28,3 +29,18 @@ def edit_score(teach_plan_id):
         tmp.score = s.get("points")
         db.session.commit()
     return jsonify({'status': 200})
+
+
+@app.route("/api/<int:semester_id>/<int:class_id>/<int:subject_id>/avg_score", methods=['GET'])
+def get_avg_score(semester_id, class_id, subject_id):
+    avg_scores = avg_score_student(semester_id, class_id, subject_id)
+
+    result = [
+        {
+            'student_id': score[0],
+            'student_name': score[1],
+            'avg_score': score[2],
+        } for score in avg_scores
+    ]
+
+    return jsonify(result)
