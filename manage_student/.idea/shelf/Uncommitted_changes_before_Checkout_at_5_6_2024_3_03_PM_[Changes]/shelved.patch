@@ -1,0 +1,31 @@
+Index: manage_student/dao/assignments.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from manage_student import db\r\nfrom manage_student.model import *\r\n\r\ndef load_class_by_grade(grade):\r\n    return Class.query.filter_by(grade=grade)\r\n\r\ndef load_subject_of_class(grade):\r\n    return Subject.query.filter_by(grade=grade)\r\n\r\ndef load_assignments_of_class(classname):\r\n    pass\r\n\r\nif __name__ == '__main__':\r\n    with app.app_context():\r\n        pass
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/manage_student/dao/assignments.py b/manage_student/dao/assignments.py
+--- a/manage_student/dao/assignments.py	
++++ b/manage_student/dao/assignments.py	
+@@ -12,4 +12,19 @@
+ 
+ if __name__ == '__main__':
+     with app.app_context():
++        pass
++from manage_student import db
++from manage_student.model import *
++
++def load_class_by_grade(grade):
++    return Class.query.filter_by(grade=grade)
++
++def load_subject_of_class(grade):
++    return Subject.query.filter_by(grade=grade)
++
++def load_assignments_of_class(classname):
++    pass
++
++if __name__ == '__main__':
++    with app.app_context():
+         pass
+\ No newline at end of file
