@@ -3,6 +3,7 @@ from sqlalchemy.orm import joinedload
 from manage_student import db
 from manage_student.model import *
 from manage_student.dao.teacher import *
+from datetime import date
 
 def load_class_by_grade(grade):
     return Class.query.filter_by(grade=grade)
@@ -54,11 +55,19 @@ def get_or_create(class_id, semester_id, teacher_subject_id):
     if plan:
         return plan, True
     else:
+        score_dl = None
+        if semester_id == 1:
+            score_dl = datetime(year=date.today().year - 1, month=12, day=31)
+        else:
+            score_dl = datetime(year=date.today().year, month=6, day=29)
+
         create_plan = Teaching_plan(
             class_id=class_id,
             semester_id=semester_id,
-            teacher_subject_id=teacher_subject_id
+            teacher_subject_id=teacher_subject_id,
+            score_deadline=score_dl
         )
+
         db.session.add(create_plan)
         db.session.commit()
         return create_plan, False

@@ -131,10 +131,10 @@ def get_class():
     return jsonify({})
 
 
-def send_mail(subject, recipients, student_name, classname):
+def send_mail(subject, recipients, student_name):
     msg = Message(subject=subject, sender=app.config['MAIL_USERNAME'],
                   recipients=recipients)
-    msg.html = render_template("/email/email.html", student_name=student_name, classname=classname)
+    msg.html = render_template("/email/email.html", student_name=student_name)
     mail.send(msg)
     return "Message sent!"
 
@@ -178,6 +178,7 @@ def register():
             if (datetime.now().year - form_student.birth_date.data.year) < min:
                 return render_template("register_student.html", form_student=form_student,mse="Tuổi không phù hợp")
             s = student.create_student(form_student)
+            send_mail(subject="Thông báo nhập học ", student_name=s.profile.name, recipients=[s.profile.email])
         except Exception as e:
             print(e)
             return render_template("register_student.html", form_student=form_student)

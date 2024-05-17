@@ -168,7 +168,7 @@ class Regulation(db.Model):
 
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()
+        # db.create_all()
         # p1 = Profile(name="Trần An Tiến")
         # p2 = Profile(name="Nguyễn Sinh Hùng")
         # p3 = Profile(name="Ngô Trịnh Minh Tâm")
@@ -279,22 +279,22 @@ if __name__ == '__main__':
         #     db.session.add(s)
         # db.session.commit()
         #
-        # regulations = [
-        #     Regulation(type="student", regulation_name="Tiếp nhận học sinh", min=6, max=18),
-        #     Regulation(type="amount", regulation_name="Sĩ số tối đa", min=0, max=30),
-        #
-        # ]
-        # for r in regulations:
-        #     db.session.add(r)
-        # db.session.commit()
+        regulations = [
+            Regulation(type="student", regulation_name="Tiếp nhận học sinh", min=6, max=18),
+            Regulation(type="amount", regulation_name="Sĩ số tối đa", min=0, max=30),
 
-        for i in range(15):
-            profile = Profile(name="student " + str(i), email=str(i) + "@gmail.com", birthday=datetime.now(),phone=str(1000000000+i),gender=0,address="chossh")
-            db.session.add(profile)
-            db.session.commit()
-            stu = Student(id=profile.id)
-            db.session.add(stu)
-            db.session.commit()
+        ]
+        for r in regulations:
+            db.session.add(r)
+        db.session.commit()
+
+        # for i in range(3):
+        #     profile = Profile(name="student " + str(i), email="2151013030hung@ou.edu.vn", birthday=datetime.now(),phone=str(1000000000+i),gender=0,address="chossh")
+        #     db.session.add(profile)
+        #     db.session.commit()
+        #     stu = Student(id=profile.id)
+        #     db.session.add(stu)
+        #     db.session.commit()
 
         # profiles_data = [
         #     {"id": 5, "name": "Trần Lưu Quốc Tuấn", "email": "john@example.com", "dob": "2003-01-15", "gender": True,
