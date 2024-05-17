@@ -9,6 +9,7 @@ from manage_student.dao.student import *
 from manage_student.form import *
 from manage_student.model import UserRole
 import datetime
+from manage_student import admin
 from manage_student.api.teach import *
 @login.user_loader
 def user_load(user_id):

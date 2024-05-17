@@ -268,9 +268,7 @@
         var studentData = getStudentData()
         document.getElementById("name-student-view-score").innerHTML = studentData.studentName
         var selectedSemesterId = document.querySelector('select[name="semester_id"]').value;
-        console.log(studentId)
-        console.log(selectedSemesterId)
-        fetch(`/api/view_score/${studentData.id}?semester_id=${selectedSemesterId}`, {
+        fetch(`/api/view_score/${studentData.studentId}?semester_id=${selectedSemesterId}`, {
             method: "GET"
         }).then(res => {
             if (!res.ok) {

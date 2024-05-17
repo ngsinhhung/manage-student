@@ -50,7 +50,7 @@ def get_all_semester():
 def verify_student_phone_number(phone_number):
     student_info = db.session.query(Student.id, Profile.name).join(Profile).filter(Profile.phone == phone_number).first()
     if student_info:
-        student_info_dict = {'id': student_info[0], 'studentName': student_info[1]}
+        student_info_dict = {'studentId': student_info[0], 'studentName': student_info[1]}
         return json.dumps(student_info_dict,ensure_ascii=False)
     else:
         return None
@@ -58,19 +58,19 @@ def verify_student_phone_number(phone_number):
 
 
 def view_score_student(student_id, semester_id):
-    return (db.session.query(Exam, Subject.name, Score.type, Score.score,Score.count,extract('YEAR', Teaching_plan.score_deadline))
+    return (db.session.query(Exam, Subject.name, Score.type, Score.score,Score.count)
             .join(Teaching_plan, Exam.teach_plan_id == Teaching_plan.id)
             .join(Score, Exam.id == Score.Exam_id)
             .join(Subject, Teaching_plan.subject_id == Subject.id)
             .filter(Exam.student_id == student_id)
-            .filter(Teaching_plan.semester_id == semester_id).filter(extract('YEAR', Teaching_plan.score_deadline) == get_current_year())
+            .filter(Teaching_plan.semester_id == semester_id).filter(Class.year == get_current_year())
             .all()
             )
 
 
 def preprocess_scores(scores):
     subject_scores = {}
-    for exam, name, type, score, count,_ in scores:
+    for exam, name, type, score, count in scores:
         if name not in subject_scores:
             subject_scores[name] = {'15_minute': {'scores': [], 'count': 0}, '45_minute': {'scores': [], 'count': 0},
                                     'final_points': {'scores': [], 'count': 0}}
@@ -86,5 +86,4 @@ def preprocess_scores(scores):
 
 if __name__ == '__main__':
     with app.app_context():
-        print(verify_student_phone_number("+84902748617"))
-        # print(view_score_student(4, 1))
+        print(view_score_student(4, 1))
