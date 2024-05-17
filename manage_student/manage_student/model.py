@@ -130,8 +130,8 @@ class Teaching_plan(db.Model):
     # teacher_id = Column(Integer, ForeignKey(Teacher.id), nullable=False)
 
     # teacher = relationship("Teacher", backref="teacher", lazy=True)
-    # semester = relationship("Semester", backref="semester", lazy=True)
-    # class_teach = relationship("Class", backref="teach", lazy=True)
+    semester = relationship("Semester", backref="semester", lazy=True)
+    class_teach = relationship("Class", backref="teach", lazy=True)
     # subject = relationship("Subject", backref="subject", lazy=True)
 
 

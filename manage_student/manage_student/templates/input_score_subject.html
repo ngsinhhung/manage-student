@@ -15,7 +15,7 @@
         <div class="ms-auto d-flex justify-content-between" style="gap: 10px;">
             <div class="d-flex align-items-center" style="gap:20px;color:#333;">
                 <p>Lớp: {{ teach_plan.class_teach.grade.value }}A{{ teach_plan.class_teach.count }}</p>
-                <p>Môn học: {{ teach_plan.subject.name }}</p>
+                <p>Môn học: {{ teach_plan.teacher_subject.subject.name }}</p>
                 <p>Kì học: {{ teach_plan.semester.semester_name }}</p>
             </div>
             <div class="action">
