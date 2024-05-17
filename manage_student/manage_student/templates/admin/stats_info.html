@@ -30,6 +30,29 @@
         <div class="w-100" style="display: flex;justify-content: center">
             <canvas id="myChart1" class="w-50 h-50"></canvas>
         </div>
+    <h2 class="mb-4 text-info">Báo cáo tổng kết môn học </h2>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>STT</th>
+                <th>Lớp</th>
+                <th>Sĩ số</th>
+                <th>Số lượng đạt</th>
+                <th>Tỉ lệ</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for s in res_final %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ def_get_class(s[0]).grade.value }}A{{ def_get_class(s[0]).count }}</td>
+                <td>{{ s[1] }}</td>
+                <td>{{ s[2] }}</td>
+                <td>{{ (s[2]/s[1]*100)|round(2) }}%</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
