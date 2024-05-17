@@ -16,7 +16,7 @@ def get_subject_by_id(id):
 def get_avg_score_by_class(semester_id,s_id):
     student_dtb = db.session.query(Student.id.label("id"), (func.sum(case((Score.type == "EXAM_15P", Score.score * 1),(Score.type == "EXAM_45P", Score.score * 2),(Score.type == "EXAM_final", Score.score * 3))) /
                                                                        func.sum(case((Score.type == "EXAM_15P", 1),(Score.type == "EXAM_45P", 2),(Score.type == "EXAM_final", 3)))).label('diem_trung_binh')). \
-                            join(Exam,Student.id == Exam.student_id).join(Score).join(Teaching_plan).join(Teachers_Subject).filter(Teachers_Subject.subject_id == s_id).filter(Teaching_plan.semester_id ==semester_id).group_by(Student.id).subquery()
+                            join(Exam, Student.id == Exam.student_id).join(Score).join(Teaching_plan).join(Teachers_Subject).filter(Teachers_Subject.subject_id == s_id).filter(Teaching_plan.semester_id ==semester_id).group_by(Student.id).subquery()
 
     query_result = db.session.query(Students_Classes.class_id, func.avg(student_dtb.c.diem_trung_binh)). \
                                     join(student_dtb, student_dtb.c.id == Students_Classes.student_id). \
@@ -32,12 +32,15 @@ def get_result_by_class(semester_id, s_id):
                                                                           (Score.type == "EXAM_45P", 2),
                                                                           (Score.type == "EXAM_final", 3)))).label(
         'diem_trung_binh')). \
-        join(Exam, Student.id == Exam.student_id).join(Score).join(Teaching_plan).filter(
-        Teaching_plan.subject_id == s_id).filter(Teaching_plan.semester_id == semester_id).group_by(
+        join(Exam, Student.id == Exam.student_id).join(Score).join(Teaching_plan).join(Teachers_Subject).filter(
+        Teachers_Subject.subject_id == s_id).filter(Teaching_plan.semester_id == semester_id).group_by(
         Student.id).subquery()
-    student_dtb_final = db.session.query(student_dtb,case(student_dtb.c.diem_trung_binh >=5, "Đậu", "Rớt")).all()
-
-    return student_dtb_final
+    student_dtb_final = db.session.query(student_dtb, case((student_dtb.c.diem_trung_binh >= 5, "Đậu"), (student_dtb.c.diem_trung_binh < 5, "Rớt")).label("ket_qua")).subquery()
+    query_result = db.session.query(Students_Classes.class_id,func.count(Students_Classes.class_id),
+                                    func.count(case((student_dtb_final.c.ket_qua == "Đậu", 1)))). \
+        join(student_dtb_final, student_dtb_final.c.id == Students_Classes.student_id). \
+        group_by(Students_Classes.class_id).all()
+    return query_result
 
 
 def top_5_highest_score_by_subject(semester_id,s_id):
@@ -101,6 +104,4 @@ def avg_score_student(semester_id, class_id, subject_id):
 
 if __name__ == '__main__':
     with app.app_context():
-        # print([int(item) if item is not None else 0 for item in num_of_classification(1,15)[0]])
-        # print(top_5_highest_score_by_subject(1,4))
-        print(avg_score_student(1,3,2))
+        print([int(item) if item is not None else 0 for item in num_of_classification(1,15)[0]])

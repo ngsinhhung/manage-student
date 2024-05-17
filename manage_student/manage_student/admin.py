@@ -51,7 +51,8 @@ class StatInfoView(BaseView):
                            list_dtb=list_dtb,
                            def_get_class=group_class.get_class_by_id,
                            num_of_classification=classification,
-                           top_5_student=subject.top_5_highest_score_by_subject(request.args.get("semester"), request.args.get("subject")))
+                           top_5_student=subject.top_5_highest_score_by_subject(request.args.get("semester"), request.args.get("subject")),
+                           res_final=subject.get_result_by_class(request.args.get("semester"), request.args.get("subject")))
 
     def is_visible(self):
         return False
@@ -73,6 +74,7 @@ class NotificationView(AuthenticatedView):
         'subject': 'Tiêu đề',
         'content': 'Nội dung thông báo',
     }
+
 
 class TeacherSubjectView(AuthenticatedView):
     column_list = ('teacher_id', 'subject_id', 'grade')
