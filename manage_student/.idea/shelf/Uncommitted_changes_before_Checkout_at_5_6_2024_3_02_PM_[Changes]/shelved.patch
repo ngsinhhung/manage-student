@@ -1,0 +1,67 @@
+Index: manage_student/index.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from flask import render_template, redirect, url_for\r\nfrom flask_login import current_user, login_required, logout_user, login_user\r\nfrom manage_student import app, login\r\nfrom manage_student.dao import auth\r\nfrom manage_student.dao.auth import auth_user, get_info_by_id\r\nfrom manage_student.dao.student import create_student\r\nfrom manage_student.dao.teacher import get_class_of_teacher, check_deadline_score, get_teaching_plan_details\r\nfrom manage_student.form import *\r\nfrom manage_student.controller.teach import *\r\n\r\n@login.user_loader\r\ndef user_load(user_id):\r\n    return auth.load_user(user_id)\r\n\r\n\r\n@app.route('/')\r\ndef index():\r\n    if current_user.is_authenticated:\r\n        if current_user.user_role == UserRole.ADMIN:\r\n            return redirect(\"/admin\")\r\n        return redirect(url_for('home'))\r\n    return redirect(url_for('login'))\r\n\r\n\r\n@app.route('/login', methods=['GET', 'POST'])\r\ndef login():\r\n    mse = \"\"\r\n    form = LoginForm()\r\n    if request.method == \"POST\" and form.SubmitFieldLogin():\r\n        username = form.username.data\r\n        password = form.password.data\r\n        user = auth_user(username=username, password=password)\r\n        if user:\r\n            login_user(user)\r\n            return redirect(url_for(\"index\"))\r\n        mse = \"Tài khoản hoặc mật khẩu không đúng \"\r\n    return render_template('login.html', form=form,mse=mse)\r\n\r\n\r\n@app.route(\"/log_out\")\r\ndef logout():\r\n    logout_user()\r\n    return redirect(url_for(\"login\"))\r\n\r\n\r\n@app.route('/home')\r\n@login_required\r\ndef home():\r\n    profile = get_info_by_id(current_user.id)\r\n    return render_template(\"index.html\", profile=profile)\r\n\r\n\r\n@app.route('/teacher/assignment')\r\ndef teacher_assignment():\r\n    return render_template(\"teacher_assignment.html\")\r\n\r\n\r\n@app.route('/class/create', methods=['GET', 'POST'])\r\ndef create_class():\r\n    form_create_class = CreateClass()\r\n    if form_create_class.submit():\r\n        pass\r\n    return render_template(\"create_class.html\",form_create_class=form_create_class)\r\n\r\n\r\n@app.route('/class/edit')\r\ndef class_edit():\r\n    return render_template(\"list_class.html\")\r\n\r\n\r\n@app.route('/student/register', methods=['GET', 'POST'])\r\ndef register():\r\n    form_student = AdmisionStudent()\r\n\r\n    if request.method == \"POST\" and form_student.submit():\r\n        student = create_student(form_student)\r\n        if student:\r\n            return redirect(url_for(\"index\"))\r\n    return render_template(\"register_student.html\",form_student=form_student)\r\n\r\n\r\n@app.route('/<class_id>/info')\r\ndef info(class_id):\r\n    return render_template(\"class_info.html\", class_id=class_id)\r\n\r\n\r\n@app.route(\"/regulations\")\r\ndef view_regulations():\r\n    return render_template('view_regulations.html')\r\n\r\n@app.route(\"/grade\")\r\n@login_required\r\ndef InputGrade():\r\n    profile = get_info_by_id(current_user.id)\r\n    return render_template(\"input_score.html\",teacher_class = get_class_of_teacher(profile.id),check_deadline_score = check_deadline_score)\r\n\r\n@app.route(\"/grade/input/<class_id>/score\")\r\n@login_required\r\ndef InputGradeSubject(class_id):\r\n    class_params = int(class_id.split('=')[-1])\r\n    class_obj,semester,subject,profile_students,teacher_planing = get_teaching_plan_details(class_params)\r\n    return render_template(\"input_score_subject.html\",class_obj=class_obj,semester=semester,subject=subject,profile_students=profile_students,teacher_planing=teacher_planing)\r\n\r\n@app.route(\"/view_score\")\r\ndef view_grade():\r\n    return render_template(\"view_score.html\")\r\n\r\n\r\nif __name__ == \"__main__\":\r\n    with app.app_context():\r\n        app.run(debug=True)\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/manage_student/index.py b/manage_student/index.py
+--- a/manage_student/index.py	
++++ b/manage_student/index.py	
+@@ -1,3 +1,4 @@
++from flask import render_template, redirect, url_for, request, jsonify
+ from flask import render_template, redirect, url_for
+ from flask_login import current_user, login_required, logout_user, login_user
+ from manage_student import app, login
+@@ -6,6 +7,11 @@
+ from manage_student.dao.student import create_student
+ from manage_student.dao.teacher import get_class_of_teacher, check_deadline_score, get_teaching_plan_details
+ from manage_student.form import *
++from dao import auth, assignments, teacher
++from dao import auth, student, group_class,teacher
++from manage_student.model import UserRole
++from manage_student import admin
++
+ from manage_student.controller.teach import *
+ 
+ @login.user_loader
+@@ -58,7 +64,7 @@
+ @app.route('/class/create', methods=['GET', 'POST'])
+ def create_class():
+     form_create_class = CreateClass()
+-    if form_create_class.submit():
++    if form_create_class.validate_on_submit():
+         pass
+     return render_template("create_class.html",form_create_class=form_create_class)
+ 
+@@ -108,4 +114,5 @@
+ 
+ if __name__ == "__main__":
+     with app.app_context():
++        from manage_student import admin
+         app.run(debug=True)
+Index: manage_student/static/js/assignments.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/manage_student/static/js/assignments.js b/manage_student/static/js/assignments.js
+new file mode 100644
+--- /dev/null	
++++ b/manage_student/static/js/assignments.js	
+@@ -0,0 +1,15 @@
++function get_class_by_grade() {
++    var grade_value = `K${document.getElementById("grade").value}`;
++    var class_list = document.getElementById("class-list");
++    class_list.innerHTML = ""
++    fetch(`/api/class/?q=${grade_value}`, {
++        method: 'get',
++    }).then(res => res.json()).then(data => {
++        data.class_list.forEach(function (c) {
++            var option_tag = document.createElement("option");
++            option_tag.value = `${c.grade}A${c.count}`
++            option_tag.textContent = `${c.grade}A${c.count}`
++            class_list.appendChild(option_tag)
++        })
++    })
++}

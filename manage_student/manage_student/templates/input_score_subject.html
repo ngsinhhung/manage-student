@@ -42,7 +42,7 @@
                 <td>{{ loop.index }}</td>
                 <td>{{ s.student.profile.name }}</td>
                 <td>
-                    {% for i in range(teach_plan.subject.number_of_15p) %}
+                    {% for i in range(teach_plan.teacher_subject.subject.number_of_15p) %}
                         <input id="{{ s.student.id }}" type="number" class="EXAM_15P_{{ loop.index }}"
                                name="score_15p_student"
                                data-column="score_15p"
@@ -52,7 +52,7 @@
                     {% endfor %}
                 </td>
                 <td>
-                    {% for i in range(teach_plan.subject.number_of_45p) %}
+                    {% for i in range(teach_plan.teacher_subject.subject.number_of_45p) %}
                         <input id="{{ s.student.id }}" type="number" class="EXAM_45P_{{ loop.index }}"
                                name="score_45p_student"
                                required data-column="score_45p"

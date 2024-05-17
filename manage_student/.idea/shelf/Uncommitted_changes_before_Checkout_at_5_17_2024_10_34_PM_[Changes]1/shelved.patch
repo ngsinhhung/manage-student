@@ -1,0 +1,19 @@
+Index: manage_student/__init__.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from flask import Flask\r\nfrom urllib.parse import quote\r\nfrom flask_sqlalchemy import SQLAlchemy\r\nfrom flask_login import LoginManager\r\nfrom flask_mail import Mail\r\n\r\napp = Flask(__name__)\r\napp.secret_key = '^%^&%^(*^^^&&*^(*^^&$%&*&*%^&$&^'\r\napp.config[\"SQLALCHEMY_DATABASE_URI\"] = \"mysql+pymysql://root:%s@localhost/manage_student?charset=utf8mb4\" % quote('1234')\r\napp.config[\"SQLALCHEMY_TRACK_MODIFICATIONS\"] = True\r\n\r\n#mail\r\napp.config['MAIL_SERVER'] = \"smtp.gmail.com\"\r\napp.config['MAIL_PORT'] = 587\r\napp.config['MAIL_USERNAME'] = \"clintonfranklin120@gmail.com\"\r\napp.config['MAIL_PASSWORD'] = \"yxcwzqngqjncwfgt\"\r\napp.config['MAIL_USE_TLS'] = True\r\napp.config['MAIL_USE_SSL'] = False\r\n\r\nmail = Mail(app)\r\n\r\ndb = SQLAlchemy(app)\r\nlogin = LoginManager(app)\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/manage_student/__init__.py b/manage_student/__init__.py
+--- a/manage_student/__init__.py	
++++ b/manage_student/__init__.py	
+@@ -6,7 +6,7 @@
+ 
+ app = Flask(__name__)
+ app.secret_key = '^%^&%^(*^^^&&*^(*^^&$%&*&*%^&$&^'
+-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:%s@localhost/manage_student?charset=utf8mb4" % quote('1234')
++app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:%s@localhost/manage_student?charset=utf8mb4" % quote('120900')
+ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
+ 
+ #mail
