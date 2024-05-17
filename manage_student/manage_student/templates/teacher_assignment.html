@@ -126,17 +126,18 @@
     <script>
         function load_assignment() {
             {% for p in plan %}
-                var row_subject = document.getElementById("{{ p.subject_id }}")
-                var teacher = row_subject.querySelector("#teacher-{{ p.teacher_id }}")
-                var seme1 = row_subject.querySelector("#seme1-{{ p.subject_id }}")
-                var seme2 = row_subject.querySelector("#seme2-{{ p.subject_id }}")
+                var row_subject = document.getElementById("{{ p.teacher_subject.subject_id }}")
+                var teacher = row_subject.querySelector("#teacher-{{ p.teacher_subject.teacher_id }}")
+                var seme1 = row_subject.querySelector("#seme1-{{ p.teacher_subject.subject_id }}")
+                var seme2 = row_subject.querySelector("#seme2-{{ p.teacher_subject.subject_id }}")
+                console.log(row_subject)
                 teacher.selected = true
                 if ({{ p.semester_id }} === 1) {
                     seme1.checked = true
-                    check_semeter({{ p.subject_id }}, 'part')
+                    check_semeter({{ p.teacher_subject.subject_id }}, 'part')
                 } else {
                     seme2.checked = true
-                    check_semeter({{ p.subject_id }}, 'part')
+                    check_semeter({{ p.teacher_subject.subject_id }}, 'part')
                 }
             {% endfor %}
         }
