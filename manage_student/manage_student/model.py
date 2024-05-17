@@ -288,13 +288,13 @@ if __name__ == '__main__':
         #     db.session.add(r)
         # db.session.commit()
 
-        # for i in range(15):
-        #     profile = Profile(name="student " + str(i), email=str(i) + "@gmail.com", birthday=datetime.now(),phone=str(1000000000+i),gender=0,address="chossh")
-        #     db.session.add(profile)
-        #     db.session.commit()
-        #     stu = Student(id=profile.id)
-        #     db.session.add(stu)
-        #     db.session.commit()
+        for i in range(15):
+            profile = Profile(name="student " + str(i), email=str(i) + "@gmail.com", birthday=datetime.now(),phone=str(1000000000+i),gender=0,address="chossh")
+            db.session.add(profile)
+            db.session.commit()
+            stu = Student(id=profile.id)
+            db.session.add(stu)
+            db.session.commit()
 
         # profiles_data = [
         #     {"id": 5, "name": "Trần Lưu Quốc Tuấn", "email": "john@example.com", "dob": "2003-01-15", "gender": True,

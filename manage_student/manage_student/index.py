@@ -11,10 +11,11 @@ from manage_student import login
 from manage_student.dao.student import *
 from manage_student.form import *
 from dao import auth, student, group_class, teacher, assignments
-from manage_student.api import *
 from manage_student.model import UserRole
 import datetime
 from manage_student.api.teach import *
+from manage_student.api.student_class import *
+from manage_student.api.student_score import *
 from manage_student.admin import *
 
 
