@@ -110,6 +110,8 @@ class Teachers_Subject(db.Model):
     teacher_id = Column(Integer, ForeignKey(Teacher.id), nullable=False)
     subject_id = Column(Integer, ForeignKey(Subject.id), nullable=False)
 
+    teacher = relationship("Teacher", backref="teachers_subject", lazy=True)
+    subject = relationship("Subject", backref="subject_teacher", lazy=True)
 
 class Semester(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -119,15 +121,18 @@ class Semester(db.Model):
 class Teaching_plan(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     score_deadline = Column(DateTime)
-    teacher_id = Column(Integer, ForeignKey(Teacher.id), nullable=False)
     class_id = Column(Integer, ForeignKey(Class.id), nullable=False)
     semester_id = Column(Integer, ForeignKey(Semester.id), nullable=False)
-    subject_id = Column(Integer, ForeignKey(Subject.id), nullable=False)
+    teacher_subject_id = Column(Integer, ForeignKey(Teachers_Subject.id), nullable=False)
 
-    teacher = relationship("Teacher", backref="teacher", lazy=True)
-    semester = relationship("Semester", backref="semester", lazy=True)
-    class_teach = relationship("Class", backref="teach", lazy=True)
-    subject = relationship("Subject", backref="subject", lazy=True)
+    teacher_subject = relationship("Teachers_Subject", backref="teaching_plan")
+    # subject_id = Column(Integer, ForeignKey(Subject.id), nullable=False)
+    # teacher_id = Column(Integer, ForeignKey(Teacher.id), nullable=False)
+
+    # teacher = relationship("Teacher", backref="teacher", lazy=True)
+    # semester = relationship("Semester", backref="semester", lazy=True)
+    # class_teach = relationship("Class", backref="teach", lazy=True)
+    # subject = relationship("Subject", backref="subject", lazy=True)
 
 
 class Exam(db.Model):

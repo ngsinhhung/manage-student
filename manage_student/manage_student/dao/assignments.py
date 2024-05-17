@@ -15,57 +15,54 @@ def load_all_teacher_subject(subject_id):
     return Teacher.query.join(Teachers_Subject).filter(Teachers_Subject.subject_id == subject_id).all()
 
 
-def save_subject_assignment(teacher_id, class_id, semester_id, subject_id):
+def get_semester(semester_id):
+    return db.session.get(Semester, semester_id)
+
+def load_assignments_of_class(class_id):
+    return Teaching_plan.query.filter_by(class_id=class_id)
+
+def get_id_teacher_subject(teacher_id, subject_id):
+    return Teachers_Subject.query.filter_by(teacher_id=teacher_id, subject_id=subject_id).first()
+
+def save_subject_assignment(class_id, semester_id, teacher_subject_id):
     if isinstance(semester_id, int):
-        print("int")
-        plan, created = get_or_create(teacher_id=teacher_id, class_id=class_id, semester_id=semester_id, subject_id=subject_id)
+        plan, created = get_or_create(class_id=class_id, semester_id=semester_id, teacher_subject_id=teacher_subject_id)
         if created:
-            plan.teacher_id = teacher_id
             plan.class_id = class_id
             plan.semester_id = semester_id
-            plan.subject_id = subject_id
+            plan.teacher_subject_id = teacher_subject_id
             db.session.commit()
         another = Teaching_plan.query.filter_by(class_id=class_id, semester_id=3 - semester_id,
-                                                subject_id=subject_id).first()
+                                                teacher_subject_id=teacher_subject_id).first()
         if another:
             db.session.delete(another)
+            db.session.commit()
+
     else:
-        print("array")
-        print("cc")
         for s in semester_id:
-            plan, created = get_or_create(teacher_id=teacher_id, class_id=class_id, semester_id=s,
-                                          subject_id=subject_id)
+            plan, created = get_or_create(class_id=class_id, semester_id=s, teacher_subject_id=teacher_subject_id)
             if created:
-                plan.teacher_id = teacher_id
                 plan.class_id = class_id
                 plan.semester_id = s
-                plan.subject_id = subject_id
+                plan.teacher_subject_id=teacher_subject_id
                 db.session.commit()
 
 
 
-def get_or_create(teacher_id, class_id, semester_id, subject_id):
-    plan = Teaching_plan.query.filter_by(class_id=class_id, semester_id=semester_id, subject_id=subject_id).first()
+def get_or_create(class_id, semester_id, teacher_subject_id):
+    plan = Teaching_plan.query.filter_by(class_id=class_id, semester_id=semester_id, teacher_subject_id=teacher_subject_id).first()
     if plan:
         return plan, True
     else:
         create_plan = Teaching_plan(
-            teacher_id=db.session.get(Teacher, teacher_id).id,
-            class_id=db.session.get(Class, class_id).id,
-            semester_id=db.session.get(Semester, semester_id).id,
-            subject_id=db.session.get(Subject, subject_id).id,
+            class_id=class_id,
+            semester_id=semester_id,
+            teacher_subject_id=teacher_subject_id
         )
         db.session.add(create_plan)
         db.session.commit()
         return create_plan, False
 
-
-def get_semester(semester_id):
-    return db.session.get(Semester, semester_id)
-
-
-def load_assignments_of_class(class_id):
-    return Teaching_plan.query.filter_by(class_id=class_id)
 
 
 def delete_assignments(class_id):
@@ -77,4 +74,5 @@ def delete_assignments(class_id):
 
 if __name__ == '__main__':
     with app.app_context():
-        pass
+        for p in load_assignments_of_class(1):
+            print(p.class_id, p.semester_id, p.teacher_subject.teacher_id, p.teacher_subject.subject_id)

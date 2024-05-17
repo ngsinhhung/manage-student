@@ -89,6 +89,7 @@ def teacher_assignment_class(grade, classname):
     elif request.method.__eq__("POST") and request.form.get("type").__eq__("save"):
         for s in subject_list:
             teacher_id = request.form.get("teacher-assigned-{id}".format(id=s.id))
+            teacher_subject_id = assignments.get_id_teacher_subject(teacher_id=teacher_id, subject_id=s.id).id
             total_seme = request.form.get("total-seme-{id}".format(id=s.id))
             seme1 = request.form.get("seme1-{id}".format(id=s.id))
             seme2 = request.form.get("seme2-{id}".format(id=s.id))
@@ -99,11 +100,11 @@ def teacher_assignment_class(grade, classname):
                 semester_id = 1
             elif seme2:
                 semester_id = 2
+            print(semester_id)
             assignments.save_subject_assignment(
-                teacher_id=teacher_id,
                 class_id=class_id,
                 semester_id=semester_id,
-                subject_id=s.id
+                teacher_subject_id=teacher_subject_id
             )
         return redirect("/teacher/assignment/{grade}/{classname}".format(grade=str(grade), classname=classname))
     elif request.method.__eq__("POST") and request.form.get("type").__eq__("delete"):

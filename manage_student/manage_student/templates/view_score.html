@@ -71,11 +71,11 @@
             <form id="viewScoreFrom"
                   method="GET">
                 <label style="color:#1668b3" class="form-label">Chọn kì học:</label>
-                <select class="form-select" name="semester_id">
-                    {% for s in semester %}
-                        <option value="{{ s.id }}">{{ s.semester_name }}</option>
-                    {% endfor %}
-                </select>
+            <select class="form-select" name="semester_id">
+                {% for s in semester %}
+                    <option value="{{ s.id }}">{{ s.semester_name }}</option>
+                {% endfor %}
+            </select>
                 <button class="btn btn-info mt-2" id="btnSemester" style="color:white">
                     Xem điểm
                 </button>
@@ -100,9 +100,6 @@
 
             </div>
             </div>
-        {% else %}
-            <div>
-                <span class="text-info fs-3">Vui Lòng nhập số điện thoại để xem điểm</span>
             </div>
 
             </div>
@@ -271,6 +268,7 @@
         var studentData = getStudentData()
         document.getElementById("name-student-view-score").innerHTML = studentData.studentName
         var selectedSemesterId = document.querySelector('select[name="semester_id"]').value;
+        console.log(studentId)
         console.log(selectedSemesterId)
         fetch(`/api/view_score/${studentData.id}?semester_id=${selectedSemesterId}`, {
             method: "GET"
@@ -295,6 +293,5 @@
 
     })
 </script>
-
 </body>
 </html>
