@@ -3,14 +3,12 @@ from flask_login import current_user, login_required, logout_user, login_user
 from flask_mail import Message
 
 from manage_student import app, login, mail
-from manage_student.dao import regulation, notification
+from manage_student.dao import regulation, notification,auth, student, group_class, teacher, assignments
 from manage_student.decorators import role_only
 
-from dao import auth, group_class, teacher, assignments
 from manage_student import login
 from manage_student.dao.student import *
 from manage_student.form import *
-from dao import auth, student, group_class, teacher, assignments
 from manage_student.model import UserRole
 import datetime
 from manage_student.api.teach import *
@@ -227,4 +225,4 @@ def view_score():
 
 if __name__ == "__main__":
     with app.app_context():
-        app.run(debug=True)
+        app.run(host='0.0.0.0', port=5000, debug=True)

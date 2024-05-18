@@ -6,9 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="9d9c9edb-3ad4-4881-af7a-8e09f54fec68" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/manage_student/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/manage_student/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/manage_student/dao/student.py" beforeDir="false" afterPath="$PROJECT_DIR$/manage_student/dao/student.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/manage_student/templates/view_score.html" beforeDir="false" afterPath="$PROJECT_DIR$/manage_student/templates/view_score.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/manage_student/index.py" beforeDir="false" afterPath="$PROJECT_DIR$/manage_student/index.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,25 +47,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "Python.index.executor": "Run",
-    "Python.manage_student.executor": "Run",
-    "Python.subject.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "D:/School/remake-manage-student/manage_student",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Python.index.executor&quot;: &quot;Run&quot;,
+    &quot;Python.manage_student.executor&quot;: &quot;Run&quot;,
+    &quot;Python.subject.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/School/remake-manage-student/manage_student&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Python.index">
     <configuration name="index" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="manage_student" />
@@ -145,6 +143,7 @@
       <workItem from="1715934201713" duration="2787000" />
       <workItem from="1715950765652" duration="4111000" />
       <workItem from="1715962830827" duration="5466000" />
+      <workItem from="1715985159070" duration="311000" />
     </task>
     <servers />
   </component>
@@ -155,7 +154,7 @@
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/manage_student$index.coverage" NAME="index Coverage Results" MODIFIED="1715981662117" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student" />
+    <SUITE FILE_PATH="coverage/manage_student$index.coverage" NAME="index Coverage Results" MODIFIED="1715984905333" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student" />
     <SUITE FILE_PATH="coverage/manage_student$model.coverage" NAME="model Coverage Results" MODIFIED="1715958078908" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student" />
     <SUITE FILE_PATH="coverage/manage_student$admin.coverage" NAME="admin Coverage Results" MODIFIED="1714029977423" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student" />
     <SUITE FILE_PATH="coverage/manage_student$student__1_.coverage" NAME="student (1) Coverage Results" MODIFIED="1715178949194" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student/api" />
