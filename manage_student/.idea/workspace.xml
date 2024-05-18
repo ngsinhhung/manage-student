@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9d9c9edb-3ad4-4881-af7a-8e09f54fec68" name="Changes" comment="update send mail">
+    <list default="true" id="9d9c9edb-3ad4-4881-af7a-8e09f54fec68" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/manage_student/templates/teacher_assignment.html" beforeDir="false" afterPath="$PROJECT_DIR$/manage_student/templates/teacher_assignment.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/manage_student/index.py" beforeDir="false" afterPath="$PROJECT_DIR$/manage_student/index.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,6 +51,7 @@
   &quot;keyToString&quot;: {
     &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
     &quot;Python.index.executor&quot;: &quot;Run&quot;,
+    &quot;Python.manage_student.executor&quot;: &quot;Run&quot;,
     &quot;Python.subject.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
@@ -75,7 +76,6 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="SDK_NAME" value="Python 3.10 (manage_student)" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/manage_student" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -126,7 +126,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-09665e90c3a7-b11f5e8da5ad-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-233.15026.15" />
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-PY-241.14494.241" />
+        <option value="bundled-python-sdk-0509580d9d50-28c9f5db9ffe-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-241.14494.241" />
       </set>
     </attachedChunks>
   </component>
@@ -142,41 +143,31 @@
       <workItem from="1715934201713" duration="2787000" />
       <workItem from="1715950765652" duration="4111000" />
       <workItem from="1715962830827" duration="5466000" />
-      <workItem from="1715981218361" duration="1619000" />
-      <workItem from="1715996938525" duration="1634000" />
+      <workItem from="1715985159070" duration="311000" />
     </task>
-    <task id="LOCAL-00001" summary="update send mail">
-      <option name="closed" value="true" />
-      <created>1715981342229</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1715981342229</updated>
-    </task>
-    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="update send mail" />
-    <option name="LAST_COMMIT_MESSAGE" value="update send mail" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/manage_student$student__1_.coverage" NAME="student (1) Coverage Results" MODIFIED="1715178949194" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student/api" />
-    <SUITE FILE_PATH="coverage/manage_student$dao.coverage" NAME="dao Coverage Results" MODIFIED="1713866284789" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student" />
-    <SUITE FILE_PATH="coverage/manage_student$class.coverage" NAME="class Coverage Results" MODIFIED="1714718911368" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student/dao" />
-    <SUITE FILE_PATH="coverage/manage_student$regulation.coverage" NAME="regulation Coverage Results" MODIFIED="1715934193056" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student/dao" />
-    <SUITE FILE_PATH="coverage/manage_student$teacher.coverage" NAME="teacher Coverage Results" MODIFIED="1715244383855" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student/dao" />
-    <SUITE FILE_PATH="coverage/manage_student$admin.coverage" NAME="admin Coverage Results" MODIFIED="1714029977423" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student" />
-    <SUITE FILE_PATH="coverage/manage_student$subject.coverage" NAME="subject Coverage Results" MODIFIED="1715958350381" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student/dao" />
+    <SUITE FILE_PATH="coverage/manage_student$index.coverage" NAME="index Coverage Results" MODIFIED="1715984905333" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student" />
     <SUITE FILE_PATH="coverage/manage_student$model.coverage" NAME="model Coverage Results" MODIFIED="1715958078908" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student" />
-    <SUITE FILE_PATH="coverage/manage_student$index.coverage" NAME="index Coverage Results" MODIFIED="1716002003744" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student" />
-    <SUITE FILE_PATH="coverage/manage_student$group_class.coverage" NAME="group_class Coverage Results" MODIFIED="1714906441645" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student/dao" />
-    <SUITE FILE_PATH="coverage/manage_student$notification.coverage" NAME="notification Coverage Results" MODIFIED="1715175985031" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student/dao" />
+    <SUITE FILE_PATH="coverage/manage_student$admin.coverage" NAME="admin Coverage Results" MODIFIED="1714029977423" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student" />
+    <SUITE FILE_PATH="coverage/manage_student$student__1_.coverage" NAME="student (1) Coverage Results" MODIFIED="1715178949194" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student/api" />
     <SUITE FILE_PATH="coverage/manage_student$student.coverage" NAME="student Coverage Results" MODIFIED="1715792274874" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student/dao" />
-    <SUITE FILE_PATH="coverage/manage_student$form.coverage" NAME="form Coverage Results" MODIFIED="1714893323809" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student" />
+    <SUITE FILE_PATH="coverage/manage_student$dao.coverage" NAME="dao Coverage Results" MODIFIED="1713866284789" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student" />
+    <SUITE FILE_PATH="coverage/manage_student$manage_student.coverage" NAME="manage_student Coverage Results" MODIFIED="1715981630951" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/manage_student$Flask__manage_student___init___py_.coverage" NAME="Flask (manage_student/__init__.py) Coverage Results" MODIFIED="1714287361950" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/manage_student$class.coverage" NAME="class Coverage Results" MODIFIED="1714718911368" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student/dao" />
+    <SUITE FILE_PATH="coverage/manage_student$notification.coverage" NAME="notification Coverage Results" MODIFIED="1715175985031" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student/dao" />
+    <SUITE FILE_PATH="coverage/manage_student$subject.coverage" NAME="subject Coverage Results" MODIFIED="1715958350381" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student/dao" />
+    <SUITE FILE_PATH="coverage/manage_student$form.coverage" NAME="form Coverage Results" MODIFIED="1714893323809" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student" />
+    <SUITE FILE_PATH="coverage/manage_student$group_class.coverage" NAME="group_class Coverage Results" MODIFIED="1714906441645" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student/dao" />
+    <SUITE FILE_PATH="coverage/manage_student$teacher.coverage" NAME="teacher Coverage Results" MODIFIED="1715244383855" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student/dao" />
+    <SUITE FILE_PATH="coverage/manage_student$regulation.coverage" NAME="regulation Coverage Results" MODIFIED="1715934193056" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/manage_student/dao" />
   </component>
 </project>

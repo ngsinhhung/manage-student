@@ -122,13 +122,13 @@
     var coderesult = ""
     var dataStudent = null
     const firebaseConfig = {
-        apiKey: "AIzaSyDBB_P8wh6tlYcyQwbFcgr3RgHQkVx8420",
-        authDomain: "verifyphone-b9daa.firebaseapp.com",
-        projectId: "verifyphone-b9daa",
-        storageBucket: "verifyphone-b9daa.appspot.com",
-        messagingSenderId: "1057973800390",
-        appId: "1:1057973800390:web:88da81198379ee2be5f6c7"
-
+        apiKey: "AIzaSyB0N-lLI2z7-pSChYSNzsm2fqdZEzjtVLc",
+        authDomain: "mobile-auth-9f6c3.firebaseapp.com",
+        projectId: "mobile-auth-9f6c3",
+        storageBucket: "mobile-auth-9f6c3.appspot.com",
+        messagingSenderId: "444414383977",
+        appId: "1:444414383977:web:62a1e777a1ab8a6cc10ff8",
+        measurementId: "G-WMZ0FSBT5Q"
     };
     firebase.initializeApp(firebaseConfig);
     render();
@@ -272,8 +272,6 @@
         var studentData = getStudentData()
         document.getElementById("name-student-view-score").innerHTML = studentData.studentName
         var selectedSemesterId = document.querySelector('select[name="semester_id"]').value;
-        console.log(studentId)
-        console.log(selectedSemesterId)
         fetch(`/api/view_score/${studentData.id}?semester_id=${selectedSemesterId}`, {
             method: "GET"
         }).then(res => {
