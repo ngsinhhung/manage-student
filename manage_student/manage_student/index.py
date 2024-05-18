@@ -145,9 +145,9 @@ def create_class():
                                          teacher.get_teacher_not_presidential()]
     if request.method == "POST" and form_create_class.validate_on_submit():
         try:
-            if form_create_class.class_size.data > regulation.get_regulation_by_name("Sĩ số tối đa").max:
-                return render_template("create_class.html", form_create_class=form_create_class, list_class=group_class.get_class(),
-                           student_no_class=student.student_no_class(),mse="Sĩ số lớp không phù hợp")
+            # if form_create_class.class_size.data > regulation.get_regulation_by_name("Sĩ số tối đa").max:
+            #     return render_template("create_class.html", form_create_class=form_create_class, list_class=group_class.get_class(),
+            #                student_no_class=student.student_no_class(),mse="Sĩ số lớp không phù hợp")
             temp_class = group_class.create_class(form_create_class)
         except Exception as e:
             redirect("/home")
