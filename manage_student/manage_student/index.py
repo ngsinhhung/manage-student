@@ -172,9 +172,9 @@ def register():
 
     if request.method == "POST" and form_student.submit():
         try:
-            min = regulation.get_regulation_by_name("Tiếp nhận học sinh").min
-            if (datetime.now().year - form_student.birth_date.data.year) < min:
-                return render_template("register_student.html", form_student=form_student,mse="Tuổi không phù hợp")
+            # min = regulation.get_regulation_by_name("Tiếp nhận học sinh").min
+            # if (datetime.now().year - form_student.birth_date.data.year) < min:
+            #     return render_template("register_student.html", form_student=form_student,mse="Tuổi không phù hợp")
             s = student.create_student(form_student)
             send_mail(subject="Thông báo nhập học ", student_name=s.profile.name, recipients=[s.profile.email])
         except Exception as e:
