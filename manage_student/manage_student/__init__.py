@@ -6,7 +6,7 @@ from flask_mail import Mail
 
 app = Flask(__name__)
 app.secret_key = '^%^&%^(*^^^&&*^(*^^&$%&*&*%^&$&^'
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://antien:%s@antien.mysql.database.azure.com/manage_student?charset=utf8mb4" % quote('Tt280103')
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://avnadmin:%s@antien-antien.g.aivencloud.com:27500/manage_student?charset=utf8mb4" % quote('AVNS_EH95lkcmzeAyvjHK5S2')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 
 #mail
